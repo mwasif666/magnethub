@@ -4,7 +4,6 @@ import FooterOne from "@/layouts/footers/FooterOne";
 import Location from "./Location";
 import About from "./About";
 import Listing from "./Listing";
-import Ads from "./Ads";
 import Process from "./Process";
 import Testimonial from "./Testimonial";
 import Blog from "./Blog";
@@ -19,7 +18,7 @@ const HomeOne = () => {
         <Listing />
         <About />
         <Location />
-        <Ads />
+        {/* <Ads /> */}
         <Process />
         <Testimonial />
         <Blog style={false} />
