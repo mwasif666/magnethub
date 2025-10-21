@@ -14,6 +14,7 @@ import Choose3 from "@/svg/home-one/Choose3";
 import Choose1 from "@/svg/home-one/Choose1";
 import Choose2 from "@/svg/home-one/Choose2";
 import { FaChartLine, FaUserTie, FaUsers, FaHandshake } from "react-icons/fa";
+import Choose9 from "@/svg/home-one/Choose9";
 
 interface DataType {
   id: number;
@@ -22,58 +23,30 @@ interface DataType {
   desc: string;
 }
 
-interface StatType {
-  id: number;
-  icon: JSX.Element;
-  value: string;
-  label: string;
-}
-
 const choose_data: DataType[] = [
   {
     id: 1,
     icon: <Choose1 />,
-    title: "Verified Opportunities",
-    desc: "Access a growing marketplace of vetted buyers, sellers, and investors ready to engage in real business deals.",
+    title: "10,000+",
+    desc: "Monthly Web Visits",
   },
   {
     id: 2,
     icon: <Choose2 />,
-    title: "Fast & Secure Transactions",
-    desc: "Experience quick deal closures and safe interactions through our trusted and transparent platform.",
+    title: "250+",
+    desc: "Active Investors",
   },
   {
     id: 3,
     icon: <Choose3 />,
-    title: "Smart Business Growth",
-    desc: "Whether you’re raising capital or expanding your portfolio, Magnate Hub helps you make smarter moves.",
-  },
-];
-
-const stats_data: StatType[] = [
-  {
-    id: 1,
-    icon: <FaChartLine size={35} className="text-primary mb-3" />,
-    value: "10,000+",
-    label: "Monthly Web Visits",
-  },
-  {
-    id: 2,
-    icon: <FaUserTie size={35} className="text-primary mb-3" />,
-    value: "250+",
-    label: "Active Investors",
-  },
-  {
-    id: 3,
-    icon: <FaUsers size={35} className="text-primary mb-3" />,
-    value: "3,000+",
-    label: "Registered Members",
+    title: "$2,500,000+",
+    desc: "Deals Successfully Closed",
   },
   {
     id: 4,
-    icon: <FaHandshake size={35} className="text-primary mb-3" />,
-    value: "$2,500,000+",
-    label: "Deals Successfully Closed",
+    icon: <Choose9 />,
+    title: "3,000+",
+    desc: "Registered Members",
   },
 ];
 
@@ -120,23 +93,6 @@ const ChooseArea = () => {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* --- New Icon-Based Achievement Section --- */}
-        <div className="row mt-50 mb-70 justify-content-center">
-          {stats_data.map((stat, index) => (
-            <div
-              key={stat.id}
-              className="col-md-3 col-6 text-center mb-30 wow fadeInUp"
-              data-wow-delay={`${0.4 + index * 0.1}s`}
-            >
-              <div className="d-flex flex-column align-items-center">
-                {stat.icon}
-                <h2 className="fw-bold text-primary">{stat.value}</h2>
-                <p className="mb-0">{stat.label}</p>
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* --- Images and Features --- */}
@@ -200,7 +156,7 @@ const ChooseArea = () => {
               ))}
 
               {/* --- Button --- */}
-              <div
+              {/* <div
                 className="tg-chose-btn wow fadeInUp"
                 data-wow-delay=".8s"
                 data-wow-duration=".9s"
@@ -211,7 +167,7 @@ const ChooseArea = () => {
                 >
                   <Button text="Join Magnate Hub" />
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
