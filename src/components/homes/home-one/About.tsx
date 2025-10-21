@@ -4,7 +4,7 @@ import Link from "next/link";
 import shape_1 from "@/assets/img/about/su/right-shape.png";
 import shape_2 from "@/assets/img/about/su/shape.png";
 import shape_3 from "@/assets/img/about/su/shape-2.png";
-import about_thumb from "@/assets/img/about/su/thumb.png";
+import about_thumb from "@/assets/img/about/premium.gif";
 import icon_1 from "@/assets/img/about/su/fun-3.png";
 import icon_2 from "@/assets/img/about/su/fun-2.png";
 import icon_3 from "@/assets/img/about/su/fun-1.png";
@@ -46,20 +46,14 @@ const About = () => {
         src={shape_1}
         alt=""
       />
-      <div className="container">
-        <div className="row align-items-end">
+      <div className="container pt-80">
+        <div className="row align-items-center">
           <div className="col-lg-5">
             <div
-              className="tg-about-su-thumb p-relative mb-40 wow fadeInLeft"
+              className="tg-about-su-thumb wow fadeInLeft"
               data-wow-delay=".4s"
               data-wow-duration=".6s"
             >
-              <div className="tg-about-su-shape-2">
-                <Image src={shape_2} alt="" />
-              </div>
-              <div className="tg-about-su-shape">
-                <Image src={shape_3} alt="" />
-              </div>
               <Image src={about_thumb} alt="" />
             </div>
           </div>

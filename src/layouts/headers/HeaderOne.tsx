@@ -44,7 +44,7 @@ const HeaderOne = () => {
                       <Image src={logo_1} alt="Logo" />
                     </Link>
                     <Link className="logo-2 d-none" href="/">
-                      <Image src={logo_2} alt="Logo" />
+                      <Image src={logo_1} alt="Logo" />
                     </Link>
                   </div>
                   {/* <button

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "../../../styles/BannerFormOne.module.css";
 
 const BannerFormOne = () => {
   const [activeTab, setActiveTab] = useState("businesses");

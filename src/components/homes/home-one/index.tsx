@@ -2,12 +2,14 @@ import HeaderOne from "@/layouts/headers/HeaderOne";
 import Banner from "./Banner";
 import FooterOne from "@/layouts/footers/FooterOne";
 import Location from "./Location";
-import About from "./About";
 import Listing from "./Listing";
 import Process from "./Process";
 import Testimonial from "./Testimonial";
 import Blog from "./Blog";
 import Cta from "./Cta";
+import Choose from "../home-three/Choose";
+import ChooseArea from "../home-seven/ChooseArea";
+import Features from "@/components/pages/about/Features";
 
 const HomeOne = () => {
   return (
@@ -16,8 +18,10 @@ const HomeOne = () => {
       <main>
         <Banner />
         <Listing />
-        <About />
+        <Choose />
         <Location />
+        <ChooseArea />
+        <Features />
         {/* <Ads /> */}
         <Process />
         <Testimonial />

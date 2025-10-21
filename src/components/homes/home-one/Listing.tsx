@@ -21,7 +21,7 @@ const Listing = () => {
   };
 
   return (
-    <div className="tg-listing-area tg-listing-su-spacing tg-grey-bg-2 pt-120 p-relative">
+    <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
       <Image
         className="tg-listing-su-shape d-none d-xl-block"
         src={shape_1}
