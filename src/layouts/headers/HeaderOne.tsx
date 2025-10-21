@@ -1,16 +1,14 @@
 "use client";
+import { useState } from "react";
 import NavMenu from "./Menu/NavMenu";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import UseSticky from "@/hooks/UseSticky";
 import Offcanvas from "./Menu/Offcanvas";
 import Sidebar from "./Menu/Sidebar";
-import PhoneIcon from "@/svg/PhoneIcon";
 import UserIcon from "@/svg/UserIcon";
 
 import logo_1 from "@/assets/img/logo/logo-white.png";
-import logo_2 from "@/assets/img/logo/logo-green.png";
 
 const HeaderOne = () => {
   const { sticky } = UseSticky();
@@ -20,9 +18,7 @@ const HeaderOne = () => {
   return (
     <>
       <style>
-        {`
-
-              .logo img{
+        {`.logo img{
               width:110px;
               height:70px;
               }

@@ -1,7 +1,13 @@
+import React from 'react';
 import Link from "next/link"
 
-const BreadCrumb = () => {
-   return (
+interface BreadCrumbProps {
+  breadCrumbsTitle: string;
+  crums: string;
+}
+
+const BreadCrumb: React.FC<BreadCrumbProps> = ({ breadCrumbsTitle, crums }) => {
+  return (
       <div className="tg-breadcrumb-area tg-breadcrumb-spacing fix p-relative z-index-1 include-bg" style={{ backgroundImage: `url(/assets/img/breadcrumb/breadcrumb.jpg)` }}>
          <div className="tg-hero-top-shadow"></div>
          <div className="tg-breadcrumb-shadow"></div>
@@ -9,11 +15,11 @@ const BreadCrumb = () => {
             <div className="row">
                <div className="col-12">
                   <div className="tg-breadcrumb-content text-center">
-                     <h2 className="tg-breadcrumb-title mb-15">Let’s Tour The World</h2>
+                     <h2 className="tg-breadcrumb-title mb-15">{breadCrumbsTitle}</h2>
                      <div className="tg-breadcrumb-list">
                         <span><Link href="/">Home</Link></span>
                         <span className="dvdr"><i className="fa-sharp fa-solid fa-angle-right"></i></span>
-                        <span>Tour Grid</span>
+                        <span>{crums}</span>
                      </div>
                   </div>
                </div>
