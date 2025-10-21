@@ -91,15 +91,6 @@ const About = () => {
                     More About Us
                   </Link>
                 </div>
-                <div className="tg-about-su-author d-flex align-items-center mb-10">
-                  <div className="tg-about-su-author-avatar mr-10">
-                    <Image src={author} alt="" />
-                  </div>
-                  <div className="tg-about-su-author-info">
-                    <h5>Richard Kemel</h5>
-                    <span>Ceo & Founder</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
