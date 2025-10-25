@@ -1,8 +1,8 @@
-"use client"
+"use client";
+import PriceRange from "@/components/features/feature-one/PriceRange";
 import { useState } from "react";
 
 const BannerFormTwo = () => {
-  const [activeTab, setActiveTab] = useState("businesses");
   const [formData, setFormData] = useState({
     // Businesses tab
     postcode: "",
@@ -15,6 +15,7 @@ const BannerFormTwo = () => {
     franchise: false,
     premium: false,
     all: false,
+    listingType: "",
 
     // Agencies tab
     sPostcode: "",
@@ -101,26 +102,20 @@ const BannerFormTwo = () => {
     "Victoria",
   ];
 
-  const priceRanges = [
-    { value: "0", label: "$0" },
-    { value: "25000", label: "$25,000" },
-    { value: "50000", label: "$50,000" },
-    { value: "75000", label: "$75,000" },
-    { value: "100000", label: "$100,000" },
-    { value: "200000", label: "$200,000" },
-    { value: "300000", label: "$300,000" },
-    { value: "400000", label: "$400,000" },
-    { value: "500000", label: "$500,000" },
-    { value: "600000", label: "$600,000" },
-    { value: "700000", label: "$700,000" },
-    { value: "800000", label: "$800,000" },
-    { value: "900000", label: "$900,000" },
-    { value: "1000000", label: "$1,000,000" },
-    { value: "2000000", label: "$2,000,000" },
-    { value: "3000000", label: "$3,000,000" },
-    { value: "4000000", label: "$4,000,000" },
-    { value: "5000000", label: "$5,000,000+" },
+  const pageItem = [
+    { value: 20, label: "20" },
+    { value: 50, label: "50" },
+    { value: 100, label: "100" },
+    { value: 200, label: "200" },
+    { value: 400, label: "400" },
+    { value: 800, label: "800" },
   ];
+
+  const [priceValue, setPriceValue] = useState([0, 5000]);
+
+  const handleChanges = (val: number[]) => {
+    setPriceValue(val);
+  };
 
   return (
     <div className=" py-4">
@@ -131,129 +126,112 @@ const BannerFormTwo = () => {
               <div className="card-body p-4">
                 {/* Header */}
                 <div className="text-center mb-4">
-                  <h2 className="h4 text-muted">Explore Unique Business Ideas, Find Your Path to Success</h2>
+                  <h2 className="h4 text-muted">
+                    Explore Unique Business Ideas, Find Your Path to Success
+                  </h2>
                 </div>
                 <form onSubmit={handleSubmit}>
-                  {/* Businesses Tab Content */}
-                  {activeTab === "businesses" && (
-                    <div className="tab-content">
-                      {/* Search Row */}
-                      <div className="row mb-4">
-                        <div className="col-md-10">
-                          <div className="input-group">
-                            <input
-                              type="text"
-                              className="form-control border-start-0"
-                              name="postcode"
-                              value={formData.postcode}
-                              onChange={handleInputChange}
-                              placeholder="Search suburb or postcode"
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-2">
-                          <button
-                            type="submit"
-                            className="btn btn-primary w-100 h-100"
+                  <div className="tab-content">
+                    <div className="row g-3 mb-4">
+                      <div className="col-md-6">
+                        <select
+                          className="form-select"
+                          name="category"
+                          value={formData.category}
+                          onChange={handleInputChange}
+                        >
+                          <option value="">Select categories</option>
+                          {categories.map((category, index) => (
+                            <option key={index} value={category}>
+                              {category}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-md-3">
+                        <select
+                          className="form-select"
+                          name="state"
+                          value={formData.state}
+                          onChange={handleInputChange}
+                        >
+                          <option value="">Select Item Range</option>
+                          {pageItem.map((page, index) => (
+                            <option key={index} value={page.value}>
+                              {page.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-md-3">
+                        <select
+                          className="form-select"
+                          name="region"
+                          value={formData.region}
+                          onChange={handleInputChange}
+                        >
+                          <option value="">Order By</option>
+                          <option value="oldest">Oldest</option>
+                          <option value="newest">Newest</option>
+                        </select>
+                      </div>
+                      <div className="col-md-4">
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="businessId"
+                          value={formData.businessId}
+                          onChange={handleInputChange}
+                          placeholder="Write Referal Id"
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="businessId"
+                          value={formData.businessId}
+                          onChange={handleInputChange}
+                          placeholder="What are you looking for?"
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <select
+                          className="form-select"
+                          name="state"
+                          value={formData.state}
+                          onChange={handleInputChange}
+                        >
+                          <option value="">Select state</option>
+                          {states.map((state, index) => (
+                            <option key={index} value={state}>
+                              {state}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-md-4">
+                        <PriceRange
+                          MAX={5000}
+                          MIN={0}
+                          STEP={1}
+                          values={priceValue}
+                          handleChanges={handleChanges}
+                        />
+                        <div className="d-flex align-items-center mt-15">
+                          <span
+                            className="input-range"
+                            onChange={() => handleChanges}
                           >
-                            SEARCH
-                          </button>
+                            ${priceValue[0]} - ${priceValue[1]}
+                          </span>
                         </div>
                       </div>
-
-                      {/* Filters Row */}
-                      <div className="row g-3 mb-4">
-                        <div className="col-md-6">
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="businessId"
-                            value={formData.businessId}
-                            onChange={handleInputChange}
-                            placeholder="Keywords or business ID"
-                          />
-                        </div>
-                        <div className="col-md-6">
-                          <select
-                            className="form-select"
-                            name="category"
-                            value={formData.category}
-                            onChange={handleInputChange}
-                          >
-                            <option value="">Select categories</option>
-                            {categories.map((category, index) => (
-                              <option key={index} value={category}>
-                                {category}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="col-md-3">
-                          <select
-                            className="form-select"
-                            name="state"
-                            value={formData.state}
-                            onChange={handleInputChange}
-                          >
-                            <option value="">Select state</option>
-                            {states.map((state, index) => (
-                              <option key={index} value={state}>
-                                {state}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="col-md-3">
-                          <select
-                            className="form-select"
-                            name="region"
-                            value={formData.region}
-                            onChange={handleInputChange}
-                          >
-                            <option value="">Select regions</option>
-                            <option value="region1">Region 1</option>
-                            <option value="region2">Region 2</option>
-                            <option value="region3">Region 3</option>
-                          </select>
-                        </div>
-                        <div className="col-md-3">
-                          <select
-                            className="form-select"
-                            name="minPrice"
-                            value={formData.minPrice}
-                            onChange={handleInputChange}
-                          >
-                            <option value="">min price</option>
-                            {priceRanges.map((price, index) => (
-                              <option key={index} value={price.value}>
-                                {price.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="col-md-3">
-                          <select
-                            className="form-select"
-                            name="maxPrice"
-                            value={formData.maxPrice}
-                            onChange={handleInputChange}
-                          >
-                            <option value="">max price</option>
-                            {priceRanges.map((price, index) => (
-                              <option key={index} value={price.value}>
-                                {price.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Checkboxes */}
-                      <div className="row mb-4">
-                        <div className="col-12">
-                          <div className="form-check form-check-inline">
+                      <div className="col-md-5">
+                        <div className="d-flex align-items-center justify-center gap-4">
+                          <div className="checkbox d-flex align-items-center">
                             <input
-                              className="form-check-input"
+                              className="tg-checkbox"
                               type="checkbox"
                               name="franchise"
                               checked={formData.franchise}
@@ -261,15 +239,16 @@ const BannerFormTwo = () => {
                               id="franchiseCheck"
                             />
                             <label
-                              className="form-check-label"
                               htmlFor="franchiseCheck"
+                              className="tg-label ms-2"
                             >
                               Franchise
                             </label>
                           </div>
-                          <div className="form-check form-check-inline">
+
+                          <div className="checkbox d-flex align-items-center">
                             <input
-                              className="form-check-input"
+                              className="tg-checkbox"
                               type="checkbox"
                               name="premium"
                               checked={formData.premium}
@@ -277,42 +256,85 @@ const BannerFormTwo = () => {
                               id="premiumCheck"
                             />
                             <label
-                              className="form-check-label"
                               htmlFor="premiumCheck"
+                              className="tg-label ms-2"
                             >
                               Premium Listing
                             </label>
                           </div>
-                          <div className="form-check form-check-inline">
+                        </div>
+                      </div>
+                      <div className="col-md-3">
+                        <div className="tg-tour-about-time d-flex align-items-center mb-10">
+                          <div className="form-check me-3">
                             <input
                               className="form-check-input"
-                              type="checkbox"
-                              name="all"
-                              checked={formData.all}
+                              type="radio"
+                              name="listingType"
+                              id="allType"
+                              value="all"
+                              checked={formData.listingType === "all"}
                               onChange={handleInputChange}
-                              id="allCheck"
                             />
                             <label
                               className="form-check-label"
-                              htmlFor="allCheck"
+                              htmlFor="allType"
                             >
                               All
                             </label>
                           </div>
+
+                          <div className="form-check me-3">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="listingType"
+                              id="investType"
+                              value="invest"
+                              checked={formData.listingType === "invest"}
+                              onChange={handleInputChange}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="investType"
+                            >
+                              Invest
+                            </label>
+                          </div>
+
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="listingType"
+                              id="buyType"
+                              value="buy"
+                              checked={formData.listingType === "buy"}
+                              onChange={handleInputChange}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="buyType"
+                            >
+                              Buy
+                            </label>
+                          </div>
                         </div>
                       </div>
-
-                      {/* Bottom Link */}
-                      <div className="text-center">
-                        <a href="#" className="text-decoration-none">
-                          <u>
-                            Sell your business or advertise your business for
-                            sale
-                          </u>
-                        </a>
-                      </div>
                     </div>
-                  )}
+                    <div className="col-md-6">
+                      <button
+                        type="submit"
+                        className="btn btn-primary w-100 h-100"
+                      >
+                        SEARCH
+                      </button>
+                    </div>
+
+                    <div className="row mb-4">
+                      <div className="col-12"></div>
+                    </div>
+                  </div>
                 </form>
               </div>
             </div>
