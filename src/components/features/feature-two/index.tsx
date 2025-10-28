@@ -4,8 +4,8 @@ import BannerForm from "./BannerForm"
 import HeaderOne from "@/layouts/headers/HeaderOne"
 
 const FeatureTwo = () => {
-   let breadCrumbsTitle  = 'Let`s explore the listing'
-   let crums = 'Listing';
+   const breadCrumbsTitle  = 'Let`s explore the listing'
+   const crums = 'Listing';
    return (
       <>
          <HeaderOne />

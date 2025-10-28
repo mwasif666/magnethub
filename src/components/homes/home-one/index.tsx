@@ -6,7 +6,7 @@ import Listing from "./Listing";
 import Process from "./Process";
 import Testimonial from "./Testimonial";
 import Blog from "./Blog";
-import Cta from "./Cta";
+// import Cta from "./Cta";
 import Choose from "../home-three/Choose";
 import ChooseArea from "../home-seven/ChooseArea";
 import Features from "@/components/pages/about/Features";

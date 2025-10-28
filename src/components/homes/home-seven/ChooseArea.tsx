@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { JSX } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 
 import shape from "@/assets/img/chose/chose-5/map.png";
 import choose_thumb1 from "@/assets/img/chose/chose-5/chose-2.jpg";
@@ -9,11 +9,11 @@ import choose_thumb2 from "@/assets/img/chose/chose-5/chose-3.jpg";
 import choose_thumb3 from "@/assets/img/chose/chose-5/chose-1.jpg";
 import circle from "@/assets/img/chose/chose-5/text.png";
 import circle2 from "@/assets/img/chose/chose-5/icon.png";
-import Button from "@/components/common/Button";
+// import Button from "@/components/common/Button";
 import Choose3 from "@/svg/home-one/Choose3";
 import Choose1 from "@/svg/home-one/Choose1";
 import Choose2 from "@/svg/home-one/Choose2";
-import { FaChartLine, FaUserTie, FaUsers, FaHandshake } from "react-icons/fa";
+// import { FaChartLine, FaUserTie, FaUsers, FaHandshake } from "react-icons/fa";
 import Choose9 from "@/svg/home-one/Choose9";
 
 interface DataType {

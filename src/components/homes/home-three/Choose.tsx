@@ -1,11 +1,6 @@
 import Image from "next/image";
-import Choose4 from "@/svg/home-one/Choose4";
-import Choose5 from "@/svg/home-one/Choose5";
 import Button from "@/components/common/Button";
-
 import choose_shape from "@/assets/img/chose/chose-shape-2.png";
-import choose_shape2 from "@/assets/img/chose/chose-shape.png";
-import choose_thumb from "@/assets/img/about/img2.png";
 import choose_thumb2 from "@/assets/img/about/bussines.png";
 import Link from "next/link";
 
@@ -42,8 +37,8 @@ const Choose = () => {
                   data-wow-duration=".9s"
                 >
                   Magnate Hub is the ultimate platform for entrepreneurs and
-                  business owners. Whether you're looking to buy or sell a
-                  business, find investors, or raise capital, we've got you
+                  business owners. Whether you&apos;re looking to buy or sell a
+                  business, find investors, or raise capital, we&apos;ve got you
                   covered.
                 </p>
                 <p

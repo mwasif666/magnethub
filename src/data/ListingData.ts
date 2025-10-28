@@ -3,9 +3,6 @@ import { StaticImageData } from "next/image";
 import listing_img1 from "@/assets/img/listing/su/listing-1.jpg";
 import listing_img2 from "@/assets/img/listing/su/listing-2.jpg";
 import listing_img3 from "@/assets/img/listing/su/listing-3.jpg";
-import listing_img4 from "@/assets/img/listing/su/listing-4.jpg";
-import listing_img5 from "@/assets/img/listing/su/listing-5.jpg";
-import listing_img6 from "@/assets/img/listing/su/listing-6.jpg";
 
 import listing3_img1 from "@/assets/img/listing/listing-1.jpg";
 import listing3_img2 from "@/assets/img/listing/listing-2.jpg";
