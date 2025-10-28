@@ -10,6 +10,8 @@ import Cta from "./Cta";
 import Choose from "../home-three/Choose";
 import ChooseArea from "../home-seven/ChooseArea";
 import Features from "@/components/pages/about/Features";
+import OurLocation from "./ourLocations";
+import Pricing from "../home-two/Pricing";
 
 const HomeOne = () => {
   return (
@@ -23,10 +25,13 @@ const HomeOne = () => {
         <ChooseArea />
         <Features />
         {/* <Ads /> */}
+        <OurLocation />
+        <Pricing />
         <Process />
+
         <Testimonial />
         <Blog style={false} />
-        <Cta />
+        {/* <Cta /> */}
       </main>
       <FooterOne />
     </>

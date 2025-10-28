@@ -21,8 +21,8 @@ const choose_data: DataType[] = [
         <Choose6 />
       </>
     ),
-    title: "Ultimate flexibility",
-    desc: "when an unknown printer took galleof type and scrambled make type peci bookhas survived five.",
+    title: "Extensive Listings",
+    desc: "A comprehensive selection of businesses for sale, including detailed information about the company, financials, and industry trends.",
   },
   {
     id: 2,
@@ -31,8 +31,8 @@ const choose_data: DataType[] = [
         <Choose7 />
       </>
     ),
-    title: "Memorable experiences",
-    desc: "when an unknown printer took galleof type and scrambled make type peci bookhas survived five.",
+    title: "Search and Filter",
+    desc: "Advanced search and filtering options that allow users to easily find businesses that meet their specific criteria.",
   },
   {
     id: 3,
@@ -41,8 +41,18 @@ const choose_data: DataType[] = [
         <Choose8 />
       </>
     ),
-    title: "Award winning support",
-    desc: "when an unknown printer took galleof type and scrambled make type peci bookhas survived five.",
+    title: "Network of Buyers and Sellers",
+    desc: "A large network of buyers, sellers, investors, and capital raisers, providing a wide range of opportunities for business transactions.",
+  },
+  {
+    id: 4,
+    icon: (
+      <>
+        <Choose7 />
+      </>
+    ),
+    title: "Support and Guidance",
+    desc: "Access to a team of experts who can provide guidance and support throughout the buying and selling process, from initial negotiations to closing the deal.",
   },
 ];
 
@@ -52,9 +62,10 @@ const Features = () => {
       <Image
         className="tg-chose-6-shape d-none d-md-block"
         src={shape}
-        alt=""
+        alt="decorative shape"
       />
       <div className="container">
+        {/* Section Title */}
         <div className="row justify-content-center">
           <div className="col-xl-6 col-lg-7 col-md-9">
             <div className="tg-chose-section-title text-center mb-35">
@@ -63,32 +74,26 @@ const Features = () => {
                 data-wow-delay=".3s"
                 data-wow-duration=".1s"
               >
-                What we do
+                Our Features
               </h5>
               <h2
                 className="mb-15 text-capitalize wow fadeInUp"
                 data-wow-delay=".4s"
                 data-wow-duration=".9s"
               >
-                We Arrange the Best Tour
-                <br /> Ever Possible
+                There are so many features of <br /> Magnate Hub, here are a
+                few.
               </h2>
-              <p
-                className="text-capitalize wow fadeInUp mb-35"
-                data-wow-delay=".5s"
-                data-wow-duration=".9s"
-              >
-                 when an unknown printer took a galley of type and scrambled
-                make type specimen bookhas survived not only five.
-              </p>
             </div>
           </div>
         </div>
+
+        {/* Feature Cards */}
         <div className="row">
           {choose_data.map((item) => (
-            <div key={item.id} className="col-lg-4 col-md-6">
-              <div className="tg-chose-6-wrap mb-30">
-                <span className="icon mb-20">{item.icon}</span>
+            <div key={item.id} className="col-lg-3 col-md-6">
+              <div className="tg-chose-6-wrap h-100 mb-30 text-center">
+                <span className="icon mb-20 d-inline-block">{item.icon}</span>
                 <h4 className="tg-chose-6-title mb-15">{item.title}</h4>
                 <p>{item.desc}</p>
               </div>
