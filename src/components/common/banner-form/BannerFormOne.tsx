@@ -1,10 +1,10 @@
-import { useState } from "react";
-// import styles from "../../../styles/BannerFormOne.module.css";
+import { apiRequest } from "@/api/axiosInstance";
+import { useEffect, useRef, useState } from "react";
 
 const BannerFormOne = () => {
+  type DropDown = { label: string; value: string }[];
   const [activeTab, setActiveTab] = useState("businesses");
   const [formData, setFormData] = useState({
-    // Businesses tab
     postcode: "",
     businessId: "",
     category: "",
@@ -15,91 +15,126 @@ const BannerFormOne = () => {
     franchise: false,
     premium: false,
     all: false,
-
-    // Agencies tab
     sPostcode: "",
     agency: "",
     state2: "",
     region2: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<DropDown>([]);
+  const [locations, setLocations] = useState<DropDown>([]);
+  const [listings, setListings] = useState<any>([]);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
 
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: checked,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+    const newForm = {
+      ...formData,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    };
+
+    setFormData(newForm);
+
+    if (name === "businessId") {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+      timeoutRef.current = setTimeout(() => {
+        const url = constructUrl(newForm);
+        if (url) fetchProductDataAsPerFilter(url);
+      }, 300);
+    }
+
+    if (name !== "businessId" && name !== "postcode") {
+      const url = constructUrl(newForm);
+      if (url) fetchProductDataAsPerFilter(url);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission here
+    if (formData.postcode.length > 3) {
+      const url = constructUrl(formData);
+      if (url) fetchProductDataAsPerFilter(url);
+    }
   };
 
-  const categories = [
-    "Aged Care & Retirement",
-    "Agriculture & Primary Services",
-    "Automotive & Marine",
-    "Books, Stationery & DVDs",
-    "Building & Construction",
-    "Business Services",
-    "Catering & Events",
-    "Children's Products & Services",
-    "Cleaning",
-    "Coffee, Cafes & Restaurants",
-    "Convenience, Grocery & Liquor Stores",
-    "Digital, Crypto & Mobile Apps",
-    "Discount & Variety Stores",
-    "Education, Coaching & Training",
-    "Electronic Equipment",
-    "Entertainment & Amusement",
-    "Fashion",
-    "Food & Beverage",
-    "Garden, Pool & Outdoor Maintenance",
-    "Gifts & Florists",
-    "Green & Eco friendly",
-    "Hair, Beauty & Spa",
-    "Handymen & Home Services",
-    "Health & Medical",
-    "Homewares & Furniture",
-    "Industrial",
-    "Manufacturing, Wholesale & Distribution",
-    "Master Franchises",
-    "Mortgage & Finance",
-    "Newsagency, Lottery & Post Office",
-    "Pet Products & Services",
-    "Pubs, Bars & Clubs",
-    "Real Estate, Property & Relocation",
-    "Safety & Security",
-    "Specialty Retail",
-    "Sport, Fitness & Adventure",
-    "Takeaway & Casual Dining",
-    "Technology, Telecommunications & Internet",
-    "Transport & Storage",
-    "Vending",
-  ];
+  const getCategories = async () => {
+    return apiRequest({ url: "GetAllProjectCategories", method: "GET" });
+  };
 
-  const states = [
-    "New South Wales - NSW",
-    "Northern Territory",
-    "Western Australia",
-    "Tasmania",
-    "Queensland",
-    "South Australia",
-    "Victoria",
-  ];
+  const getLocations = async () => {
+    return apiRequest({ url: "GetAllProjectLocations", method: "GET" });
+  };
+
+  useEffect(() => {
+    setLoading(true);
+
+    Promise.all([getCategories(), getLocations()])
+      .then(([catRes, locRes]) => {
+        setCategories(
+          catRes?.map((c: any) => ({
+            label: c.name,
+            value: c.category_id,
+          })) || []
+        );
+
+        setLocations(
+          locRes?.map((l: any) => ({
+            label: l.name,
+            value: l.location_id,
+          })) || []
+        );
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const constructUrl = (filters: any) => {
+    let params: any = {};
+
+    if (activeTab === "businesses") {
+      if (filters.postcode) params.postcode = filters.postcode;
+      if (filters.businessId) params.businessId = filters.businessId;
+      if (filters.category) params.category = filters.category;
+      if (filters.region) params.region = filters.region;
+      if (filters.state) params.state = filters.state;
+      if (filters.minPrice) params.minPrice = filters.minPrice;
+      if (filters.maxPrice) params.maxPrice = filters.maxPrice;
+
+      if (!filters.all) {
+        if (filters.franchise) params.franchise = "";
+        if (filters.premium) params.premium = "";
+      }
+
+      return `GetAllProjects?${Object.keys(params)
+        .map((key) => (params[key] === "" ? key : `${params[key]}`))
+        .join("&")}`;
+    }
+
+    if (activeTab === "agencies") {
+      if (filters.sPostcode) params.postcode = filters.sPostcode;
+      if (filters.agency) params.agency = filters.agency;
+      if (filters.state2) params.state = filters.state2;
+      if (filters.region2) params.region = filters.region2;
+
+      return `GetAllAgencies?${Object.keys(params)
+        .map((key) => `${key}=${params[key]}`)
+        .join("&")}`;
+    }
+  };
+
+  const fetchProductDataAsPerFilter = async (finalUrl: string) => {
+    try {
+      const response = await apiRequest({ url: finalUrl, method: "GET" });
+      setListings(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const priceRanges = [
     { value: "0", label: "$0" },
@@ -203,7 +238,7 @@ const BannerFormOne = () => {
                             name="businessId"
                             value={formData.businessId}
                             onChange={handleInputChange}
-                            placeholder="Keywords or business ID"
+                            placeholder="Keywords or business Id"
                           />
                         </div>
                         <div className="col-md-6">
@@ -215,8 +250,8 @@ const BannerFormOne = () => {
                           >
                             <option value="">Select categories</option>
                             {categories.map((category, index) => (
-                              <option key={index} value={category}>
-                                {category}
+                              <option key={index} value={category.value}>
+                                {category.label}
                               </option>
                             ))}
                           </select>
@@ -229,9 +264,9 @@ const BannerFormOne = () => {
                             onChange={handleInputChange}
                           >
                             <option value="">Select state</option>
-                            {states.map((state, index) => (
-                              <option key={index} value={state}>
-                                {state}
+                            {locations.map((state, index) => (
+                              <option key={index} value={state.value}>
+                                {state.label}
                               </option>
                             ))}
                           </select>
@@ -397,9 +432,9 @@ const BannerFormOne = () => {
                             onChange={handleInputChange}
                           >
                             <option value="">Select state</option>
-                            {states.map((state, index) => (
-                              <option key={index} value={state}>
-                                {state}
+                            {locations.map((state, index) => (
+                              <option key={index} value={state.value}>
+                                {state.label}
                               </option>
                             ))}
                           </select>
