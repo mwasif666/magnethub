@@ -70,14 +70,14 @@ const BannerFormTwo = () => {
     Promise.all([getCategories(), getLocations()])
       .then(([catRes, locRes]) => {
         setCategories(
-          catRes?.map((c: any) => ({
+          catRes?.data?.map((c: any) => ({
             label: c.name,
             value: c.category_id,
           })) || []
         );
 
         setLocations(
-          locRes?.map((l: any) => ({
+          locRes?.data?.map((l: any) => ({
             label: l.name,
             value: l.location_id,
           })) || []
