@@ -4,11 +4,12 @@ import HeaderThree from "@/layouts/headers/HeaderThree"
 import AboutArea from "./AboutArea"
 import Choose from "./Choose"
 import Cta from "./Cta"
+import HeaderOne from "@/layouts/headers/HeaderOne"
 
 const About = () => {
    return (
       <>
-         <HeaderThree />
+         <HeaderOne />
          <main>
             <BreadCrumb title="About Us" sub_title="About Us" />
             <AboutArea />

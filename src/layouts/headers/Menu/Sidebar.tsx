@@ -10,7 +10,7 @@ interface SidebarProps {
 const Sidebar = ({ sidebar, setSidebar }: SidebarProps) => {
    return (
       <>
-         <div className={`offCanvas__info ${sidebar ? "active" : ""}`}>
+         {/* <div className={`offCanvas__info ${sidebar ? "active" : ""}`}>
             <div className="offCanvas__close-icon menu-close">
                <button onClick={() => setSidebar(false)}><i className="fa-sharp fa-regular fa-xmark"></i></button>
             </div>
@@ -40,7 +40,7 @@ const Sidebar = ({ sidebar, setSidebar }: SidebarProps) => {
                <Link href="/"><i className="fab fa-instagram"></i></Link>
             </div>
          </div>
-         <div onClick={() => setSidebar(false)} className={`offCanvas__overly ${sidebar ? "active" : ""}`}></div>
+         <div onClick={() => setSidebar(false)} className={`offCanvas__overly ${sidebar ? "active" : ""}`}></div> */}
       </>
    )
 }

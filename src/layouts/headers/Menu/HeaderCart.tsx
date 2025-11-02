@@ -24,12 +24,12 @@ const HeaderCart = () => {
       <div className="minicart">
          {productItem.length === 0 ? (
             <div className="mb-30">
-               <div className="empty_bag text-center">
+               {/* <div className="empty_bag text-center">
                   <p className="py-3">Your Bag is Empty</p>
                   <Link href={"/shop"} className="swiftcart-btn-black swiftcart-btn-black-large">
                      Go To Shop
                   </Link>
-               </div>
+               </div> */}
             </div>
          ) : (
             <>
