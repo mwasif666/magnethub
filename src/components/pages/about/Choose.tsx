@@ -14,24 +14,46 @@ interface DataType {
 }
 
 const choose_data: DataType[] = [
-   {
-      id: 1,
-      icon: (<><Choose6 /></>),
-      title: "Ultimate flexibility",
-      desc: "when an unknown printer took galleof type and scrambled make type peci bookhas survived five.",
-   },
-   {
-      id: 2,
-      icon: (<><Choose7 /></>),
-      title: "Memorable experiences",
-      desc: "when an unknown printer took galleof type and scrambled make type peci bookhas survived five.",
-   },
-   {
-      id: 3,
-      icon: (<><Choose8 /></>),
-      title: "Award winning support",
-      desc: "when an unknown printer took galleof type and scrambled make type peci bookhas survived five.",
-   },
+  {
+    id: 1,
+    icon: (
+      <>
+        <Choose6 />
+      </>
+    ),
+    title: "Extensive Listings",
+    desc: "A comprehensive selection of businesses for sale, including detailed information about the company, financials, and industry trends.",
+  },
+  {
+    id: 2,
+    icon: (
+      <>
+        <Choose7 />
+      </>
+    ),
+    title: "Search and Filter",
+    desc: "Advanced search and filtering options that allow users to easily find businesses that meet their specific criteria.",
+  },
+  {
+    id: 3,
+    icon: (
+      <>
+        <Choose8 />
+      </>
+    ),
+    title: "Network of Buyers and Sellers",
+    desc: "A large network of buyers, sellers, investors, and capital raisers, providing a wide range of opportunities for business transactions.",
+  },
+  {
+    id: 4,
+    icon: (
+      <>
+        <Choose7 />
+      </>
+    ),
+    title: "Support and Guidance",
+    desc: "Access to a team of experts who can provide guidance and support throughout the buying and selling process, from initial negotiations to closing the deal.",
+  },
 ];
 
 const Choose = () => {
@@ -42,10 +64,10 @@ const Choose = () => {
             <div className="row justify-content-center">
                <div className="col-xl-6 col-lg-7 col-md-9">
                   <div className="tg-chose-section-title text-center mb-35">
-                     <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".1s">What we do</h5>
-                     <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">We Arrange the Best Tour<br /> Ever Possible</h2>
-                     <p className="text-capitalize wow fadeInUp mb-35" data-wow-delay=".5s" data-wow-duration=".9s"> when an unknown printer took a galley of type and scrambled make type
-                        specimen bookhas survived not only five.</p>
+                     <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".1s">Our Features</h5>
+                     <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">There are so many features of Magnate Hub, here are a few.</h2>
+                     {/* <p className="text-capitalize wow fadeInUp mb-35" data-wow-delay=".5s" data-wow-duration=".9s"> when an unknown printer took a galley of type and scrambled make type
+                        specimen bookhas survived not only five.</p> */}
                   </div>
                </div>
             </div>

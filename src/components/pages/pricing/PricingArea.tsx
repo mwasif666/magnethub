@@ -8,8 +8,8 @@ const PricingArea = () => {
             <div className="row">
                <div className="col-lg-12">
                   <div className="tg-location-section-title text-center mb-40">
-                     <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".9s">Best Holiday Packages</h5>
-                     <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">Popular Travel Destinations <br /> Available Worldwide</h2>
+                     <h1 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".9s">Magnate Hub Pricing Plans</h1>
+                     <h5 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">At Magnate Hub, we believe in your success. That's why we offer unbeatable benefits such as no commissions, long listing times <br />and unlimited edits, allowing you to showcase your business and make any necessary changes with ease. Say goodbye <br /> to high costs and hello to a brighter future. Join us today and select the best option for your situation.</h5>
                   </div>
                </div>
                {pricing_data.map((item) => (
@@ -21,7 +21,7 @@ const PricingArea = () => {
                         </div>
                         <div className="tg-pricing-price mb-25">
                            <h2><span>$</span>{item.price}</h2>
-                           <span className="dates">/month *</span>
+                           <span className="dates">/Per Advert *</span>
                         </div>
                         <div className="tg-pricing-btn mb-40">
                            <Link className="tg-btn text-center w-100" href="/contact">Buy Now</Link>

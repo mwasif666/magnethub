@@ -3,11 +3,12 @@ import HeaderThree from "@/layouts/headers/HeaderThree"
 import PricingArea from "./PricingArea"
 import FooterThree from "@/layouts/footers/FooterThree"
 import Cta from "./Cta"
+import HeaderOne from "@/layouts/headers/HeaderOne"
 
 const Pricing = () => {
   return (
     <>
-      <HeaderThree />
+      <HeaderOne />
       <main>
         <BreadCrumb title="Pricing Plan" sub_title="Pricing Plan" />
         <PricingArea />

@@ -10,8 +10,8 @@ const pricing_data: DataType[] = [
   {
     id: 1,
     title: "Essentials",
-    desc: "This tier is a great option for those who have the time and expertise to handle the sale process themselves and are looking for an affordable way to gain exposure for their business.",
-    price: 109,
+    desc: "The Essentials pricing tier is designed for business owners who are comfortable managing the sale of their business on their own. This is the most affordable option, which provides you with exposure to potential buyers. With this tier, you will be able to list your business on our platform and have access to our network of buyers. You will be responsible for all aspects of the sale, including the evaluation of your business, gathering the necessary documents, and communicating with potential buyers.",
+    price: 149,
     list: [
       "No commissions or other fees",
       "Unlimited Edits",
@@ -25,8 +25,8 @@ const pricing_data: DataType[] = [
   {
     id: 2,
     title: "Premium",
-    desc: "Suitable for business owners who need a little help determining the price of the business as well as the sale process etc.",
-    price: 330,
+    desc: "The Premium pricing tier offers comprehensive support for selling your business. This includes assistance in evaluating your business to determine its value and potential market appeal, as well as help in gathering the necessary documents and paperwork and editing your listing to maximise the chances of a swift sale.You will also be guided through the whole process to make sure that the sale goes smoothly and successfully. With this tier, you can be sure that you'll get the expert help you need to make your business worth as much as possible and find the right buyer.",
+    price: 1999,
     list: [
       "No commissions or other fees (if you go via a broker, you may have to pay commissions or fees)",
       "Add your business to the Magnate Premium Directory",
@@ -43,9 +43,9 @@ const pricing_data: DataType[] = [
   },
   {
     id: 3,
-    title: "Enterprise",
-    desc: "Suitable for Brokers, Agents and Franchises.",
-    price: 1800,
+    title: "Capital Raise",
+    desc: "The ultimate solution to find investors looking to fund the next big thing. Whether you're a startup, an established business, or pre-revenue ideas, our platform connects you with a wide range of opportunities to grow your portfolio and get in front of the right people.",
+    price: 249,
     list: [
       "No commissions or other fees",
       "Unlimited Listings",

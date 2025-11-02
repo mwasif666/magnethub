@@ -28,7 +28,7 @@ const menu_data: MenuItem[] = [
   {
     id: 2,
     title: "About",
-    link: "#",
+    link: "/about",
     has_dropdown: false,
     // sub_menus: [
     //   { link: "/hotel-grid", title: "Hotel Grid" },
@@ -48,25 +48,25 @@ const menu_data: MenuItem[] = [
   {
     id: 4,
     title: "Investment Opportunities",
-    link: "#",
+    link: "/investment-opportunities",
     has_dropdown: false,
   },
   {
     id: 5,
     title: "Premium Packages",
-    link: "#",
+    link: "/premium-packages",
     has_dropdown: false,
   },
   {
     id: 6,
     title: "Pricing",
-    link: "#",
+    link: "/pricing",
     has_dropdown: false,
   },
   {
     id: 7,
     title: "Media",
-    link: "#",
+    link: "/media",
     has_dropdown: false,
   },
   //   {

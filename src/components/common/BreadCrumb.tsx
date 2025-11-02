@@ -6,7 +6,7 @@ interface DataType {
 }
 const BreadCrumb = ({ sub_title, title }: DataType) => {
    return (
-      <div className="tg-breadcrumb-area tg-breadcrumb-spacing-5 fix p-relative z-index-1 include-bg" style={{ backgroundImage: `url(/assets/img/breadcrumb/breadcrumb.jpg)` }}>
+      <div className="tg-breadcrumb-area tg-breadcrumb-spacing-5 fix p-relative z-index-1 include-bg" style={{ backgroundImage: `url(/assets/img/banner/banner.png)` }}>
          <div className="tg-hero-top-shadow"></div>
          <div className="tg-breadcrumb-shadow"></div>
          <div className="container">
@@ -15,13 +15,13 @@ const BreadCrumb = ({ sub_title, title }: DataType) => {
                   <div className="tg-breadcrumb-content text-center">
                      <h2 className="tg-breadcrumb-title mb-5 fs-40">{title}</h2>
                      <div className="tg-breadcrumb-list-4">
-                        <ul>
+                        {/* <ul>
                            <li><Link href="/">Home</Link></li>
                            <li><i className="fa-sharp fa-solid fa-angle-right"></i></li>
                            <li>Pages</li>
                            <li><i className="fa-sharp fa-solid fa-angle-right"></i></li>
                            <li>{sub_title}</li>
-                        </ul>
+                        </ul> */}
                      </div>
                   </div>
                </div>

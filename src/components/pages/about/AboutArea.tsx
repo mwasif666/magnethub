@@ -41,23 +41,23 @@ const AboutArea = () => {
                <div className="col-lg-6">
                   <div className="tg-chose-content mb-35 ml-60">
                      <div className="tg-chose-section-title mb-30">
-                        <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".1s">Explore the world with us</h5>
-                        <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">The perfect vacation<br /> come true with<br /> our Travel Agency</h2>
-                        <p className="text-capitalize wow fadeInUp mb-35" data-wow-delay=".5s" data-wow-duration=".9s">when an unknown printer took a galley of type and scrambled
-                           it to make a type specimen book. It has survived not only five
-                           centuries but also the leap into electronic typesetting<br />
-                           remaining essentially unchanged.</p>
+                        <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".1s">About Us</h5>
+                        <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">Success usually comes to those who are busy to be looking for it</h2>
+                        <p className="text-capitalize wow fadeInUp mb-35" data-wow-delay=".5s" data-wow-duration=".9s">Welcome to Magnate Hub, your premier destination for professional business transactions. We're here to connect entrepreneurs, investors, and business owners in a dynamic marketplace designed to facilitate buying, selling, and capital-raising endeavors.<br /> Our user-friendly platform streamlines the process, making it effortless for businesses to find buyers, and for sellers to connect with qualified agents. With Magnate Hub, you can confidently trade your business online, unlocking a world of opportunities.</p>
                         <div className="tg-chose-btn wow fadeInUp" data-wow-delay=".8s" data-wow-duration=".9s">
-                           <Link href="/tour-details" className="tg-btn tg-btn-switch-animation">
+                           <Link href="/contact " className="tg-btn tg-btn-switch-animation">
                               <Button text="Book Your Room" />
                            </Link>
                         </div>
                      </div>
                   </div>
                </div>
+               
             </div>
          </div>
       </div>
+
+      
    )
 }
 

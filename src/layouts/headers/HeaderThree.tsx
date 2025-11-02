@@ -30,8 +30,8 @@ const HeaderThree = () => {
                      <div className="col-lg-7 col-5">
                         <div className="tgmenu__wrap d-flex align-items-center">
                            <div className="logo">
-                              <Link className="logo-1" href="/"><Image src={logo_1} alt="Logo" /></Link>
-                              <Link className="logo-2 d-none" href="/"><Image src={logo_2} alt="Logo" /></Link>
+                              {/* <Link className="logo-1" href="/"><Image src={logo_1} alt="Logo" /></Link> */}
+                              <Link className="logo-1 d-none" href="/"><Image src={logo_1} alt="Logo" /></Link>
                            </div>
                            <nav className="tgmenu__nav tgmenu-1-space ml-180">
                               <div className="tgmenu__navbar-wrap tgmenu__main-menu d-none d-xl-flex">
@@ -43,22 +43,22 @@ const HeaderThree = () => {
                      <div className="col-lg-5 col-7">
                         <div className="tg-menu-right-action d-flex align-items-center justify-content-end">
                            <div className="tg-header-contact-info d-flex align-items-center">
-                              <span className="tg-header-contact-icon mr-5 d-none d-xl-block">
+                              {/* <span className="tg-header-contact-icon mr-5 d-none d-xl-block">
                                  <PhoneIcon />
                               </span>
                               <div className="tg-header-contact-number d-none d-xl-block">
                                  <span>Call Us:</span>
                                  <Link href="tel:+123595966">+123 5959 66</Link>
-                              </div>
+                              </div> */}
                            </div>
                            <div className="tg-header-cart p-relative ml-20 pl-20 d-none d-xl-block">
-                              <span className="tg-header-border"></span>
+                              {/* <span className="tg-header-border"></span>
                               <button className="cart-button">
                                  <span>
                                     <CartIcon />
                                  </span>
                                  <span className="tg-header-cart-count"><TotalCart /></span>
-                              </button>
+                              </button> */}
                               <HeaderCart />
                            </div>
                            <div className="tg-header-btn ml-20 d-none d-sm-block">
@@ -69,7 +69,7 @@ const HeaderThree = () => {
                                  Login
                               </Link>
                            </div>
-                           <div className="tg-header-menu-bar lh-1 p-relative ml-20 pl-20">
+                           {/* <div className="tg-header-menu-bar lh-1 p-relative ml-20 pl-20">
                               <span className="tg-header-border d-none d-xl-block"></span>
                               <button onClick={() => setSidebar(true)} style={{ cursor: "pointer" }} className="tgmenu-offcanvas-open-btn menu-tigger d-none d-xl-block">
                                  <span></span>
@@ -81,7 +81,7 @@ const HeaderThree = () => {
                                  <span></span>
                                  <span></span>
                               </button>
-                           </div>
+                           </div> */}
                         </div>
                      </div>
                   </div>
