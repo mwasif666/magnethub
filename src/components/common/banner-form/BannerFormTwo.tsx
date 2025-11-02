@@ -126,8 +126,8 @@ const BannerFormTwo = () => {
     <div className=" py-4">
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-lg-10">
-            <div className="card shadow-sm border-0">
+          <div className="col-lg-12">
+            <div className="card border-0">
               <div className="card-body p-4">
                 {/* Header */}
                 <div className="text-center mb-4">
