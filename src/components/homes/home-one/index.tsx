@@ -23,7 +23,7 @@ const HomeOne = () => {
       <HeaderOne />
       <main>
         <Banner setListing={setListing}/>
-        <Listing />
+        <Listing listing={listing} />
         <Choose />
         <Location />
         <ChooseArea />

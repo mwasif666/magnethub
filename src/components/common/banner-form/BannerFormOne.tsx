@@ -1,9 +1,10 @@
 import { apiRequest } from "@/api/axiosInstance";
 import { useEffect, useRef, useState } from "react";
+import { FaRedo, FaSearch } from "react-icons/fa";
 
 type BannerFormProps = {
   setListing: React.Dispatch<React.SetStateAction<any[]>>;
-}
+};
 
 const BannerFormOne = ({ setListing }: BannerFormProps) => {
   type DropDown = { label: string; value: string }[];
@@ -28,7 +29,6 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<DropDown>([]);
   const [locations, setLocations] = useState<DropDown>([]);
-  const [listings, setListings] = useState<any>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleInputChange = (
@@ -134,7 +134,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
   const fetchProductDataAsPerFilter = async (finalUrl: string) => {
     try {
       const response = await apiRequest({ url: finalUrl, method: "GET" });
-      setListings(response.data);
+      setListing(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -160,6 +160,28 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
     { value: "4000000", label: "$4,000,000" },
     { value: "5000000", label: "$5,000,000+" },
   ];
+
+const handleClear = () => {
+  setFormData({
+    postcode: "",
+    businessId: "",
+    category: "",
+    state: "",
+    region: "",
+    minPrice: "",
+    maxPrice: "",
+    franchise: false,
+    premium: false,
+    all: false,
+    sPostcode: "",
+    agency: "",
+    state2: "",
+    region2: "",
+  });
+
+  setListing([]);
+};
+
 
   return (
     <div className=" py-4">
@@ -208,7 +230,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                     <div className="tab-content">
                       {/* Search Row */}
                       <div className="row mb-4">
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                           <div className="input-group">
                             <span className="input-group-text bg-white border-end-0">
                               <i className="fas fa-search text-muted"></i>
@@ -223,14 +245,14 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                             />
                           </div>
                         </div>
-                        <div className="col-md-2">
+                        {/* <div className="col-md-2">
                           <button
                             type="submit"
                             className="btn btn-primary w-100 h-100"
                           >
                             SEARCH
                           </button>
-                        </div>
+                        </div> */}
                       </div>
 
                       {/* Filters Row */}
@@ -373,9 +395,26 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                           </div>
                         </div>
                       </div>
+                      <div className="row justify-content-end">
+                        <div className="col-md-5 d-flex gap-3">
+                          <button
+                            type="reset"
+                            className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
+                            onClick={handleClear}
+                          >
+                            <FaRedo /> Clear
+                          </button>
+                          <button
+                            type="submit"
+                            className="btn w-100 h-100 d-flex align-items-center btn-submit justify-content-center gap-2"
+                          >
+                            <FaSearch /> SEARCH
+                          </button>
+                        </div>
+                      </div>
 
                       {/* Bottom Link */}
-                      <div className="text-center">
+                      <div className="text-center mt-4">
                         <a href="#" className="text-decoration-none">
                           <u>
                             Sell your business or advertise your business for
@@ -391,7 +430,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                     <div className="tab-content">
                       {/* Search Row */}
                       <div className="row mb-4">
-                        <div className="col-md-10">
+                        <div className="col-md-12">
                           <div className="input-group">
                             <span className="input-group-text bg-white border-end-0">
                               <i className="fas fa-search text-muted"></i>
@@ -406,14 +445,14 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                             />
                           </div>
                         </div>
-                        <div className="col-md-2">
+                        {/* <div className="col-md-2">
                           <button
                             type="submit"
                             className="btn btn-primary w-100 h-100"
                           >
                             SEARCH
                           </button>
-                        </div>
+                        </div> */}
                       </div>
 
                       {/* Filters Row */}
@@ -457,6 +496,22 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                           </select>
                         </div>
                       </div>
+                       <div className="row justify-content-end mt-4">
+                        <div className="col-md-5 d-flex gap-3">
+                          <button
+                            type="reset"
+                            className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
+                          >
+                            <FaRedo /> Clear
+                          </button>
+                          <button
+                            type="submit"
+                            className="btn w-100 h-100 d-flex align-items-center btn-submit justify-content-center gap-2"
+                          >
+                            <FaSearch /> SEARCH
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </form>
@@ -472,6 +527,13 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       />
       <style jsx>{`
+        .btn-clear {
+          background-color: #f5f5f5;
+        }
+        .btn-submit {
+          background-color: #560ce3;
+          color: white;
+        }
         .nav-tabs .nav-link {
           color: #6c757d;
           font-weight: 600;

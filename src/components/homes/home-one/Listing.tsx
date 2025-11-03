@@ -12,13 +12,24 @@ import { addToWishlist } from "@/redux/features/wishlistSlice";
 
 import shape_1 from "@/assets/img/listing/su/shape-2.png";
 import shape_2 from "@/assets/img/listing/su/shape-1.png";
+import { useEffect, useState } from "react";
 
-const Listing = () => {
+const Listing = ({ listing }: { listing: any }) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   // add to wishlist
   const handleAddToWishlist = (item: any) => {
     dispatch(addToWishlist(item));
   };
+
+  useEffect(() => {
+    console.log("Listing updated:", listing);
+  }, [listing]);
+
+  useEffect(() => {
+    if (!listing) setLoading(true);
+    else setLoading(false);
+  }, [listing]);
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
@@ -55,17 +66,18 @@ const Listing = () => {
           </div>
         </div>
         <div className="row">
-          {listing_data
-            .filter((items) => items.page === "home_1")
-            .map((item) => (
+          {listing && listing.length > 0 ? (
+            listing.map((item: any) => (
               <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
                 <div className="tg-listing-card-item tg-listing-su-card-item mb-25">
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
                     <Link href="/tour-details">
                       <Image
                         className="tg-card-border w-100"
-                        src={item.thumb}
-                        alt="listing"
+                        src={`http://magnatehub.au/uploads/project/card/${item.images}`}
+                        alt={item?.name || "Project listing image"}
+                        width={400}
+                        height={300}
                       />
                       {item.tag && (
                         <span className="tg-listing-item-price-discount">
@@ -82,26 +94,27 @@ const Listing = () => {
                       </a>
                     </div>
                   </div>
+
                   <div className="tg-listing-card-content">
                     <div className="tg-listing-card-duration-tour d-flex align-items-center gap-3">
                       <span className="tg-listing-card-duration-map mb-5">
-                        <Clock />
-                        {item.time}
+                        <Clock /> {item.time}
                       </span>
                       <span className="tg-listing-card-duration-time mb-5">
-                        <User />
-                        {item.guest}
+                        <User /> {item.guest}
                       </span>
                     </div>
+
                     <h4 className="tg-listing-card-title mb-10">
                       <Link href="tour-details.html">{item.title}</Link>
                     </h4>
+
                     <div className="tg-listing-card-duration-tour mb-20">
                       <span className="tg-listing-card-duration-map">
-                        <Location />
-                        {item.location}
+                        <Location /> {item.location}
                       </span>
                     </div>
+
                     <div className="tg-listing-card-price d-flex align-items-end justify-content-between">
                       <div>
                         <span className="tg-listing-card-currency-amount d-flex align-items-center">
@@ -122,7 +135,13 @@ const Listing = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="text-center py-5">
+              <p>No listings found.</p>
+            </div>
+          )}
+
           <div className="col-12">
             <div className="text-center mt-15">
               <Link
