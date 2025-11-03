@@ -12,6 +12,7 @@ import process_2 from "@/assets/img/chose/chose-2/thumb-2.jpg";
 import process_3 from "@/assets/img/chose/chose-2/thumb-3.jpg";
 import shape from "@/assets/img/chose/chose-2/shape.png";
 import HeaderOne from "@/layouts/headers/HeaderOne";
+import FooterTwo from "@/layouts/footers/FooterTwo";
 
 interface DataType {
   id: number;
@@ -110,7 +111,7 @@ const ProcessPage = () => {
         </div>
       </main>
 
-      <FooterFive />
+      <FooterTwo />
     </>
   );
 };

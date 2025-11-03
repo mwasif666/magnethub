@@ -2,6 +2,9 @@ import FeatureArea from "./FeatureArea"
 import BreadCrumb from "@/components/common/BreadCrumb";
 import BannerForm from "./BannerForm"
 import HeaderOne from "@/layouts/headers/HeaderOne"
+import FooterSix from "@/layouts/footers/FooterTwo"
+import FooterTwo from "@/layouts/footers/FooterTwo";
+
 
 const FeatureTwo = () => {
    const breadCrumbsTitle  = 'Let`s explore the listing'
@@ -14,6 +17,7 @@ const FeatureTwo = () => {
             <BannerForm />
             <FeatureArea />
          </main>
+         <FooterTwo />
       </>
    )
 }

@@ -4,6 +4,7 @@ import PricingArea from "./PricingArea"
 import FooterThree from "@/layouts/footers/FooterThree"
 import Cta from "./Cta"
 import HeaderOne from "@/layouts/headers/HeaderOne"
+import FooterTwo from "@/layouts/footers/FooterTwo"
 
 const Pricing = () => {
   return (
@@ -14,7 +15,7 @@ const Pricing = () => {
         <PricingArea />
         <Cta />
       </main>
-      <FooterThree />
+      <FooterTwo />
     </>
   )
 }
