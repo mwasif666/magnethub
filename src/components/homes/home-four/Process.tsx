@@ -1,3 +1,6 @@
+import FooterFive from "@/layouts/footers/FooterFive";
+import BreadCrumb from "@/components/common/BreadCrumb";
+
 import Image, { StaticImageData } from "next/image";
 import { JSX } from "react";
 import Link from "next/link";
@@ -9,6 +12,8 @@ import process_1 from "@/assets/img/chose/chose-2/thumb-1.jpg"
 import process_2 from "@/assets/img/chose/chose-2/thumb-2.jpg"
 import process_3 from "@/assets/img/chose/chose-2/thumb-3.jpg"
 import shape from "@/assets/img/chose/chose-2/shape.png"
+import HeaderOne from "@/layouts/headers/HeaderOne";
+
 
 interface DataType {
    id: number;
@@ -53,6 +58,11 @@ const process_data: DataType[] = [
 
 const Process = () => {
    return (
+      <>
+      <HeaderOne />
+
+      <main>
+         <BreadCrumb title="Investment Opportunities" sub_title="" />
       <div className="tg-chose-area p-relative z-index-9 pt-135 pb-35">
          <Image className="tg-chose-2-shape d-none d-lg-block" src={shape} alt="shape" />
          <div className="container">
@@ -92,6 +102,9 @@ const Process = () => {
             </div>
          </div>
       </div>
+      </main>
+      <FooterFive />
+      </>
    )
 }
 

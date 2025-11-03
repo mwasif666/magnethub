@@ -4,7 +4,7 @@ import BlogDetailsArea from "./BlogDetailsArea"
 import FooterFive from "@/layouts/footers/FooterFive"
 import HeaderOne from "@/layouts/headers/HeaderOne"
 
-const Media = () => {
+const Media1 = () => {
   return (
     <>
       <HeaderOne />
@@ -17,4 +17,4 @@ const Media = () => {
   )
 }
 
-export default Media
+export default Media1

@@ -2,7 +2,7 @@ import Shop from "@/components/pages/shops/shop";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-  title: "Shop Tourex - Tour & Travel Booking React Next js Template",
+  title: "Shop MagnetHub",
 };
 const page = () => {
   return (

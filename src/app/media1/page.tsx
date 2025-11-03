@@ -1,8 +1,8 @@
-import NotFound from "@/components/pages/error";
+import NotFound from "@/components/pages/media1";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-   title: "404 || Tourex - Tour & Travel Booking React Next js Template",
+   title: "Media MagnetHub",
 };
 const page = () => {
    return (

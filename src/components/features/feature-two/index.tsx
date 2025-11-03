@@ -1,5 +1,5 @@
 import FeatureArea from "./FeatureArea"
-import BreadCrumb from "./BreadCrumb"
+import BreadCrumb from "@/components/common/BreadCrumb";
 import BannerForm from "./BannerForm"
 import HeaderOne from "@/layouts/headers/HeaderOne"
 
@@ -10,7 +10,7 @@ const FeatureTwo = () => {
       <>
          <HeaderOne />
          <main>
-            <BreadCrumb breadCrumbsTitle={breadCrumbsTitle} crums={crums}/>
+        <BreadCrumb title="Listings" sub_title="" />
             <BannerForm />
             <FeatureArea />
          </main>

@@ -2,7 +2,7 @@ import FeatureTwo from "@/components/features/feature-two";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-  title: "Feature Two Tourex - Tour & Travel Booking React Next js Template",
+  title: "Listings MagnetHub",
 };
 const page = () => {
   return (
