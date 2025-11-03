@@ -1,3 +1,4 @@
+"use client";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import Banner from "./Banner";
 import FooterOne from "@/layouts/footers/FooterOne";
