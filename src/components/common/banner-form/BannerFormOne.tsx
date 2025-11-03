@@ -1,7 +1,11 @@
 import { apiRequest } from "@/api/axiosInstance";
 import { useEffect, useRef, useState } from "react";
 
-const BannerFormOne = () => {
+type BannerFormProps = {
+  setListing: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+const BannerFormOne = ({ setListing }: BannerFormProps) => {
   type DropDown = { label: string; value: string }[];
   const [activeTab, setActiveTab] = useState("businesses");
   const [formData, setFormData] = useState({

@@ -10,7 +10,7 @@ import FeatureTop from "./FeatureTop"
 import FeatureSidebar from "./FeatureSidebar";
 import ReactPaginate from "react-paginate";
 
-const FeatureArea = () => {
+const FeatureArea = ({ listing }: { listing: any }) => {
    const dispatch = useDispatch();
    const { products, setProducts } = UseProducts();
    const [isListView, setIsListView] = useState(false);

@@ -18,4 +18,4 @@ const FeatureTwo = () => {
    )
 }
 
-export default FeatureTwo
+export default FeatureTwo;

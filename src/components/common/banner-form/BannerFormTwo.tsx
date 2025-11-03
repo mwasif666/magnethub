@@ -4,7 +4,11 @@ import PriceRange from "@/components/features/feature-one/PriceRange";
 import { FaSearch, FaRedo } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
-const BannerFormTwo = () => {
+interface BannerFormTwoProps {
+  setListing: React.Dispatch<React.SetStateAction<any[]>>;
+}
+
+const BannerFormTwo: React.FC<BannerFormTwoProps> = ({ setListing }) => {
   type DropDown = { label: string; value: string }[];
   const [formData, setFormData] = useState({
     category: "",
@@ -25,7 +29,6 @@ const BannerFormTwo = () => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<DropDown>([]);
   const [locations, setLocations] = useState<DropDown>([]);
-  const [listings, setListings] = useState<any>([]);
   const [priceValue, setPriceValue] = useState([0, 5000]);
 
   const handleInputChange = (
@@ -49,7 +52,8 @@ const BannerFormTwo = () => {
     { value: 800, label: "800" },
   ];
 
-  const handleChanges = (val: number[]) => {
+ const handleChanges = (val: number[]) => {
+    setPriceValue(val); 
     setFormData((prev) => ({
       ...prev,
       minPrice: String(val[0]),
@@ -90,7 +94,7 @@ const BannerFormTwo = () => {
   const fetchProductDataAsPerFilter = async (finalUrl: string) => {
     try {
       const response = await apiRequest({ url: finalUrl, method: "GET" });
-      setListings(response.data);
+      setListing(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -122,6 +126,28 @@ const BannerFormTwo = () => {
     const url = constructUrl(formData);
     if (url) fetchProductDataAsPerFilter(url);
   };
+
+  const handleClear = () => {
+  setFormData({
+    category: "",
+    itemRange: "",
+    sortBy: "",
+    referalId: "",
+    query: "",
+    state: "",
+    postcode: "",
+    businessId: "",
+    region: "",
+    minPrice: "",
+    maxPrice: "",
+    franchise: false,
+    premium: false,
+    listingType: "",
+  });
+
+  setPriceValue([0, 5000]);
+  setListing([]); 
+};
 
   return (
     <div className=" py-4">
@@ -336,17 +362,18 @@ const BannerFormTwo = () => {
                     </div>
                     <div className="row justify-content-end">
                       <div className="col-md-5 d-flex gap-3">
+                         <button
+                          type="reset"
+                          onClick={handleClear}
+                          className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
+                        >
+                          <FaRedo /> Clear
+                        </button>
                         <button
                           type="submit"
                           className="btn w-100 h-100 d-flex align-items-center btn-submit justify-content-center gap-2"
                         >
                           <FaSearch /> SEARCH
-                        </button>
-                        <button
-                          type="reset"
-                          className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
-                        >
-                          <FaRedo /> Clear
                         </button>
                       </div>
                     </div>

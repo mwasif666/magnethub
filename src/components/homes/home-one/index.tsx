@@ -1,3 +1,4 @@
+"use client";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import Banner from "./Banner";
 import FooterOne from "@/layouts/footers/FooterOne";
@@ -12,13 +13,16 @@ import ChooseArea from "../home-seven/ChooseArea";
 import Features from "@/components/pages/about/Features";
 import OurLocation from "./ourLocations";
 import Pricing from "../home-two/Pricing";
+import { useState } from "react";
 
 const HomeOne = () => {
+
+  const [listing, setListing] = useState<any[]>([]);
   return (
     <>
       <HeaderOne />
       <main>
-        <Banner />
+        <Banner setListing={setListing}/>
         <Listing />
         <Choose />
         <Location />
