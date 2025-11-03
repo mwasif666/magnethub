@@ -1,6 +1,7 @@
 "use client";
 import { apiRequest } from "@/api/axiosInstance";
 import PriceRange from "@/components/features/feature-one/PriceRange";
+import { FaSearch, FaRedo } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
 const BannerFormTwo = () => {
@@ -126,8 +127,8 @@ const BannerFormTwo = () => {
     <div className=" py-4">
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-lg-10">
-            <div className="card shadow-sm border-0">
+          <div className="col-lg-12">
+            <div className="card border-0">
               <div className="card-body p-4">
                 {/* Header */}
                 <div className="text-center mb-4">
@@ -215,26 +216,32 @@ const BannerFormTwo = () => {
                           ))}
                         </select>
                       </div>
-                      <div className="col-md-4">
-                        <PriceRange
-                          MAX={5000}
-                          MIN={0}
-                          STEP={1}
-                          values={priceValue}
-                          handleChanges={handleChanges}
-                        />
-                        <div className="d-flex align-items-center mt-15">
-                          <span
-                            className="input-range"
-                            onChange={() => handleChanges}
-                          >
-                            ${priceValue[0]} - ${priceValue[1]}
-                          </span>
+                      <div className="col-md-5">
+                        <div className="row align-items-center">
+                          <div className="col-8">
+                            <PriceRange
+                              MAX={5000}
+                              MIN={0}
+                              STEP={1}
+                              values={priceValue}
+                              handleChanges={handleChanges}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <div className=" ">
+                              <span
+                                className="input-range"
+                                onChange={() => handleChanges}
+                              >
+                                ${priceValue[0]} - ${priceValue[1]}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="col-md-5">
-                        <div className="d-flex align-items-center justify-center gap-4">
-                          <div className="checkbox d-flex align-items-center">
+                      <div className="col-md-4">
+                        <div className="d-flex  justify-center gap-4">
+                          <div className="checkbox d-flex">
                             <input
                               className="tg-checkbox"
                               type="checkbox"
@@ -245,13 +252,13 @@ const BannerFormTwo = () => {
                             />
                             <label
                               htmlFor="franchiseCheck"
-                              className="tg-label ms-2"
+                              className="tg-label"
                             >
                               Franchise
                             </label>
                           </div>
 
-                          <div className="checkbox d-flex align-items-center">
+                          <div className="checkbox d-flex">
                             <input
                               className="tg-checkbox"
                               type="checkbox"
@@ -327,13 +334,21 @@ const BannerFormTwo = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-6">
-                      <button
-                        type="submit"
-                        className="btn btn-primary w-100 h-100"
-                      >
-                        SEARCH
-                      </button>
+                    <div className="row justify-content-end">
+                      <div className="col-md-5 d-flex gap-3">
+                        <button
+                          type="submit"
+                          className="btn w-100 h-100 d-flex align-items-center btn-submit justify-content-center gap-2"
+                        >
+                          <FaSearch /> SEARCH
+                        </button>
+                        <button
+                          type="reset"
+                          className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
+                        >
+                          <FaRedo /> Clear
+                        </button>
+                      </div>
                     </div>
 
                     <div className="row mb-4">
@@ -353,6 +368,13 @@ const BannerFormTwo = () => {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       />
       <style jsx>{`
+        .btn-clear {
+          background-color: #f5f5f5;
+        }
+        .btn-submit {
+          background-color: #560ce3;
+          color: white;
+        }
         .nav-tabs .nav-link {
           color: #6c757d;
           font-weight: 600;
