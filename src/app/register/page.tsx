@@ -2,7 +2,7 @@ import Register from "@/components/pages/register";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-  title: "Register Tourex - Tour & Travel Booking React Next js Template",
+  title: "Register MagnetHub",
 };
 const page = () => {
   return (

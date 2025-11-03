@@ -44,8 +44,8 @@ const FooterTwo = () => {
                            <ul>
                               <li><Link href="/">Home</Link></li>
                               <li><Link href="/about">About Us</Link></li>
-                              <li><Link href="#">Services</Link></li>
-                              <li><Link href="#">Tour Guide</Link></li>
+                              <li><Link href="/listings">Listing</Link></li>
+                              <li><Link href="/media1">Media</Link></li>
                               <li><Link href="/contact"> Contact Us</Link></li>
                            </ul>
                         </div>
