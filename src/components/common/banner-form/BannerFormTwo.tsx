@@ -187,7 +187,7 @@ const BannerFormTwo: React.FC<BannerFormTwoProps> = ({ setListing }) => {
                           value={formData.state}
                           onChange={handleInputChange}
                         >
-                          <option value="">Select Item Range</option>
+                          <option value="">Select Item Range </option>
                           {pageItem.map((page, index) => (
                             <option key={index} value={page.value}>
                               {page.label}
