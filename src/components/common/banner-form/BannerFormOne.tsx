@@ -182,6 +182,14 @@ const handleClear = () => {
   setListing([]);
 };
 
+useEffect(() => {
+  const initialUrl = constructUrl(formData);
+  if (initialUrl) {
+    fetchProductDataAsPerFilter(initialUrl);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
 
   return (
     <div className=" py-4">

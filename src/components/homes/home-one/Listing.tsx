@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Image from "next/image";
-import listing_data from "@/data/ListingData";
 import Link from "next/link";
 import Wishlist from "@/svg/home-one/Wishlist";
 import Clock from "@/svg/home-one/Clock";
@@ -9,65 +7,54 @@ import User from "@/svg/home-one/User";
 import Location from "@/svg/home-one/Location";
 import { useDispatch } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
-
 import shape_1 from "@/assets/img/listing/su/shape-2.png";
 import shape_2 from "@/assets/img/listing/su/shape-1.png";
 import { useEffect, useState } from "react";
 
-const Listing = ({ listing }: { listing: any }) => {
+const Listing = ({ listing }: { listing: any[] }) => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  // add to wishlist
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const handleAddToWishlist = (item: any) => {
     dispatch(addToWishlist(item));
   };
 
   useEffect(() => {
-    console.log("Listing updated:", listing);
-  }, [listing]);
-
-  useEffect(() => {
-    if (!listing) setLoading(true);
-    else setLoading(false);
+    if (listing && listing.length > 0) {
+      setData(listing);
+      setLoading(false);
+    } else {
+      setData([]);
+      setLoading(false);
+    }
   }, [listing]);
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
-      <Image
-        className="tg-listing-su-shape d-none d-xl-block"
-        src={shape_1}
-        alt=""
-      />
-      <Image
-        className="tg-listing-su-shape-2 d-none d-xxl-block"
-        src={shape_2}
-        alt=""
-      />
+      <Image className="tg-listing-su-shape d-none d-xl-block" src={shape_1} alt="" />
+      <Image className="tg-listing-su-shape-2 d-none d-xxl-block" src={shape_2} alt="" />
+
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-6">
             <div className="tg-listing-section-title-wrap text-center mb-40">
-              <h5
-                className="tg-section-su-subtitle su-subtitle-2 mb-15 wow fadeInUp"
-                data-wow-delay=".4s"
-                data-wow-duration=".9s"
-              >
-                Premium Listings
-              </h5>
-              <h2
-                className="tg-section-su-title text-capitalize wow fadeInUp mb-15"
-                data-wow-delay=".5s"
-                data-wow-duration=".9s"
-              >
-                Explore our exclusive portfolio of premium listings at Magnate
-                Hub
+              <h5 className="tg-section-su-subtitle su-subtitle-2 mb-15">Premium Listings</h5>
+              <h2 className="tg-section-su-title text-capitalize mb-15">
+                Explore our exclusive portfolio of premium listings at Magnate Hub
               </h2>
             </div>
           </div>
         </div>
+
         <div className="row">
-          {listing && listing.length > 0 ? (
-            listing.map((item: any) => (
+          {/* Loading State */}
+          {loading ? (
+            <div className="text-center py-5">
+              <p>Loading listings...</p>
+            </div>
+          ) : data.length > 0 ? (
+            data.map((item) => (
               <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
                 <div className="tg-listing-card-item tg-listing-su-card-item mb-25">
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
@@ -80,16 +67,11 @@ const Listing = ({ listing }: { listing: any }) => {
                         height={300}
                       />
                       {item.tag && (
-                        <span className="tg-listing-item-price-discount">
-                          {item.tag}
-                        </span>
+                        <span className="tg-listing-item-price-discount">{item.tag}</span>
                       )}
                     </Link>
                     <div className="tg-listing-item-wishlist">
-                      <a
-                        onClick={() => handleAddToWishlist(item)}
-                        style={{ cursor: "pointer" }}
-                      >
+                      <a onClick={() => handleAddToWishlist(item)} style={{ cursor: "pointer" }}>
                         <Wishlist />
                       </a>
                     </div>
@@ -118,18 +100,14 @@ const Listing = ({ listing }: { listing: any }) => {
                     <div className="tg-listing-card-price d-flex align-items-end justify-content-between">
                       <div>
                         <span className="tg-listing-card-currency-amount d-flex align-items-center">
-                          <span className="currency-symbol mr-5">From</span>$
-                          {item.price}
+                          <span className="currency-symbol mr-5">From</span>${item.price}
                         </span>
                       </div>
                       <div>
                         <span className="tg-listing-rating-icon">
-                          <i className="fa-sharp fa-solid fa-star"></i>{" "}
-                          {item.review}
+                          <i className="fa-sharp fa-solid fa-star"></i> {item.review}
                         </span>
-                        <span className="tg-listing-rating-percent">
-                          {item.total_review}
-                        </span>
+                        <span className="tg-listing-rating-percent">{item.total_review}</span>
                       </div>
                     </div>
                   </div>
