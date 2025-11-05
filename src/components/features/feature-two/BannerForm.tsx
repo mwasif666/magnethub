@@ -1,4 +1,4 @@
-import BannerFormTwo from "@/components/common/banner-form/BannerFormTwo";
+import BannerFormOne from "@/components/common/banner-form/BannerFormOne";
 
 type BannerFormProps = {
   setListing: React.Dispatch<React.SetStateAction<any[]>>;
@@ -11,7 +11,8 @@ const BannerForm = ({ setListing }: BannerFormProps) => {
         <div className="row">
           <div className="col-lg-12">
             <div className="tg-booking-form-item tg-booking-form-grid">
-              <BannerFormTwo setListing={setListing} />
+               <BannerFormOne setListing={setListing}/>
+              {/* <BannerFormTwo setListing={setListing} /> */}
             </div>
           </div>
         </div>

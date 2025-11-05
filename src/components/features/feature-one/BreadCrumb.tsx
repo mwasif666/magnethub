@@ -1,5 +1,5 @@
 import Image from "next/image"
-import BannerFormTwo from "@/components/common/banner-form/BannerFormTwo"
+// import BannerFormTwo from "@/components/common/banner-form/BannerFormTwo"
 
 import shape_1 from "@/assets/img/booking/shape.png"
 import shape_2 from "@/assets/img/booking/shape-2.png"
@@ -13,7 +13,7 @@ const BreadCrumb = () => {
             <div className="row">
                <div className="col-12">
                   <div className="tg-booking-form-item pt-20 pb-10">
-                     <BannerFormTwo />
+                     {/* <BannerFormTwo /> */}
                   </div>
                </div>
             </div>

@@ -1,5 +1,4 @@
 "use client"
-import BannerFormThree from "@/components/common/banner-form/BannerFormThree"
 import About from "./About"
 import Banner from "./Banner"
 import Blog from "./Blog"
@@ -20,7 +19,7 @@ const HomeThree = () => {
          <HeaderThree />
          <main>
             <Banner />
-            <BannerFormThree />
+            {/* <BannerFormThree /> */}
             <About />
             <Listing />
             <Choose />

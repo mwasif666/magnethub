@@ -5,11 +5,11 @@ import Wishlist from "@/svg/home-one/Wishlist";
 import Clock from "@/svg/home-one/Clock";
 import User from "@/svg/home-one/User";
 import Location from "@/svg/home-one/Location";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
+import { useDispatch } from "react-redux";
 import shape_1 from "@/assets/img/listing/su/shape-2.png";
 import shape_2 from "@/assets/img/listing/su/shape-1.png";
-import { useEffect, useState } from "react";
 
 const Listing = ({ listing }: { listing: any[] }) => {
   const dispatch = useDispatch();
@@ -22,13 +22,24 @@ const Listing = ({ listing }: { listing: any[] }) => {
 
   useEffect(() => {
     if (listing && listing.length > 0) {
-      setData(listing);
+      setData(listing); 
       setLoading(false);
     } else {
       setData([]);
       setLoading(false);
     }
   }, [listing]);
+
+  const getFirstImage = (images: string) => {
+  try {
+    const parsed = JSON.parse(images);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed[0];
+    }
+  } catch {
+    // ignore parsing errors
+  }
+};
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
@@ -58,13 +69,14 @@ const Listing = ({ listing }: { listing: any[] }) => {
               <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
                 <div className="tg-listing-card-item tg-listing-su-card-item mb-25">
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
-                    <Link href="/tour-details">
+                     <Link href="/tour-details">
                       <Image
                         className="tg-card-border w-100"
-                        src={`http://magnatehub.au/uploads/project/card/${item.images}`}
+                        src={`http://magnatehub.au/uploads/project/card/${getFirstImage(item.images)}`}
                         alt={item?.name || "Project listing image"}
                         width={400}
                         height={300}
+                        unoptimized
                       />
                       {item.tag && (
                         <span className="tg-listing-item-price-discount">{item.tag}</span>

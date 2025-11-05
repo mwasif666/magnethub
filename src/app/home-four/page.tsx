@@ -1,4 +1,4 @@
-import HomeFour from "@/components/homes/home-four";
+// import HomeFour from "@/components/homes/home-four";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
@@ -7,7 +7,7 @@ export const metadata = {
 const page = () => {
   return (
     <Wrapper>
-      <HomeFour />
+      {/* <HomeFour /> */}
     </Wrapper>
   );
 };
