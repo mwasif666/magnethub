@@ -161,47 +161,46 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
     { value: "5000000", label: "$5,000,000+" },
   ];
 
-const handleClear = () => {
-  setFormData({
-    postcode: "",
-    businessId: "",
-    category: "",
-    state: "",
-    region: "",
-    minPrice: "",
-    maxPrice: "",
-    franchise: false,
-    premium: false,
-    all: false,
-    sPostcode: "",
-    agency: "",
-    state2: "",
-    region2: "",
-  });
+  const handleClear = () => {
+    setFormData({
+      postcode: "",
+      businessId: "",
+      category: "",
+      state: "",
+      region: "",
+      minPrice: "",
+      maxPrice: "",
+      franchise: false,
+      premium: false,
+      all: false,
+      sPostcode: "",
+      agency: "",
+      state2: "",
+      region2: "",
+    });
 
-  setListing([]);
-};
+    setListing([]);
+  };
 
-useEffect(() => {
-  const initialUrl = constructUrl(formData);
-  if (initialUrl) {
-    fetchProductDataAsPerFilter(initialUrl);
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
-
+  useEffect(() => {
+    const initialUrl = constructUrl(formData);
+    if (initialUrl) {
+      fetchProductDataAsPerFilter(initialUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className=" py-4">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-10">
-            <div className="card shadow-sm border-0">
+            <div className="glass-card shadow-sm border-0">
               <div className="card-body p-4">
                 {/* Header */}
                 <div className="text-center mb-4">
                   {/* <h1 className="display-5 fw-bold text-primary mb-2">SESES</h1> */}
-                  <h2 className="h4 text-muted">FIND BUSINESSES & AGENCIES</h2>
+                  <h2 className="h4 text-white">FIND BUSINESSES & AGENCIES</h2>
                 </div>
 
                 {/* Tab Navigation */}
@@ -423,7 +422,7 @@ useEffect(() => {
 
                       {/* Bottom Link */}
                       <div className="text-center mt-4">
-                        <a href="#" className="text-decoration-none">
+                        <a href="#" className="text-decoration-none text-white">
                           <u>
                             Sell your business or advertise your business for
                             sale
@@ -504,7 +503,7 @@ useEffect(() => {
                           </select>
                         </div>
                       </div>
-                       <div className="row justify-content-end mt-4">
+                      <div className="row justify-content-end mt-4">
                         <div className="col-md-5 d-flex gap-3">
                           <button
                             type="reset"
@@ -535,6 +534,26 @@ useEffect(() => {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       />
       <style jsx>{`
+        h4 {
+          color: white !important;
+        }
+        .form-check label {
+          color: white;
+        }
+
+        .glass-card {
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 20px;
+          transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
         .btn-clear {
           background-color: #f5f5f5;
         }
@@ -543,21 +562,22 @@ useEffect(() => {
           color: white;
         }
         .nav-tabs .nav-link {
-          color: #6c757d;
+          color: #f5f5f5;
           font-weight: 600;
           border: none;
+          border-bottom: 3px solid white;
           padding: 1rem 2rem;
         }
 
         .nav-tabs .nav-link.active {
-          color: #0d6efd;
+          color: white;
           background: transparent;
-          border-bottom: 3px solid #0d6efd;
+          border-bottom: 3px solid #560ce3;
         }
 
         .nav-tabs .nav-link:hover {
           border: none;
-          border-bottom: 3px solid #dee2e6;
+          border-bottom: 3px solid #560ce3;
         }
 
         .card {
