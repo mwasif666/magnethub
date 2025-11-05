@@ -3,9 +3,8 @@ import FeatureArea from "./FeatureArea";
 import BreadCrumb from "@/components/common/BreadCrumb";
 import BannerForm from "./BannerForm";
 import HeaderOne from "@/layouts/headers/HeaderOne";
-import FooterSix from "@/layouts/footers/FooterTwo";
-import FooterTwo from "@/layouts/footers/FooterTwo";
 import { useState } from "react";
+import FooterOne from "@/layouts/footers/FooterOne";
 
 const FeatureTwo = () => {
   const breadCrumbsTitle = "Let`s explore the listing";
@@ -19,7 +18,7 @@ const FeatureTwo = () => {
         <BannerForm setListing={setListing} />
         <FeatureArea listing={listing} />
       </main>
-      <FooterTwo />
+      <FooterOne />
     </>
   );
 };

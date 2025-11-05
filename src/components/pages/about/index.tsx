@@ -1,25 +1,25 @@
-import BreadCrumb from "@/components/common/BreadCrumb"
-import HeaderThree from "@/layouts/headers/HeaderThree"
-import AboutArea from "./AboutArea"
-import Choose from "./Choose"
-import Cta from "./Cta"
-import HeaderOne from "@/layouts/headers/HeaderOne"
+import BreadCrumb from "@/components/common/BreadCrumb";
+import AboutArea from "./AboutArea";
+import Cta from "./Cta";
+import HeaderOne from "@/layouts/headers/HeaderOne";
 import FooterTwo from "@/layouts/footers/FooterTwo";
-
+import Features from "./Features";
+import FooterOne from "@/layouts/footers/FooterOne";
 
 const About = () => {
-   return (
-      <>
-         <HeaderOne />
-         <main>
-            <BreadCrumb title="About Us" sub_title="About Us" />
-            <AboutArea />
-            <Choose />
-            <Cta />
-         </main>
-         <FooterTwo />
-      </>
-   )
-}
+  return (
+    <>
+      <HeaderOne />
+      <main>
+        <BreadCrumb title="About Us" sub_title="About Us" />
+        <AboutArea />
+        <Features />
 
-export default About
+        <Cta />
+      </main>
+      <FooterOne />
+    </>
+  );
+};
+
+export default About;

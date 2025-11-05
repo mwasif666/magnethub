@@ -1,20 +1,17 @@
-import FooterTwo from "@/layouts/footers/FooterTwo"
-import LoginArea from "./LoginArea"
-import FooterFive from "@/layouts/footers/FooterFive"
-import HeaderOne from "@/layouts/headers/HeaderOne"
-import HeaderTwo from "@/layouts/headers/HeaderTwo"
-import InnerHeader from "@/layouts/headers/InnerHeader"
+import LoginArea from "./LoginArea";
+import HeaderOne from "@/layouts/headers/HeaderOne";
+import FooterOne from "@/layouts/footers/FooterOne";
 
 const Login = () => {
-   return (
-      <>
-         <HeaderOne />
-         <main>
-            <LoginArea />
-         </main>
-         <FooterTwo />
-      </>
-   )
-}
+  return (
+    <>
+      <HeaderOne />
+      <main>
+        <LoginArea />
+      </main>
+      <FooterOne />
+    </>
+  );
+};
 
-export default Login
+export default Login;

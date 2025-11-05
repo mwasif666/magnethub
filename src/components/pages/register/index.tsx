@@ -1,19 +1,17 @@
-import InnerHeader from "@/layouts/headers/InnerHeader"
-import RegisterArea from "./RegisterArea"
-import FooterFive from "@/layouts/footers/FooterFive"
-import FooterTwo from "@/layouts/footers/FooterTwo"
-import HeaderOne from "@/layouts/headers/HeaderOne"
+import RegisterArea from "./RegisterArea";
+import HeaderOne from "@/layouts/headers/HeaderOne";
+import FooterOne from "@/layouts/footers/FooterOne";
 
 const Register = () => {
-   return (
-      <>
-         <HeaderOne />
-         <main>
-            <RegisterArea />
-         </main>
-         <FooterTwo />
-      </>
-   )
-}
+  return (
+    <>
+      <HeaderOne />
+      <main>
+        <RegisterArea />
+      </main>
+      <FooterOne />
+    </>
+  );
+};
 
-export default Register
+export default Register;

@@ -10,6 +10,7 @@ import Counter from './Counter'
 import Cta from './Cta'
 import Testimonial from './Testimonial'
 import Blog from '../home-one/Blog'
+import FooterOne from '@/layouts/footers/FooterOne'
 
 const HomeTwo = () => {
    return (
@@ -27,7 +28,7 @@ const HomeTwo = () => {
             <Testimonial />
             <Blog style={true} />
          </main>
-         <FooterTwo />
+         <FooterOne />
       </>
    )
 }

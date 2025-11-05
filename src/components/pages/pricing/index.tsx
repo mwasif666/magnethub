@@ -1,10 +1,8 @@
 import BreadCrumb from "@/components/common/BreadCrumb"
-import HeaderThree from "@/layouts/headers/HeaderThree"
 import PricingArea from "./PricingArea"
-import FooterThree from "@/layouts/footers/FooterThree"
 import Cta from "./Cta"
 import HeaderOne from "@/layouts/headers/HeaderOne"
-import FooterTwo from "@/layouts/footers/FooterTwo"
+import FooterOne from "@/layouts/footers/FooterOne"
 
 const Pricing = () => {
   return (
@@ -15,7 +13,7 @@ const Pricing = () => {
         <PricingArea />
         <Cta />
       </main>
-      <FooterTwo />
+      <FooterOne />
     </>
   )
 }
