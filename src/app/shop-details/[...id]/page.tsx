@@ -8,7 +8,8 @@ import HeaderThree from "@/layouts/headers/HeaderThree";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-  title: "Shop Details Tourex - Tour & Travel Booking React Next js Template",
+  title:
+    "Shop Details Magnet Hub - Tour & Travel Booking React Next js Template",
 };
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -27,7 +28,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       <FooterSix />
       <ShopDetails />
     </Wrapper>
-  )
-}
+  );
+};
 
-export default page
+export default page;

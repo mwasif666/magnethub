@@ -28,14 +28,11 @@ const HomeOne = () => {
         <Location />
         <ChooseArea />
         <Features />
-        {/* <Ads /> */}
         <OurLocation />
         <Pricing />
         <Process />
-
         <Testimonial />
         <Blog style={false} />
-        {/* <Cta /> */}
       </main>
       <FooterOne />
     </>

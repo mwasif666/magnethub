@@ -1,5 +1,6 @@
 "use client";
 import "../styles/index.css";
+import "../styles/App.css";
 import "../../public/assets/css/main.css";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
@@ -17,7 +18,7 @@ export default function RootLayout({
         <meta name="keywords" content="Magnet Hub" />
         <meta
           name="description"
-          content="Tourex is a Modern Tour & Travel Booking React Next js Template. It is perfect for travel businesses of all kinds. Tourex boasts a unique and intuitive search function that is ideal for tour operators, adventure companies, and holiday booking websites alike, as well as hotel booking, plane ticket booking, car rental, and property rental. It’s easy and quick to launch a professional and cost-effective travel website."
+          content="Magnet Hub is a Modern Tour & Travel Booking React Next js Template. It is perfect for travel businesses of all kinds. Magnet Hub boasts a unique and intuitive search function that is ideal for tour operators, adventure companies, and holiday booking websites alike, as well as hotel booking, plane ticket booking, car rental, and property rental. It’s easy and quick to launch a professional and cost-effective travel website."
         />
         <meta
           name="viewport"

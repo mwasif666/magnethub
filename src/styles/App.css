@@ -1,0 +1,13 @@
+.list-desc {
+  font-size: 14px;
+}
+.see-more-btn {
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #560ce3;
+}
+
+.see-more-btn:hover {
+  text-decoration: underline;
+}

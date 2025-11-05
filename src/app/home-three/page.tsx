@@ -2,14 +2,14 @@ import HomeThree from "@/components/homes/home-three";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-  title: "Home Three Tourex - Tour & Travel Booking React Next js Template",
+  title: "Home Three Magnet Hub - Tour & Travel Booking React Next js Template",
 };
 const page = () => {
   return (
     <Wrapper>
       <HomeThree />
     </Wrapper>
-  )
-}
+  );
+};
 
-export default page
+export default page;

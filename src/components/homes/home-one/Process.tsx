@@ -3,9 +3,9 @@ import { JSX } from "react";
 import Link from "next/link";
 import { FaStore, FaUserCheck, FaMoneyBillTrendUp } from "react-icons/fa6";
 
-import process_1 from "@/assets/img/chose/chose-2/thumb-1.jpg";
-import process_2 from "@/assets/img/chose/chose-2/thumb-2.jpg";
-import process_3 from "@/assets/img/chose/chose-2/thumb-3.jpg";
+import process_1 from "@/assets/img/imgs/market.jpg";
+import process_2 from "@/assets/img/imgs/user.png";
+import process_3 from "@/assets/img/imgs/increase.jpg";
 import shape from "@/assets/img/chose/chose-2/shape.png";
 
 interface DataType {

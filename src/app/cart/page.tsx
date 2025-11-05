@@ -2,14 +2,14 @@ import Cart from "@/components/pages/shops/cart";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-  title: "Cart Tourex - Tour & Travel Booking React Next js Template",
+  title: "Cart Magnet Hub - Tour & Travel Booking React Next js Template",
 };
 const page = () => {
   return (
     <Wrapper>
       <Cart />
     </Wrapper>
-  )
-}
+  );
+};
 
-export default page
+export default page;

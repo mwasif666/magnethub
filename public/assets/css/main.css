@@ -1,9 +1,9 @@
 /*============================================
 
-   Theme Name: Tourex - Tour & Travel Booking html5 Template
+   Theme Name: Magnet Hub - Tour & Travel Booking html5 Template
    Author : Theme_Dox
    Support: https://themedox.ticksy.com
-   Description: Tourex - Tour & Travel Booking html5 Template
+   Description: Magnet Hub - Tour & Travel Booking html5 Template
    Version: 1.0.0
 
 ==============================================*/
@@ -559,8 +559,6 @@ textarea {
   -o-transition: all 0.4s ease 0.3s 0s ease-out;
   transition: all 0.4s ease 0.3s 0s ease-out;
 }
-
-
 
 .tg-transparent {
   position: absolute;
@@ -3260,7 +3258,10 @@ textarea {
   width: 100%;
   z-index: 999;
   visibility: visible;
-  background: rgba(255, 255, 255, 0.9);
+  background: #560ce3;
+  align-items: center;
+  height: 100px;
+  display: flex;
   box-shadow: 0px 1px 3px 0px rgba(18, 20, 32, 0.14);
   animation: 0.95s ease 0s normal forwards 1 running headerSlideDown;
   -webkit-animation: 0.95s ease 0s normal forwards 1 running headerSlideDown;
@@ -3268,7 +3269,7 @@ textarea {
 }
 .header-sticky .tgmenu__main-menu ul > li > a {
   padding: 21px 12px;
-  color: var(--tg-common-black);
+  color: white;
 }
 .header-sticky .tg-header-contact-number a {
   color: var(--tg-common-black);
@@ -3309,7 +3310,7 @@ textarea {
 }
 .header-sticky .tgmenu__navbar-wrap > ul > li.active > a,
 .header-sticky .tgmenu__navbar-wrap > ul > li:hover > a {
-  color: var(--tg-theme-primary);
+  color: #f5f5f5;
 }
 .header-sticky .tg-menu-3-wrap .tgmenu__navbar-wrap > ul > li.active > a,
 .header-sticky .tg-menu-3-wrap .tgmenu__navbar-wrap > ul > li:hover > a {

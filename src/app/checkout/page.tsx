@@ -2,14 +2,14 @@ import Checkout from "@/components/pages/shops/checkout";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
-  title: "Checkout Tourex - Tour & Travel Booking React Next js Template",
+  title: "Checkout Magnet Hub - Tour & Travel Booking React Next js Template",
 };
 const page = () => {
   return (
     <Wrapper>
       <Checkout />
     </Wrapper>
-  )
-}
+  );
+};
 
-export default page
+export default page;
