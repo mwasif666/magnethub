@@ -64,7 +64,7 @@ const FeatureTop = ({ startOffset, endOffset, totalItems, setProducts, isListVie
             </div>
             <div className="col-lg-7 col-md-7 mb-15">
                <div className="tg-listing-box-view-type d-flex justify-content-end align-items-center">
-                  <div className="tg-listing-sort">
+                  {/* <div className="tg-listing-sort">
                      <span>Sort by:</span>
                      <a href="#">
                         <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +85,7 @@ const FeatureTop = ({ startOffset, endOffset, totalItems, setProducts, isListVie
                         onChange={niceSelectHandler}
                         name=""
                         placeholder="" />
-                  </div>
+                  </div> */}
                   <div className="d-none d-sm-block">
                      <div className="tg-listing-box-view ml-10 d-flex">
                         <div className="list-switch-item">

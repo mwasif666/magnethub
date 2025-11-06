@@ -3,8 +3,47 @@ import Image from "next/image";
 import Link from "next/link";
 
 import logo from "@/assets/img/logo/logo-white.png";
+import { useState } from "react";
+import { apiRequest } from "@/api/axiosInstance";
 
 const FooterOne = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const submitNewsLetter = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      setMessage("Please enter a valid email address.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const response = await apiRequest({
+        method: "POST",
+        url: "/SaveNewsLetterForm",
+        data: { email },
+      });
+
+      if (response) {
+        setMessage("Successfully subscribed to our newsletter!");
+        setIsSuccess(true);
+      }
+    } catch (error) {
+      setMessage("Failed to subscribe. Please try again later.");
+      setIsSuccess(false);
+    } finally {
+      setEmail("");
+      setLoading(false);
+    }
+  };
+
+
   return (
     <footer>
       <div
@@ -33,26 +72,52 @@ const FooterOne = () => {
                   </p>
                   {/* Newsletter Form */}
                   <div className="tg-footer-form mb-30">
-                    <form onSubmit={(e) => e.preventDefault()}>
-                      <input type="email" placeholder="Enter your email" />
-                      <button className="tg-footer-form-btn" type="submit">
-                        <svg
-                          width="22"
-                          height="17"
-                          viewBox="0 0 22 17"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M1.52514 8.47486H20.4749M20.4749 8.47486L13.5 1.5M20.4749 8.47486L13.5 15.4497"
-                            stroke="white"
-                            strokeWidth="1.77778"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                    <form onSubmit={submitNewsLetter}>
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                      <button
+                        className="tg-footer-form-btn"
+                        type="submit"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <span>Sending...</span>
+                        ) : (
+                          <svg
+                            width="22"
+                            height="17"
+                            viewBox="0 0 22 17"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M1.52514 8.47486H20.4749M20.4749 8.47486L13.5 1.5M20.4749 8.47486L13.5 15.4497"
+                              stroke="white"
+                              strokeWidth="1.77778"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
                       </button>
                     </form>
+
+                    {message && (
+                      <p
+                        style={{
+                          color: isSuccess ? "#00ff91" : "#ff4d4d",
+                          marginTop: "8px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {message}
+                      </p>
+                    )}
                   </div>
                   <div className="tg-footer-social">
                     <Link href="#">

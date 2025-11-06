@@ -22,7 +22,7 @@ const Listing = ({ listing }: { listing: any[] }) => {
 
   useEffect(() => {
     if (listing && listing.length > 0) {
-      setData(listing); 
+      setData(listing);
       setLoading(false);
     } else {
       setData([]);
@@ -31,28 +31,39 @@ const Listing = ({ listing }: { listing: any[] }) => {
   }, [listing]);
 
   const getFirstImage = (images: string) => {
-  try {
-    const parsed = JSON.parse(images);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed[0];
+    try {
+      const parsed = JSON.parse(images);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed[0];
+      }
+    } catch {
+      // ignore parsing errors
     }
-  } catch {
-    // ignore parsing errors
-  }
-};
+  };
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
-      <Image className="tg-listing-su-shape d-none d-xl-block" src={shape_1} alt="" />
-      <Image className="tg-listing-su-shape-2 d-none d-xxl-block" src={shape_2} alt="" />
+      <Image
+        className="tg-listing-su-shape d-none d-xl-block"
+        src={shape_1}
+        alt=""
+      />
+      <Image
+        className="tg-listing-su-shape-2 d-none d-xxl-block"
+        src={shape_2}
+        alt=""
+      />
 
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-6">
             <div className="tg-listing-section-title-wrap text-center mb-40">
-              <h5 className="tg-section-su-subtitle su-subtitle-2 mb-15">Premium Listings</h5>
+              <h5 className="tg-section-su-subtitle su-subtitle-2 mb-15">
+                Premium Listings
+              </h5>
               <h2 className="tg-section-su-title text-capitalize mb-15">
-                Explore our exclusive portfolio of premium listings at Magnate Hub
+                Explore our exclusive portfolio of premium listings at Magnate
+                Hub
               </h2>
             </div>
           </div>
@@ -69,21 +80,34 @@ const Listing = ({ listing }: { listing: any[] }) => {
               <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
                 <div className="tg-listing-card-item tg-listing-su-card-item mb-25">
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
-                     <Link href="/tour-details">
+                    <Link href="/tour-details">
                       <Image
                         className="tg-card-border w-100"
-                        src={`http://magnatehub.au/uploads/project/card/${getFirstImage(item.images)}`}
+                        src={`http://magnatehub.au/uploads/project/card/${
+                          getFirstImage(item.images) ||
+                          "67-1759918312-87531328.jpg"
+                        }`}
                         alt={item?.name || "Project listing image"}
                         width={400}
                         height={300}
                         unoptimized
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                        }}
                       />
+
                       {item.tag && (
-                        <span className="tg-listing-item-price-discount">{item.tag}</span>
+                        <span className="tg-listing-item-price-discount">
+                          {item.tag}
+                        </span>
                       )}
                     </Link>
                     <div className="tg-listing-item-wishlist">
-                      <a onClick={() => handleAddToWishlist(item)} style={{ cursor: "pointer" }}>
+                      <a
+                        onClick={() => handleAddToWishlist(item)}
+                        style={{ cursor: "pointer" }}
+                      >
                         <Wishlist />
                       </a>
                     </div>
@@ -112,14 +136,18 @@ const Listing = ({ listing }: { listing: any[] }) => {
                     <div className="tg-listing-card-price d-flex align-items-end justify-content-between">
                       <div>
                         <span className="tg-listing-card-currency-amount d-flex align-items-center">
-                          <span className="currency-symbol mr-5">From</span>${item.price}
+                          <span className="currency-symbol mr-5">From</span>$
+                          {item.price}
                         </span>
                       </div>
                       <div>
                         <span className="tg-listing-rating-icon">
-                          <i className="fa-sharp fa-solid fa-star"></i> {item.review}
+                          <i className="fa-sharp fa-solid fa-star"></i>{" "}
+                          {item.review}
                         </span>
-                        <span className="tg-listing-rating-percent">{item.total_review}</span>
+                        <span className="tg-listing-rating-percent">
+                          {item.total_review}
+                        </span>
                       </div>
                     </div>
                   </div>

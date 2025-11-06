@@ -10,10 +10,10 @@ const BannerForm = ({ setListing }: BannerFormProps) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="tg-booking-form-item tg-booking-form-grid">
+            {/* <div className="tg-booking-form-item tg-booking-form-grid"> */}
                <BannerFormOne setListing={setListing}/>
               {/* <BannerFormTwo setListing={setListing} /> */}
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>

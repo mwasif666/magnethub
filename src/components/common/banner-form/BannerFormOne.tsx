@@ -1,4 +1,5 @@
 import { apiRequest } from "@/api/axiosInstance";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaRedo, FaSearch } from "react-icons/fa";
 
@@ -7,6 +8,7 @@ type BannerFormProps = {
 };
 
 const BannerFormOne = ({ setListing }: BannerFormProps) => {
+  const pathname = usePathname();
   type DropDown = { label: string; value: string }[];
   const [activeTab, setActiveTab] = useState("businesses");
   const [formData, setFormData] = useState({
@@ -203,17 +205,19 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
     getListingData();
   };
 
-  const getListingData = ()=>{
+  const getListingData = () => {
     const initialUrl = constructUrl(formData);
     if (initialUrl) {
       fetchProductDataAsPerFilter(initialUrl);
     }
-  }
+  };
 
   useEffect(() => {
     getListingData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const isListing = pathname.includes("listing");
 
   return (
     <div className=" py-4">
@@ -234,7 +238,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                     <button
                       className={`nav-link ${
                         activeTab === "businesses" ? "active" : ""
-                      }`}
+                      } ${isListing ? "tab-listing-color" : ""}`}
                       onClick={() => setActiveTab("businesses")}
                       type="button"
                       role="tab"
@@ -246,7 +250,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                     <button
                       className={`nav-link ${
                         activeTab === "agencies" ? "active" : ""
-                      }`}
+                      } ${isListing ? "tab-listing-color" : ""}`}
                       onClick={() => setActiveTab("agencies")}
                       type="button"
                       role="tab"
@@ -255,7 +259,6 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                     </button>
                   </li>
                 </ul>
-
                 <form onSubmit={handleSubmit}>
                   {/* Businesses Tab Content */}
                   {activeTab === "businesses" && (
@@ -387,7 +390,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                               id="franchiseCheck"
                             />
                             <label
-                              className="form-check-label"
+                              className={`form-check-label ${isListing ? "tab-listing-color" : ""}`}
                               htmlFor="franchiseCheck"
                             >
                               Franchise
@@ -403,7 +406,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                               id="premiumCheck"
                             />
                             <label
-                              className="form-check-label"
+                              className={`form-check-label ${isListing ? "tab-listing-color" : ""}`}
                               htmlFor="premiumCheck"
                             >
                               Premium Listing
@@ -419,7 +422,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                               id="allCheck"
                             />
                             <label
-                              className="form-check-label"
+                              className={`form-check-label ${isListing ? "tab-listing-color" : ""}`}
                               htmlFor="allCheck"
                             >
                               All
@@ -561,6 +564,9 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
       <style jsx>{`
         h4 {
           color: white !important;
+        }
+         .tab-listing-color{
+        color:gray !important;
         }
         .form-check label {
           color: white;
