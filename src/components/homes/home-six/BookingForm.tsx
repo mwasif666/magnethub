@@ -1,4 +1,4 @@
-import BannerFormTwo from "@/components/common/banner-form/BannerFormTwo"
+// import BannerFormTwo from "@/components/common/banner-form/BannerFormTwo"
 import Image from "next/image"
 
 import shape_1 from "@/assets/img/booking/shape.png"
@@ -13,7 +13,7 @@ const BookingForm = () => {
             <div className="row">
                <div className="col-12">
                   <div className="tg-booking-form-item pt-20 pb-10">
-                     <BannerFormTwo />
+                     {/* <BannerFormTwo /> */}
                   </div>
                </div>
             </div>

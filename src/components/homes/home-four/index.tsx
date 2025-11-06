@@ -1,16 +1,16 @@
-import Hero from "./Hero"
-import Brand from "./Brand"
-import Destination from "./Destination"
-import Listing from "./Listing"
-import Process from "./Process"
-import Counter from "../home-two/Counter"
-import Testimonial from "./Testimonial"
-import Blog from "./Blog"
-import HeaderFour from "@/layouts/headers/HeaderFour"
-import BannerFormFour from "@/components/common/banner-form/BannerFormFour"
-import Cta from "./Cta"
-import FooterThree from "@/layouts/footers/FooterThree"
-import CtaTwo from "../home-one/Cta"
+import Hero from "./Hero";
+import Brand from "./Brand";
+import Destination from "./Destination";
+import Listing from "./Listing";
+import Process from "./Process";
+import Counter from "../home-two/Counter";
+import Testimonial from "./Testimonial";
+import Blog from "./Blog";
+import HeaderFour from "@/layouts/headers/HeaderFour";
+// import BannerFormFour from "@/components/common/banner-form/BannerFormFour"
+import Cta from "./Cta";
+import FooterThree from "@/layouts/footers/FooterThree";
+import CtaTwo from "../home-one/Cta";
 
 const HomeFour = () => {
   return (
@@ -18,7 +18,7 @@ const HomeFour = () => {
       <HeaderFour />
       <main>
         <Hero />
-        <BannerFormFour />
+        {/* <BannerFormFour /> */}
         <Brand />
         <Destination />
         <Cta />
@@ -31,7 +31,7 @@ const HomeFour = () => {
       </main>
       <FooterThree />
     </>
-  )
-}
+  );
+};
 
-export default HomeFour
+export default HomeFour;
