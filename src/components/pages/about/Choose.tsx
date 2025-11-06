@@ -1,90 +1,73 @@
-import Choose6 from "@/svg/home-one/Choose6";
-import Choose7 from "@/svg/home-one/Choose7";
-import Choose8 from "@/svg/home-one/Choose8";
+import { FaStore, FaHandshake, FaChartLine } from "react-icons/fa";
 import Image from "next/image";
 import { JSX } from "react";
 
-import shape from "@/assets/img/banner/banner-2/shape.png"
-
 interface DataType {
-   id: number;
-   icon: JSX.Element;
-   title: string;
-   desc: string;
+  id: number;
+  icon: JSX.Element;
+  title: string;
+  desc: string;
 }
 
 const choose_data: DataType[] = [
   {
     id: 1,
-    icon: (
-      <>
-        <Choose6 />
-      </>
-    ),
-    title: "Extensive Listings",
-    desc: "A comprehensive selection of businesses for sale, including detailed information about the company, financials, and industry trends.",
+    icon: <FaStore size={40} color="#631ee5" />,
+    title: "Extensive Marketplace",
+    desc: "Our platform boasts a diverse range of businesses available for sale and investment opportunities. From small local enterprises to large-scale ventures, you'll find a wide selection of options.",
   },
   {
     id: 2,
-    icon: (
-      <>
-        <Choose7 />
-      </>
-    ),
-    title: "Search and Filter",
-    desc: "Advanced search and filtering options that allow users to easily find businesses that meet their specific criteria.",
+    icon: <FaHandshake size={40} color="#631ee5" />,
+    title: "User-Friendly Interface",
+    desc: "We've designed our platform with simplicity in mind. Easily list your business for sale or search for potential acquisitions. Our intuitive tools ensure a seamless experience.",
   },
   {
     id: 3,
-    icon: (
-      <>
-        <Choose8 />
-      </>
-    ),
-    title: "Network of Buyers and Sellers",
-    desc: "A large network of buyers, sellers, investors, and capital raisers, providing a wide range of opportunities for business transactions.",
-  },
-  {
-    id: 4,
-    icon: (
-      <>
-        <Choose7 />
-      </>
-    ),
-    title: "Support and Guidance",
-    desc: "Access to a team of experts who can provide guidance and support throughout the buying and selling process, from initial negotiations to closing the deal.",
+    icon: <FaChartLine size={40} color="#631ee5" />,
+    title: "Capital Raising",
+    desc: "If you're seeking capital to fuel your business growth, Magnate Hub is the ideal place to connect with investors interested in your industry.",
   },
 ];
 
 const Choose = () => {
-   return (
-      <div className="tg-chose-area tg-grey-bg pt-140 pb-70 p-relative z-index-1">
-         <Image className="tg-chose-6-shape d-none d-md-block" src={shape} alt="" />
-         <div className="container">
-            <div className="row justify-content-center">
-               <div className="col-xl-6 col-lg-7 col-md-9">
-                  <div className="tg-chose-section-title text-center mb-35">
-                     <h5 className="tg-section-subtitle mb-15 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".1s">Our Features</h5>
-                     <h2 className="mb-15 text-capitalize wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".9s">There are so many features of Magnate Hub, here are a few.</h2>
-                     {/* <p className="text-capitalize wow fadeInUp mb-35" data-wow-delay=".5s" data-wow-duration=".9s"> when an unknown printer took a galley of type and scrambled make type
-                        specimen bookhas survived not only five.</p> */}
-                  </div>
-               </div>
+  return (
+    <div className="tg-chose-area tg-grey-bg pt-140 pb-70 p-relative z-index-1">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-xl-6 col-lg-7 col-md-9">
+            <div className="tg-chose-section-title text-center mb-35">
+              <h5
+                className="tg-section-subtitle mb-15 wow fadeInUp"
+                data-wow-delay=".3s"
+                data-wow-duration=".1s"
+              >
+                Choose us
+              </h5>
+              <h2
+                className="mb-15 text-capitalize wow fadeInUp"
+                data-wow-delay=".4s"
+                data-wow-duration=".9s"
+              >
+                Why Choose Magnate Hub?
+              </h2>
             </div>
-            <div className="row">
-               {choose_data.map((item) => (
-                  <div key={item.id} className="col-lg-4 col-md-6">
-                     <div className="tg-chose-6-wrap mb-30">
-                        <span className="icon mb-20">{item.icon}</span>
-                        <h4 className="tg-chose-6-title mb-15">{item.title}</h4>
-                        <p>{item.desc}</p>
-                     </div>
-                  </div>
-               ))}
+          </div>
+        </div>
+        <div className="row">
+          {choose_data.map((item) => (
+            <div key={item.id} className="col-lg-4 col-md-6">
+              <div className="tg-chose-6-wrap mb-30 h-100 text-center">
+                <span className="icon mb-20 d-inline-block">{item.icon}</span>
+                <h4 className="tg-chose-6-title mb-15">{item.title}</h4>
+                <p>{item.desc}</p>
+              </div>
             </div>
-         </div>
+          ))}
+        </div>
       </div>
-   )
-}
+    </div>
+  );
+};
 
-export default Choose
+export default Choose;

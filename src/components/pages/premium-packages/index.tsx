@@ -1,16 +1,21 @@
 import BreadCrumb from "@/components/common/BreadCrumb";
-
 import Image, { StaticImageData } from "next/image";
-import { JSX } from "react";
-import Link from "next/link";
-import { FaStore, FaUserCheck, FaMoneyBillTrendUp } from "react-icons/fa6";
+import {
+  FaStore,
+  FaUserCheck,
+  FaMoneyBillTrendUp,
+  FaRocket,
+} from "react-icons/fa6";
 
-import process_1 from "@/assets/img/chose/chose-2/thumb-1.jpg";
-import process_2 from "@/assets/img/chose/chose-2/thumb-2.jpg";
-import process_3 from "@/assets/img/chose/chose-2/thumb-3.jpg";
-import shape from "@/assets/img/chose/chose-2/shape.png";
+import process_1 from "@/assets/img/imgs/14.gif";
+import process_4 from "@/assets/img/imgs/13.gif";
+import process_5 from "@/assets/img/imgs/16.jpg";
+import process_2 from "@/assets/img/imgs/7.gif";
+import process_3 from "@/assets/img/imgs/12.gif";
+
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import FooterOne from "@/layouts/footers/FooterOne";
+import { JSX } from "react";
 
 interface DataType {
   id: number;
@@ -24,23 +29,30 @@ const process_data: DataType[] = [
   { id: 1, thumb: process_1 },
   {
     id: 2,
-    icon: <FaStore />,
+    icon: <FaStore size={50} color="#631ee5" />,
     title: "Increased Visibility",
     desc: "With our premium package, your business listing/advert will be prominently displayed in our directory, increasing the chances of it being seen by potential buyers.",
   },
   { id: 3, thumb: process_2 },
   {
     id: 4,
-    icon: <FaUserCheck />,
+    icon: <FaUserCheck size={50} color="#631ee5" />,
     title: "Targeted Audience",
     desc: "Our directory is specifically designed to reach Private Equity Firms, Venture Capitalists, Investors, and elite business personnel, ensuring that your listing is seen by the right people.",
   },
   { id: 5, thumb: process_3 },
   {
     id: 6,
-    icon: <FaMoneyBillTrendUp />,
+    icon: <FaMoneyBillTrendUp size={50} color="#631ee5" />,
     title: "Faster Sales",
     desc: "By reaching a targeted audience, you'll increase the chances of a swift and successful sale. Our premium package will help you get your business in front of the right people at the right time.",
+  },
+  { id: 7, thumb: process_4 },
+  {
+    id: 8,
+    icon: <FaRocket size={50} color="#631ee5" />,
+    title: "Greater Exposure",
+    desc: "With our premium package, you'll have the opportunity to reach a wider audience than with a standard listing. This will help you reach more potential buyers and increase your chances of a successful sale. ",
   },
 ];
 
@@ -53,101 +65,148 @@ const ProcessPage = () => {
         <BreadCrumb title="Premium Packages" sub_title="" />
 
         <div className="tg-chose-area tg-chose-su-wrap pt-100 pb-105 p-relative z-index-9">
-          <Image
-            className="tg-chose-2-shape d-none d-lg-block"
-            src={shape}
-            alt="shape"
-          />
-
           <div className="container">
-            <div className="row justify-content-center">
-              <div className="col-12">
-                <div className="tg-chose-section-title text-center mb-40">
-                  {/* <h5 className="tg-section-su-subtitle su-subtitle-2 mb-20">Discover Our Features</h5> */}
-                  {/*             
-                  <p className="tg-section-su-para">
-                    Explore how Magnate Hub simplifies business buying, selling, and funding.
-                  </p> */}
+            {/* Introduction Section */}
+            <div className="container py-5">
+              {/* Row 1: Image + Intro Text */}
+              <div className="row align-items-center justify-content-center pb-60">
+                <div className="col-lg-6 mb-4 mb-lg-0">
+                  <Image
+                    className="img-fluid rounded-3 shadow-sm"
+                    src={process_5}
+                    alt="Premium Package"
+                  />
+                </div>
+                <div className="col-lg-6">
+                  <div className="tg-chose-section-title">
+                    <h2 className="tg-section-su-title text-capitalize mb-4">
+                      Introducing Magnate Hub's Premium Package
+                    </h2>
+                    <p className="tg-section-su-para">
+                      The ultimate solution for business owners looking to sell
+                      their business. With this package, your business listing
+                      will be directly sent to a curated list of Private Equity
+                      Firms, Venture Capitalists, Investors, and elite business
+                      personnel actively searching for new investment
+                      opportunities.
+                    </p>
+                    <p className="tg-section-su-para">
+                      This means that if your business aligns with their
+                      interests, you could receive a purchase offer swiftly and
+                      efficiently. Our premium package provides maximum exposure
+                      for your business and accelerates the buying and selling
+                      process.
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-                  <p className="tg-section-su-para">
-                    Introducing Magnate Hub's Premium Package - the ultimate
-                    solution for business owners looking to sell their business.
-                    With this package, your business listing will be directly
-                    sent to a curated list of Private Equity Firms, Venture
-                    Capitalists, Investors, and elite business personnel who are
-                    actively searching for new investment opportunities.
-                  </p>
+              {/* Row 2: Cards Section */}
+              <div className="text-center mb-4">
+                <h2 className="tg-section-su-title text-capitalize pb-40">
+                  4 Great Reasons Why You Should Purchase the Premium Package
+                </h2>
+              </div>
 
-                  <p className="tg-section-su-para">
-                    This means that if your business aligns with their
-                    interests, you could receive a purchase offer swiftly and
-                    efficiently. Our premium package provides maximum exposure
-                    for your business and accelerates the buying and selling
-                    process.
-                  </p>
+              <div className="row g-4 justify-content-center">
+                <div className="col-md-6 col-lg-3">
+                  <div className="card h-100 text-center border-0 shadow-sm p-4 rounded-4">
+                    <h5 className="fw-bold mb-3">Maximum Exposure</h5>
+                    <p className="tg-section-su-para mb-0">
+                      Your business gets visibility among elite investors, PE
+                      firms, and VCs actively seeking opportunities.
+                    </p>
+                  </div>
+                </div>
 
-                  <p className="tg-section-su-para">
-                    Enjoy no commissions, unlimited access to edit your listing,
-                    and a dedicated consultation with our experts to evaluate
-                    your business opportunities. Our team will write, list, and
-                    manage your investment opportunities for you, ensuring
-                    maximum visibility and engagement. Your listings will remain
-                    active until you find the perfect match, and you can choose
-                    to invest in businesses on your own or with the help of our
-                    brokers. Please note, if you choose a broker to help with
-                    your sale, you may be liable to pay a commission to them.
-                    Magnate Hub does not take any commissions by placing an
-                    advert on our platform.
-                  </p>
+                <div className="col-md-6 col-lg-3">
+                  <div className="card h-100 text-center border-0 shadow-sm p-4 rounded-4">
+                    <h5 className="fw-bold mb-3">No Commissions</h5>
+                    <p className="tg-section-su-para mb-0">
+                      Keep 100% of your profit. Magnate Hub doesn’t take any
+                      commission from your sale listings.
+                    </p>
+                  </div>
+                </div>
 
-                  <p className="tg-section-su-para">
-                    The package also includes a free non-disclosure document, a
-                    statistics dashboard to track your progress, and a chat
-                    feature to connect with potential business owners, sellers
-                    and partners. With the Premium Package, you have everything
-                    you need to take your investment portfolio to new heights
-                    and get in front of the right people.
-                  </p>
+                <div className="col-md-6 col-lg-3">
+                  <div className="card h-100 text-center border-0 shadow-sm p-4 rounded-4">
+                    <h5 className="fw-bold mb-3">Dedicated Consultation</h5>
+                    <p className="tg-section-su-para mb-0">
+                      Get expert support to evaluate your business and optimize
+                      your listing for maximum engagement.
+                    </p>
+                  </div>
+                </div>
 
-                  <h2 className="tg-section-su-title text-capitalize mb-15">
-                    4 great reasons why they should purchase the premium package
-                  </h2>
-                  <p className="tg-section-su-para">
-                    Here are 4 great reasons why you should purchase the premium
-                    package:
-                  </p>
+                <div className="col-md-6 col-lg-3">
+                  <div className="card h-100 text-center border-0 shadow-sm p-4 rounded-4">
+                    <h5 className="fw-bold mb-3">Powerful Tools</h5>
+                    <p className="tg-section-su-para mb-0">
+                      Access a stats dashboard, free NDA, and chat tools to
+                      connect with potential buyers and investors.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="row">
-              {process_data.map((item) =>
-                item.thumb ? (
-                  <div
-                    key={item.id}
-                    className="col-lg-4 col-md-6 col-sm-6 mb-25"
-                  >
-                    <Image
-                      className="w-100 h-100"
-                      src={item.thumb}
-                      alt="process-thumb"
-                    />
-                  </div>
-                ) : (
-                  <div
-                    key={item.id}
-                    className="col-lg-4 col-md-6 col-sm-6 mb-25 text-center"
-                  >
-                    <div className="tg-chose-2-icon mb-20 fs-1 text-primary">
-                      {item.icon}
+            {/* Feature Blocks */}
+            <div className="row pt-100 g-5">
+              {process_data.map((item, i) => {
+                // Only process pairs of two (image + text)
+                if (
+                  item.thumb &&
+                  process_data[i + 1] &&
+                  process_data[i + 1].icon
+                ) {
+                  const content = process_data[i + 1];
+                  return (
+                    <div
+                      key={item.id}
+                      className="row align-items-center py-5 mb-60 border rounded-3 shadow-sm overflow-hidden"
+                    >
+                      {/* Alternate left/right */}
+                      <div
+                        className={`col-lg-6 col-md-12 ${
+                          i % 4 === 0 ? "order-lg-1" : "order-lg-2"
+                        }`}
+                      >
+                        <Image
+                          src={item.thumb}
+                          alt={`process-${item.id}`}
+                          className="w-100 rounded-3 shadow"
+                          style={{
+                            height: "350px",
+                            width: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </div>
+
+                      <div
+                        className={`col-lg-6 col-md-12 ${
+                          i % 4 === 0 ? "order-lg-2" : "order-lg-1"
+                        }`}
+                      >
+                        <div className="w-100 d-flex flex-column justify-content-center text-start p-4">
+                          {content.icon && (
+                            <div className="mb-3 fs-1">{content.icon}</div>
+                          )}
+                          {content.title && (
+                            <h3 className="mb-2 text-capitalize">
+                              {content.title}
+                            </h3>
+                          )}
+                          {content.desc && (
+                            <p className="mb-0">{content.desc}</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <h4 className="tg-chose-2-title mb-15">
-                      <Link href="/contact">{item.title}</Link>
-                    </h4>
-                    <p>{item.desc}</p>
-                  </div>
-                )
-              )}
+                  );
+                }
+              })}
             </div>
           </div>
         </div>

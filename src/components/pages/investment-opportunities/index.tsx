@@ -6,10 +6,12 @@ import Process7 from "@/svg/home-one/Process7";
 import Process8 from "@/svg/home-one/Process8";
 import Process9 from "@/svg/home-one/Process9";
 
-import process_1 from "@/assets/img/chose/chose-2/thumb-1.jpg";
-import process_2 from "@/assets/img/chose/chose-2/thumb-2.jpg";
-import process_3 from "@/assets/img/chose/chose-2/thumb-3.jpg";
-import shape from "@/assets/img/chose/chose-2/shape.png";
+import process_1 from "@/assets/img/imgs/6.gif";
+import process_2 from "@/assets/img/imgs/7.gif";
+import process_3 from "@/assets/img/imgs/8.gif";
+import process_4 from "@/assets/img/imgs/9.png";
+import process_5 from "@/assets/img/imgs/10.gif";
+import process_6 from "@/assets/img/imgs/11.gif";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import FooterOne from "@/layouts/footers/FooterOne";
 
@@ -48,21 +50,21 @@ const process_data: DataType[] = [
     icon: <Process7 />,
     title: "Direct communication",
     desc: "Magnate Hub offers a built-in messaging system that allows investors to directly communicate with entrepreneurs and startups. This makes it easy for investors to ask questions, request additional information, and negotiate deals.",
-    thumb: process_1,
+    thumb: process_4,
   },
   {
     id: 5,
     icon: <Process8 />,
     title: "Investment tracking",
     desc: "Our platform includes a statistics dashboard that allows investors to track the performance of their investments and see how their portfolio is growing over time.",
-    thumb: process_2,
+    thumb: process_5,
   },
   {
     id: 6,
     icon: <Process9 />,
     title: "No commissions",
     desc: "Unlike other platforms, Magnate Hub does not charge any commission on investment deals. This means that investors can keep more of their returns for themselves.",
-    thumb: process_3,
+    thumb: process_6,
   },
 ];
 
@@ -74,13 +76,7 @@ const Process = () => {
       <main>
         <BreadCrumb title="Investment Opportunities" sub_title="" />
 
-        <div className="tg-chose-area p-relative z-index-9 pt-135 pb-35">
-          <Image
-            className="tg-chose-2-shape d-none d-lg-block"
-            src={shape}
-            alt="shape"
-          />
-
+        <div className="tg-chose-area p-relative z-index-9 pt-135 pb-140">
           <div className="container">
             <div className="col-12 text-center mb-60">
               <h1 className="tg-section-subtitle">Investor</h1>
@@ -94,7 +90,10 @@ const Process = () => {
             </div>
 
             {process_data.map((item, i) => (
-              <div key={item.id} className="row align-items-center mb-60">
+              <div
+                key={item.id}
+                className="row align-items-center mb-60 border rounded-3 shadow-sm"
+              >
                 {/* Card */}
                 <div
                   className={`col-lg-6 col-md-12 mb-4 d-flex ${
@@ -102,7 +101,7 @@ const Process = () => {
                   }`}
                 >
                   <div
-                    className="w-100 border rounded-3 shadow-sm d-flex flex-column justify-content-center text-center"
+                    className="w-100  d-flex flex-column justify-content-center text-start px-5"
                     style={{ height: "350px" }}
                   >
                     <div className="mb-3 fs-1">{item.icon}</div>

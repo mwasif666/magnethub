@@ -1,10 +1,12 @@
 import BreadCrumb from "@/components/common/BreadCrumb";
 import AboutArea from "./AboutArea";
-import Cta from "./Cta";
 import HeaderOne from "@/layouts/headers/HeaderOne";
-import FooterTwo from "@/layouts/footers/FooterTwo";
 import Features from "./Features";
 import FooterOne from "@/layouts/footers/FooterOne";
+import About3 from "../../homes/home-three/About";
+import Choose from "./Choose";
+import ChooseArea from "@/components/homes/home-seven/ChooseArea";
+import Work from "./Work";
 
 const About = () => {
   return (
@@ -13,9 +15,11 @@ const About = () => {
       <main>
         <BreadCrumb title="About Us" sub_title="About Us" />
         <AboutArea />
+        <Choose />
+        <About3 />
+        <Work />
+        <ChooseArea />
         <Features />
-
-        <Cta />
       </main>
       <FooterOne />
     </>

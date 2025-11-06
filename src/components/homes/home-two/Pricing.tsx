@@ -1,12 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import pricing_data from "@/data/PricingData";
-
-import shape_1 from "@/assets/img/pricing/shape.png";
-import shape_2 from "@/assets/img/pricing/shape-2.png";
 
 type PricingItem = {
   id: number;
@@ -19,16 +15,6 @@ type PricingItem = {
 const Pricing = () => {
   return (
     <div className="tg-pricing-area tg-pricing-su-wrap pb-100 pt-130 p-relative z-index-1">
-      <Image
-        className="tg-pricing-su-shape d-none d-md-block p-absolute"
-        src={shape_1}
-        alt=""
-      />
-      <Image
-        className="tg-pricing-su-shape-2 p-absolute d-none d-md-block"
-        src={shape_2}
-        alt=""
-      />
       <div className="container-fluid px-5">
         <div className="row">
           <div className="col-lg-12">

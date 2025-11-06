@@ -1,5 +1,9 @@
-import { FaListAlt, FaFilter, FaUsers, FaHandsHelping } from "react-icons/fa";
-import Image from "next/image";
+import {
+  FaRegClipboard,
+  FaHandshake,
+  FaComments,
+  FaUserTie,
+} from "react-icons/fa";
 import { JSX } from "react";
 
 interface DataType {
@@ -12,31 +16,31 @@ interface DataType {
 const choose_data: DataType[] = [
   {
     id: 1,
-    icon: <FaListAlt size={40} color="#631ee5" />,
-    title: "Extensive Listings",
-    desc: "A comprehensive selection of businesses for sale, including detailed information about the company, financials, and industry trends.",
+    icon: <FaRegClipboard size={40} color="#631ee5" />,
+    title: "Listing Your Business",
+    desc: "If you're looking to sell your business, create a detailed listing highlighting your company's strengths, financials, and growth potential.",
   },
   {
     id: 2,
-    icon: <FaFilter size={40} color="#631ee5" />,
-    title: "Search and Filter",
-    desc: "Advanced search and filtering options that allow users to easily find businesses that meet their specific criteria.",
+    icon: <FaHandshake size={40} color="#631ee5" />,
+    title: "Connecting with Buyers",
+    desc: "Buyers can easily search for businesses that align with their interests and investment criteria. Our platform offers advanced search filters to narrow down your options.",
   },
   {
     id: 3,
-    icon: <FaUsers size={40} color="#631ee5" />,
-    title: "Network of Buyers and Sellers",
-    desc: "A large network of buyers, sellers, investors, and capital raisers, providing a wide range of opportunities for business transactions.",
+    icon: <FaComments size={40} color="#631ee5" />,
+    title: "Discussions",
+    desc: "Initiate confidential discussions and negotiations with potential buyers or sellers while protecting your sensitive information. Use our chat feature to communicate securely before sharing any personal details.",
   },
   {
     id: 4,
-    icon: <FaHandsHelping size={40} color="#631ee5" />,
-    title: "Support and Guidance",
-    desc: "Access to a team of experts who can provide guidance and support throughout the buying and selling process, from initial negotiations to closing the deal.",
+    icon: <FaUserTie size={40} color="#631ee5" />,
+    title: "Professional Support",
+    desc: "If you need assistance, our team of experts and agents is available to provide guidance and support at every step of the process.",
   },
 ];
 
-const Features = () => {
+const Work = () => {
   return (
     <div className="tg-chose-area tg-grey-bg pt-140 pb-70 p-relative z-index-1">
       <div className="container-fluid px-5">
@@ -49,15 +53,14 @@ const Features = () => {
                 data-wow-delay=".3s"
                 data-wow-duration=".1s"
               >
-                Our Features
+                Works
               </h5>
               <h2
                 className="mb-15 text-capitalize wow fadeInUp"
                 data-wow-delay=".4s"
                 data-wow-duration=".9s"
               >
-                There are so many features of <br /> Magnate Hub, here are a
-                few.
+                How It Works
               </h2>
             </div>
           </div>
@@ -80,4 +83,4 @@ const Features = () => {
   );
 };
 
-export default Features;
+export default Work;

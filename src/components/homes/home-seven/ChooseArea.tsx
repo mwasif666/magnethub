@@ -4,9 +4,9 @@ import { JSX } from "react";
 // import Link from "next/link";
 
 import shape from "@/assets/img/chose/chose-5/map.png";
-import choose_thumb1 from "@/assets/img/chose/chose-5/chose-2.jpg";
-import choose_thumb2 from "@/assets/img/chose/chose-5/chose-3.jpg";
-import choose_thumb3 from "@/assets/img/chose/chose-5/chose-1.jpg";
+import choose_thumb1 from "@/assets/img/imgs/4.png";
+import choose_thumb2 from "@/assets/img/imgs/user.png";
+import choose_thumb3 from "@/assets/img/imgs/mission.webp";
 import circle from "@/assets/img/chose/chose-5/text.png";
 import circle2 from "@/assets/img/chose/chose-5/icon.png";
 // import Button from "@/components/common/Button";
@@ -110,26 +110,22 @@ const ChooseArea = () => {
                       className="mb-20"
                       src={choose_thumb1}
                       alt="Choose Image 1"
+                      style={{
+                        objectFit: "cover",
+                        height: "245px",
+                      }}
                     />
-                    <Image src={choose_thumb2} alt="Choose Image 2" />
+                    <Image
+                      src={choose_thumb2}
+                      style={{
+                        height: "100%",
+                      }}
+                      alt="Choose Image 2"
+                    />
                   </div>
                 </div>
                 <div className="col-lg-7 col-md-7 col-sm-7">
                   <div className="tg-chose-5-thumb-2 p-relative">
-                    <div className="tg-chose-5-text-round d-none d-sm-block">
-                      <div className="tg-chose-3-rounded p-relative mb-20">
-                        <Image
-                          className="rotate-infinite-2"
-                          src={circle}
-                          alt="Circle Text"
-                        />
-                        <Image
-                          className="tg-chose-3-star rounded-circale"
-                          src={circle2}
-                          alt="Circle Icon"
-                        />
-                      </div>
-                    </div>
                     <Image src={choose_thumb3} alt="Choose Image 3" />
                   </div>
                 </div>

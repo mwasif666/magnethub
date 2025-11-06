@@ -1,53 +1,87 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import Button from '@/components/common/Button'
+import Image from "next/image";
 
-import about_thumb1 from "@/assets/img/about/about.jpg"
-import about_thumb2 from "@/assets/img/about/about-2.jpg"
-import about_thumb3 from "@/assets/img/about/about-3.jpg"
-import about_thumb4 from "@/assets/img/about/about-4.jpg"
-import about_logo from "@/assets/img/about/logo.png"
+import about_thumb1 from "@/assets/img/imgs/mission.webp";
 
 const About = () => {
-   return (
-      <div className="tg-about-area pb-100">
-         <div className="container">
-            <div className="row">
-               <div className="col-lg-3">
-                  <div className="tg-about-thumb-wrap mb-30">
-                     <Image className="w-100 tg-round-15 mb-85 wow fadeInLeft" data-wow-delay=".3s" data-wow-duration=".7s" src={about_thumb1} alt="about" />
-                     <Image className="tg-about-thumb-2 tg-round-15 wow fadeInLeft" data-wow-delay=".4s" data-wow-duration=".9s" src={about_thumb2} alt="about" />
-                  </div>
-               </div>
-               <div className="col-lg-6 mb-30">
-                  <div className="tg-about-content text-center">
-                     <div className="tg-about-logo mb-30 wow fadeInUp" data-wow-delay=".3s" data-wow-duration=".5s">
-                        <Image src={about_logo} alt="logo" />
-                     </div>
-                     <div className="tg-about-section-title mb-25">
-                        <h5 className="tg-section-subtitle wow fadeInUp" data-wow-delay=".4s" data-wow-duration=".6s">Most Popular Tour</h5>
-                        <h2 className="mb-15 wow fadeInUp" data-wow-delay=".5s" data-wow-duration=".7s">Let’s Discover The World With Our Excellent Eyes</h2>
-                        <p className="text-capitalize wow fadeInUp" data-wow-delay=".6s" data-wow-duration=".8s">Whether you&apos;re looking for a romantic getawaamily-friendly
-                           solo journey to explore the world, a travel agency can provide
-                           tailored itinerary that exceeds your expectations.</p>
-                     </div>
-                     <div className="tp-about-btn-wrap wow fadeInUp" data-wow-delay=".7s" data-wow-duration=".9s">
-                        <Link href="/tour-details" className="tg-btn tg-btn-transparent tg-btn-switch-animation">
-                           <Button text="Take a Tour" />
-                        </Link>
-                     </div>
-                  </div>
-               </div>
-               <div className="col-lg-3">
-                  <div className="tg-about-thumb-wrap  mb-30">
-                     <Image className="w-100 tg-round-15 mb-85 wow fadeInRight" data-wow-delay=".3s" data-wow-duration=".7s" src={about_thumb3} alt="about" />
-                     <Image className="tg-about-thumb-4 tg-round-15 wow fadeInRight" data-wow-delay=".4s" data-wow-duration=".9s" src={about_thumb4} alt="about" />
-                  </div>
-               </div>
+  return (
+    <div className="tg-about-area pt-100">
+      <div className="container">
+        <div className="row align-items-center">
+          <div className="col-lg-4">
+            <div className="tg-about-thumb-wrap mb-30">
+              <Image
+                className="w-100 tg-round-15 mb-85 wow fadeInLeft"
+                data-wow-delay=".3s"
+                data-wow-duration=".7s"
+                src={about_thumb1}
+                alt="about"
+              />
             </div>
-         </div>
+          </div>
+          <div className="col-lg-8 mb-30">
+            <div className="tg-about-content text-start">
+              <div className="tg-about-section-title mb-25">
+                <h5
+                  className="tg-section-subtitle wow fadeInUp"
+                  data-wow-delay=".4s"
+                  data-wow-duration=".6s"
+                >
+                  About us
+                </h5>
+                <h2
+                  className="mb-15 wow fadeInUp"
+                  data-wow-delay=".5s"
+                  data-wow-duration=".7s"
+                >
+                  Our Mission
+                </h2>
+                <p
+                  className="text-capitalize wow fadeInUp"
+                  data-wow-delay=".6s"
+                  data-wow-duration=".8s"
+                >
+                  At Magnate Hub, our mission is to empower businesses of all
+                  sizes to achieve their goals and connect them with the
+                  resources they need to thrive. In an industry where finding a
+                  one-stop-shop can be challenging, we proudly offer a
+                  comprehensive platform that not only facilitates buying and
+                  selling businesses but also provides a dedicated space for
+                  individuals seeking capital raisers.
+                </p>
+                <p
+                  className="text-capitalize wow fadeInUp"
+                  data-wow-delay=".6s"
+                  data-wow-duration=".8s"
+                >
+                  We understand that it's often difficult to be heard in the
+                  crowded marketplace of investment opportunities. That's why
+                  Magnate Hub goes the extra mile to ensure that pitchers have a
+                  platform to showcase their vision and secure the necessary
+                  funding. We have cultivated a vast network of investors
+                  actively seeking their next big project, providing a unique
+                  opportunity for entrepreneurs to find the support and
+                  financial backing they need to turn their dreams into reality.
+                </p>
+                <p
+                  className="text-capitalize wow fadeInUp"
+                  data-wow-delay=".6s"
+                  data-wow-duration=".8s"
+                >
+                  With Magnate Hub, we're not just simplifying business
+                  transactions; we're forging connections, fostering innovation,
+                  and ensuring that everyone, from small local businesses to
+                  ambitious startups, has the chance to make their mark in the
+                  world of entrepreneurship. Join us today and experience the
+                  difference of a platform that truly understands and supports
+                  your business aspirations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-   )
-}
+    </div>
+  );
+};
 
-export default About
+export default About;
