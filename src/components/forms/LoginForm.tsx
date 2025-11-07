@@ -50,8 +50,9 @@ const LoginForm = () => {
          return;
       }
       
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("token", response?.token);
       toast.success("Login successful!", { position: "top-center" });
+      window.open(response.link, "_blank");
 
     } catch (error: any) {
       console.error("Login error:", error);
