@@ -5,10 +5,7 @@ const RegisterArea = () => {
       <div
          className="tg-login-area pt-130 pb-130 bg-cover bg-center relative"
          style={{
-          backgroundImage: `
-           linear-gradient(rgba(40, 0, 120, 0.4), rgba(40, 0, 120, 0.4)),
-           url('/assets/img/banner/banner.png')
-              `,
+          backgroundImage: `linear-gradient(to right, rgb(0, 0, 0, 0.6), rgb(0, 0, 0, 0.6)),url(/assets/img/banner/banner.png)`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",

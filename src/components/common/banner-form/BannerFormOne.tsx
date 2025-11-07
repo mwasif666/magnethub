@@ -229,7 +229,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                 {/* Header */}
                 <div className="text-center mb-4">
                   {/* <h1 className="display-5 fw-bold text-primary mb-2">SESES</h1> */}
-                  <h2 className="h4 text-white">FIND BUSINESSES & AGENCIES</h2>
+                  <h2 className="h4 text-white">FIND BUSINESSES & Investment</h2>
                 </div>
 
                 {/* Tab Navigation */}
@@ -255,7 +255,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                       type="button"
                       role="tab"
                     >
-                      FIND AGENCIES
+                      FIND INVESTEMENTS
                     </button>
                   </li>
                 </ul>
@@ -276,7 +276,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                               name="postcode"
                               value={formData.postcode}
                               onChange={handleInputChange}
-                              placeholder="Search suburb or postcode"
+                              placeholder="Search by name"
                             />
                           </div>
                         </div>

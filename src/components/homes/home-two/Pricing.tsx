@@ -10,6 +10,7 @@ type PricingItem = {
   price: number | string;
   desc: string;
   list: string[];
+  suitable?: string;
 };
 
 const Pricing = () => {
@@ -63,6 +64,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
         className="tg-pricing-wrap mb-30 wow fadeInUp"
         data-wow-delay=".3s"
         data-wow-duration=".9s"
+        style={{height:"129vh"}}
       >
         <div className="tg-pricing-head">
           <h4 className="tg-pricing-title mb-15">{item.title}</h4>
@@ -119,6 +121,9 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
               </li>
             ))}
           </ul>
+           {/* <div className="tg-pricing-head">
+          <h4 className="tg-pricing-title mb-15">{item.suitable}</h4>
+        </div> */}
         </div>
       </div>
     </div>
