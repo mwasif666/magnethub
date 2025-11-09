@@ -60,16 +60,6 @@ const FeatureArea = ({ listing }: { listing: any }) => {
     }
   }, [listing]);
 
-  const getFirstImage = (images: string) => {
-    try {
-      const parsed = JSON.parse(images);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed[0];
-      }
-    } catch {
-      // ignore parsing errors
-    }
-  };
 
   return (
     <div className="tg-listing-grid-area mb-85">
@@ -108,10 +98,7 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                             <Link href="/tour-details">
                               <Image
                                 className="tg-card-border w-100"
-                                src={`http://magnatehub.au/uploads/project/card/${
-                                  getFirstImage(item.images) ||
-                                  "67-1759918312-87531328.jpg"
-                                }`}
+                                src={`http://magnatehub.au/uploads/project/card/${item.card}`}
                                 alt={item?.name || "Project listing image"}
                                 width={400}
                                 height={300}

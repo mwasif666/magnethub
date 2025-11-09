@@ -7,11 +7,9 @@ export const metadata = {
 };
 const page = () => {
   return (
-    <AuthProvider>
     <Wrapper>
       <HomeOne />
     </Wrapper>
-    </AuthProvider>
   );
 };
 

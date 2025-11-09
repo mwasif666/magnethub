@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import {useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { apiRequest } from "@/api/axiosInstance";
+import { useAuth } from "@/context/AuthContext";
 
 interface LoginData {
   email: string;
@@ -20,14 +20,15 @@ const schema = yup.object({
   rememberMe: yup.boolean().default(false),
 });
 
-
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+ const { loginUser } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<LoginData>({
     resolver: yupResolver(schema),
   });
@@ -35,29 +36,36 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginData) => {
     try {
       setLoading(true);
+
       const formData = new FormData();
       formData.append("email", data.email);
       formData.append("password", data.password);
       formData.append("rememberMe", data.rememberMe ? "true" : "false");
 
-      const response = await apiRequest({
-        url: "/Raising/Login",
-        method: "POST",
-        data: formData,
-      });
-      if(response?.error){
-         toast.error(response?.message, { position: "top-center" });
-         return;
-      }
-      
-      localStorage.setItem("token", response?.token);
-      toast.success("Login successful!", { position: "top-center" });
-      window.open(response.link, "_blank");
+      const response = await loginUser(formData);
 
+      if (!response) {
+        toast.error("No response from server.", { position: "top-center" });
+        return;
+      }
+
+      if ((response as any)?.error) {
+        toast.error((response as any)?.message || "Login failed.", {
+          position: "top-center",
+        });
+        return;
+      }
+
+      toast.success("Login successful!", { position: "top-center" });
+
+      reset();
+      if ((response as any)?.link) {
+        window.open((response as any).link, "_blank");
+      }
     } catch (error: any) {
       console.error("Login error:", error);
       const message =
-        error?.data?.message ||
+        error?.response?.data?.message ||
         error?.message ||
         "Invalid email or password.";
       toast.error(message, { position: "top-center" });

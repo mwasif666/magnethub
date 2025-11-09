@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { apiRequest } from "@/api/axiosInstance";
+import { useAuth } from "@/context/AuthContext"; // ✅ use your AuthContext hook
 
 interface RegisterData {
   firstName: string;
@@ -35,6 +35,7 @@ const schema = yup
 const RegisterForm = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { registerUser } = useAuth();
 
   const {
     register,
@@ -49,6 +50,7 @@ const RegisterForm = () => {
     try {
       setLoading(true);
 
+      // Prepare form data
       const formData = new FormData();
       formData.append("first_name", data.firstName);
       formData.append("last_name", data.lastName);
@@ -57,17 +59,26 @@ const RegisterForm = () => {
       formData.append("password_confirmation", data.confirmPassword);
       formData.append("type", activeTab.toString());
 
-      await apiRequest({
-        url: "/RegisterNewUser",
-        method: "POST",
-        data: formData,
-      });
+      const response = await registerUser(formData);
+
+      if (!response) {
+        toast.error("No response from server.", { position: "top-center" });
+        return;
+      }
+
+      if ((response as any)?.error) {
+        toast.error((response as any)?.message || "Registration failed.", {
+          position: "top-center",
+        });
+        return;
+      }
 
       toast.success("Registered successfully!", { position: "top-center" });
       reset();
     } catch (error: any) {
       console.error("Registration error:", error);
       const message =
+        error?.response?.data?.message ||
         error?.data?.message ||
         error?.message ||
         "Something went wrong. Please try again.";
@@ -166,9 +177,7 @@ const RegisterForm = () => {
           <div className="col-lg-12">
             <div className="d-flex align-items-center justify-content-between">
               <div className="review-checkbox d-flex align-items-center mb-25">
-                <label htmlFor="australia" className="tg-label">
-                  Already Have An Account?
-                </label>
+                <label className="tg-label">Already Have An Account?</label>
               </div>
               <div className="tg-login-navigate mb-25">
                 <Link href="/login">Log In</Link>

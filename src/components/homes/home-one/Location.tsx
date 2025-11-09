@@ -3,9 +3,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
-import location_data from "@/data/LocationData";
 
 import location_bg from "@/assets/img/destination/tu/bg.png";
+import { useEffect, useState } from "react";
+import { apiRequest } from "@/api/axiosInstance";
 
 const setting = {
   slidesPerView: 4,
@@ -37,6 +38,28 @@ const setting = {
 };
 
 const Location = () => {
+  const [loading, setLoading] = useState(true);
+  const [locationData, setLocationData] = useState([]);
+
+  const getLocationData = async () => {
+    try {
+      setLoading(true);
+      const response = await apiRequest({
+        method: "GET",
+        url: "GetAllProjectCategories",
+      });
+      setLocationData(response?.data);
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getLocationData();
+  }, []);
+
   return (
     <div className="tg-location-area p-relative z-index-1 pb-65 pt-120">
       <div className="tg-location-su-bg">
@@ -85,22 +108,33 @@ const Location = () => {
               modules={[Autoplay, Navigation]}
               className="swiper-container tg-location-su-slider"
             >
-              {location_data
-                .filter((items) => items.page === "home_1")
-                .map((item) => (
+              {loading ? (
+                <div>
+                  <h6>Loading...</h6>
+                </div>
+              ) : (
+                locationData.length > 0 &&
+                locationData.map((item: any) => (
                   <SwiperSlide key={item.id} className="swiper-slide">
                     <div className="tg-location-3-wrap  tg-location-su-wrap  p-relative mb-30 tg-round-25">
                       <div className="tg-location-thumb tg-round-25">
                         <Image
                           className="w-100 tg-round-25"
-                          src={item.thumb}
-                          alt="location"
+                          src={`http://magnatehub.au/uploads/category/card/${item?.card}`}
+                          alt="categories"
+                          width={400}
+                          height={300}
+                          unoptimized
+                          onError={(e) => {
+                            e.currentTarget.src =
+                              "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                          }}
                         />
                       </div>
                       <div className="tg-location-content tg-location-su-content">
                         <div className="content">
                           <h3 className="tg-location-title mb-5">
-                            <Link href="/tour-grid-1">{item.title}</Link>
+                            <Link href="/tour-grid-1">{item.name}</Link>
                           </h3>
                           <span className="tg-location-su-duration">
                             {item.total}
@@ -126,7 +160,8 @@ const Location = () => {
                       </div>
                     </div>
                   </SwiperSlide>
-                ))}
+                ))
+              )}
             </Swiper>
           </div>
         </div>

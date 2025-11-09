@@ -1,18 +1,26 @@
+"use client";
 import { apiRequest } from "@/api/axiosInstance";
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 // Define the structure of the user object
 interface User {
   id: string;
   name?: string;
   email?: string;
-  [key: string]: any; // allow additional properties if needed
+  [key: string]: any; 
 }
 
 interface AuthResponse {
   user?: User;
   data?: User;
-  token?: string;
+  _token?: string;
+  user_id?:string;
 }
 
 interface LoginData {
@@ -28,14 +36,12 @@ interface RegisterData {
   [key: string]: any;
 }
 
-// Define the context type
 interface AuthContextType {
-  user: User | null;
   token: string | null;
   userId: string | null;
   isAuthenticated: boolean;
-  loginUser: (loginData: LoginData) => Promise<AuthResponse>;
-  registerUser: (registerData: RegisterData) => Promise<AuthResponse>;
+  loginUser: (loginData: LoginData | FormData) => Promise<AuthResponse>;
+  registerUser: (registerData: RegisterData | FormData) => Promise<AuthResponse>;
   logout: () => Promise<void>;
 }
 
@@ -44,19 +50,21 @@ interface AuthProviderProps {
 }
 
 // Create context with default value (undefined for safety)
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState<string>('');
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedUser = localStorage.getItem("user");
+      const savedUser = localStorage.getItem("user_id");
       const savedToken = localStorage.getItem("token");
 
-      if (savedUser) setUser(JSON.parse(savedUser));
+      if (savedUser) setUserId(JSON.parse(savedUser));
       if (savedToken) setToken(savedToken);
       if (savedUser && savedToken) setIsAuthenticated(true);
     }
@@ -64,19 +72,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const storeDataInLS = (res: AuthResponse) => {
     if (typeof window !== "undefined") {
-      const userData = res.data || res.user;
-      if (userData) localStorage.setItem("user", JSON.stringify(userData));
-      if (res.token) localStorage.setItem("token", res.token);
+      if (res.user_id) localStorage.setItem("user_id", JSON.stringify(res.user_id));
+      if (res._token) localStorage.setItem("token", res._token);
     }
 
-    setUser(res.user || res.data || null);
-    setToken(res.token || null);
+    setUserId(res.user_id || '');
+    setToken(res._token || null);
     setIsAuthenticated(true);
   };
 
-  const loginUser = async (loginData: LoginData): Promise<AuthResponse> => {
+  const loginUser = async (
+    loginData: LoginData | FormData
+  ): Promise<AuthResponse> => {
     const res = await apiRequest({
-      url: "LoginUser",
+      url: "/Raising/Login",
       method: "POST",
       data: loginData,
     });
@@ -84,7 +93,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-  const registerUser = async (registerData: RegisterData): Promise<AuthResponse> => {
+  const registerUser = async (
+    registerData: RegisterData | FormData
+  ): Promise<AuthResponse> => {
     const res = await apiRequest({
       url: "RegisterNewUser",
       method: "POST",
@@ -94,13 +105,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-  const userId = user ? user.id : null;
 
   const logout = (): Promise<void> => {
     return new Promise((resolve) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
-      setUser(null);
+      setUserId('');
       setToken(null);
       setIsAuthenticated(false);
       resolve();
@@ -110,7 +120,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        user,
         token,
         userId,
         isAuthenticated,

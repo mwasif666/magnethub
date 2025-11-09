@@ -4,6 +4,7 @@ import "../styles/App.css";
 import "../../public/assets/css/main.css";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout({
   children,
@@ -33,7 +34,9 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning={true}>
-        <Provider store={store}>{children}</Provider>
+        <Provider store={store}>
+          <AuthProvider>{children}</AuthProvider>
+          </Provider>
       </body>
     </html>
   );
