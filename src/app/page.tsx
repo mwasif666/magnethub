@@ -1,4 +1,5 @@
 import HomeOne from "@/components/homes/home-one";
+import { AuthProvider } from "@/context/AuthContext";
 import Wrapper from "@/layouts/Wrapper";
 
 export const metadata = {
@@ -6,9 +7,11 @@ export const metadata = {
 };
 const page = () => {
   return (
+    <AuthProvider>
     <Wrapper>
       <HomeOne />
     </Wrapper>
+    </AuthProvider>
   );
 };
 
