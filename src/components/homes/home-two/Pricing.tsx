@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import pricing_data from "@/data/PricingData";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import pricing_data from "@/data/PricingData";
 
 type PricingItem = {
   id: number;
@@ -64,8 +64,6 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
     item.desc.length > 100 ? item.desc.slice(0, 100) + "..." : item.desc;
 
   const buyNow = (slug: string)=>{
-    console.log("isAuthenticated",isAuthenticated);
-    
     if (isAuthenticated) {
       router.push(`/plan/${slug}`);
     } else {
@@ -94,7 +92,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
         </div>
 
         <div className="tg-pricing-btns mb-40">
-          <span className="tg-btn text-center w-100 cursor-pointer"  onClick={()=>buyNow(item?.slug || 'essentials')}>
+          <span className="tg-btn text-center w-100" style={{cursor:'pointer'}}  onClick={()=>buyNow(item?.slug || 'essentials')}>
             Buy Now
           </span>
         </div>
