@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import pricing_data from "@/data/PricingData";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 type PricingItem = {
   id: number;
   title: string;
+  slug?: string;
   price: number | string;
   desc: string;
   list: string[];
@@ -53,10 +55,23 @@ type PricingCardProps = {
 };
 
 const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
+ const {isAuthenticated} = useAuth();
+ const router = useRouter();
+
   const [showFullText, setShowFullText] = useState(false);
 
   const truncatedText =
     item.desc.length > 100 ? item.desc.slice(0, 100) + "..." : item.desc;
+
+  const buyNow = (slug: string)=>{
+    console.log("isAuthenticated",isAuthenticated);
+    
+    if (isAuthenticated) {
+      router.push(`/plan/${slug}`);
+    } else {
+      router.push("/login");
+    }
+  }
 
   return (
     <div className="col-lg-3 col-md-6">
@@ -79,9 +94,9 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
         </div>
 
         <div className="tg-pricing-btns mb-40">
-          <Link className="tg-btn text-center w-100" href="/contact">
+          <span className="tg-btn text-center w-100 cursor-pointer"  onClick={()=>buyNow(item?.slug || 'essentials')}>
             Buy Now
-          </Link>
+          </span>
         </div>
 
         <div className="tg-pricing-list">

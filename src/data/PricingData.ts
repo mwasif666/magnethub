@@ -1,5 +1,6 @@
 interface DataType {
   id: number;
+  slug?: string;
   title: string;
   desc: string;
   price: number;
@@ -11,6 +12,7 @@ const pricing_data: DataType[] = [
   {
     id: 1,
     title: "Essentials",
+    slug: "essentials",
     desc: `
 The "Essentials" pricing tier is designed for business owners who are comfortable managing the sale of their business on their own. This is the most affordable option, which provides you with exposure to potential buyers. 
 
@@ -37,6 +39,7 @@ With this tier, you will be able to list your business on our platform and have 
   {
     id: 2,
     title: "Premium",
+    slug: "premium",
     desc: `The "Premium" pricing tier offers comprehensive support for selling your business. This includes assistance in evaluating your business to determine its value and potential market appeal, as well as help in gathering the necessary documents and paperwork and editing your listing to maximise the chances of a swift sale.
 
 You will also be guided through the whole process to make sure that the sale goes smoothly and successfully. With this tier, you can be sure that you'll get the expert help you need to make your business worth as much as possible and find the right buyer. This includes us creating an Information Memorandum, created by us, to position you in the best possible light.`,
@@ -63,6 +66,7 @@ You will also be guided through the whole process to make sure that the sale goe
   {
     id: 3,
     title: "Enterprise",
+    slug: "enterprise",
     desc: `The "Enterprise" pricing tier is the ultimate package for brokers, agents, and franchisers. This premium offering allows access to unlimited listings Australia-wide, providing maximum exposure and easily list, change, edit your listings all in one flat fee`,
     price: 1500,
     list: [
@@ -82,6 +86,7 @@ You will also be guided through the whole process to make sure that the sale goe
   {
     id: 4,
     title: "Capital Raise",
+    slug: "capitai_rise",
     desc: "The ultimate solution to find investors looking to fund the next big thing. Whether you're a startup, an established business, or pre-revenue ideas, our platform connects you with a wide range of opportunities to grow your portfolio and get in front of the right people.",
     price: 249,
     list: [
