@@ -55,21 +55,20 @@ type PricingCardProps = {
 };
 
 const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
- const {isAuthenticated} = useAuth();
- const router = useRouter();
-
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const [showFullText, setShowFullText] = useState(false);
 
   const truncatedText =
     item.desc.length > 100 ? item.desc.slice(0, 100) + "..." : item.desc;
 
-  const buyNow = (slug: string)=>{
+  const buyNow = (slug: string) => {
     if (isAuthenticated) {
       router.push(`/plan/${slug}`);
     } else {
       router.push("/login");
     }
-  }
+  };
 
   return (
     <div className="col-lg-3 col-md-6">
@@ -77,7 +76,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
         className="tg-pricing-wrap mb-30 wow fadeInUp"
         data-wow-delay=".3s"
         data-wow-duration=".9s"
-        style={{height:"129vh"}}
+        style={{ height: "129vh" }}
       >
         <div className="tg-pricing-head">
           <h4 className="tg-pricing-title mb-15">{item.title}</h4>
@@ -92,7 +91,11 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
         </div>
 
         <div className="tg-pricing-btns mb-40">
-          <span className="tg-btn text-center w-100" style={{cursor:'pointer'}}  onClick={()=>buyNow(item?.slug || 'essentials')}>
+          <span
+            className="tg-btn text-center w-100"
+            style={{ cursor: "pointer" }}
+            onClick={() => buyNow(item?.slug || "essentials")}
+          >
             Buy Now
           </span>
         </div>
@@ -134,7 +137,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
               </li>
             ))}
           </ul>
-           {/* <div className="tg-pricing-head">
+          {/* <div className="tg-pricing-head">
           <h4 className="tg-pricing-title mb-15">{item.suitable}</h4>
         </div> */}
         </div>

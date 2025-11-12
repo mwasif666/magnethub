@@ -1,35 +1,19 @@
-"use client";
-import BreadCrumb from "@/components/common/BreadCrumb";
-import { useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { useParams } from "next/navigation";
-import FooterOne from "@/layouts/footers/FooterOne";
-import HeaderOne from "@/layouts/headers/HeaderOne";
-import BuyNow from "@/components/buynow/BuyNow";
+import pricing_data from "@/data/PricingData";
+import PlanClient from "./PlanClient";
 
-const Pricing = () => {
-  const { isAuthenticated } = useAuth();
-  const { slug } = useParams();
-  const slugParam = Array.isArray(slug) ? slug[0] : slug || "essentials";
+export async function generateStaticParams() {
+  return pricing_data.map((item: any) => ({
+    slug: item.slug,
+  }));
+}
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      window.location.href = "/login";
-    }
-  }, [isAuthenticated]);
+interface PlanPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
 
-  return (
-    <>
-      <HeaderOne />
-      <main>
-        <BreadCrumb title="Buy Now" sub_title="" />
-        <div className="tg-chose-area p-relative z-index-9 pt-135 pb-140">
-          <BuyNow slug={slugParam} />
-        </div>
-      </main>
-      <FooterOne />
-    </>
-  );
-};
-
-export default Pricing;
+export default async function PlanPage({ params }: PlanPageProps) {
+  const resolvedParams = await params;
+  return <PlanClient slug={resolvedParams.slug} />;
+}

@@ -133,15 +133,6 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
     }
   };
 
-  const fetchProductDataAsPerFilter = async (finalUrl: string) => {
-    try {
-      const response = await apiRequest({ url: finalUrl, method: "GET" });
-      setListing(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const minPriceRanges = [
     { value: "0", label: "$0" },
     { value: "25000", label: "$25,000" },
@@ -205,10 +196,32 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
     getListingData();
   };
 
+  const saveListingJSON = async (listingData: any) => {
+  try {
+    await fetch("/api/generate-json", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(listingData),
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
   const getListingData = () => {
     const initialUrl = constructUrl(formData);
     if (initialUrl) {
       fetchProductDataAsPerFilter(initialUrl);
+    }
+  };
+
+  const fetchProductDataAsPerFilter = async (finalUrl: string) => {
+    try {
+      const response = await apiRequest({ url: finalUrl, method: "GET" });
+      setListing(response.data);
+      saveListingJSON(response.data)
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -229,7 +242,9 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                 {/* Header */}
                 <div className="text-center mb-4">
                   {/* <h1 className="display-5 fw-bold text-primary mb-2">SESES</h1> */}
-                  <h2 className="h4 text-white">FIND BUSINESSES & Investment</h2>
+                  <h2 className="h4 text-white">
+                    FIND BUSINESSES & Investment
+                  </h2>
                 </div>
 
                 {/* Tab Navigation */}
@@ -390,7 +405,9 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                               id="franchiseCheck"
                             />
                             <label
-                              className={`form-check-label ${isListing ? "tab-listing-color" : ""}`}
+                              className={`form-check-label ${
+                                isListing ? "tab-listing-color" : ""
+                              }`}
                               htmlFor="franchiseCheck"
                             >
                               Franchise
@@ -406,7 +423,9 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                               id="premiumCheck"
                             />
                             <label
-                              className={`form-check-label ${isListing ? "tab-listing-color" : ""}`}
+                              className={`form-check-label ${
+                                isListing ? "tab-listing-color" : ""
+                              }`}
                               htmlFor="premiumCheck"
                             >
                               Premium Listing
@@ -422,7 +441,9 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                               id="allCheck"
                             />
                             <label
-                              className={`form-check-label ${isListing ? "tab-listing-color" : ""}`}
+                              className={`form-check-label ${
+                                isListing ? "tab-listing-color" : ""
+                              }`}
                               htmlFor="allCheck"
                             >
                               All
@@ -565,8 +586,8 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
         h4 {
           color: white !important;
         }
-         .tab-listing-color{
-        color:gray !important;
+        .tab-listing-color {
+          color: gray !important;
         }
         .form-check label {
           color: white;
