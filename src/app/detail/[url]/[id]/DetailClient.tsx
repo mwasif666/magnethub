@@ -1,4 +1,8 @@
 "use client";
+import BreadCrumb from "@/components/common/BreadCrumb";
+import ListingDetail from "@/components/listing-detail/ListingDetail";
+import FooterOne from "@/layouts/footers/FooterOne";
+import HeaderOne from "@/layouts/headers/HeaderOne";
 import React from "react";
 
 interface DetailClientProps {
@@ -8,11 +12,16 @@ interface DetailClientProps {
 
 const DetailClient: React.FC<DetailClientProps> = ({ url, id }) => {
   return (
-    <div>
-      <h1>Detail Page</h1>
-      <p>URL Slug: {url}</p>
-      <p>ID: {id}</p>
-    </div>
+      <>
+      <HeaderOne />
+      <main>
+        <BreadCrumb title="Listing Detail" sub_title="" />
+        <div className="tg-chose-area p-relative z-index-9 pt-135 pb-140">
+          <ListingDetail url={url} id={id}></ListingDetail>
+        </div>
+      </main>
+      <FooterOne />
+    </>
   );
 };
 

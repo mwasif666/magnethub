@@ -3,17 +3,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import UseProducts from "@/hooks/UseProducts";
+import FeatureTop from "./FeatureTop";
+import ReactPaginate from "react-paginate";
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
-import FeatureTop from "./FeatureTop";
-import FeatureSidebar from "./FeatureSidebar";
-import ReactPaginate from "react-paginate";
+import { useRouter } from "next/navigation";
 
 const FeatureArea = ({ listing }: { listing: any }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const { products, setProducts } = UseProducts();
   const [isListView, setIsListView] = useState(false);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const itemsPerPage = 9;
   const [itemOffset, setItemOffset] = useState(0);
@@ -47,9 +51,6 @@ const FeatureArea = ({ listing }: { listing: any }) => {
     setIsListView(false);
   };
 
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     if (listing && listing.length > 0) {
       setData(listing);
@@ -60,6 +61,9 @@ const FeatureArea = ({ listing }: { listing: any }) => {
     }
   }, [listing]);
 
+  const redirectUser = (item: any)=>{
+    router.push(`/detail/${item.url}/${item.id}`);
+  }
 
   return (
     <div className="tg-listing-grid-area mb-85">
@@ -94,8 +98,7 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                         className="col-xxl-3 col-xl-6 col-lg-6 col-md-6 tg-grid-full"
                       >
                         <div className="tg-listing-card-item mb-30">
-                          <div className="tg-listing-card-thumb fix mb-15 p-relative">
-                            <Link href="/tour-details">
+                          <div className="tg-listing-card-thumb fix mb-15 p-relative"  onClick={()=>redirectUser(item)}>
                               <Image
                                 className="tg-card-border w-100"
                                 src={`http://magnatehub.au/uploads/project/card/${item.card}`}
@@ -139,7 +142,6 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                                   {item.offer}
                                 </span>
                               )}
-                            </Link>
                             <div className="tg-listing-item-wishlist">
                               <a
                                 onClick={() => handleAddToWishlist(item)}

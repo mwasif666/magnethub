@@ -7,8 +7,6 @@ import { useState } from "react";
 import FooterOne from "@/layouts/footers/FooterOne";
 
 const FeatureTwo = () => {
-  const breadCrumbsTitle = "Let`s explore the listing";
-  const crums = "Listing";
   const [listing, setListing] = useState<any[]>([]);
   return (
     <>

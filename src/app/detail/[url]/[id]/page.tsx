@@ -1,4 +1,12 @@
 import DetailClient from "./DetailClient";
+import listing from "../../../../../data/listing.json";
+
+export async function generateStaticParams() {
+  return listing.map((item: any) => ({
+    url: item.url,   
+    id: item.id.toString(), 
+  }));
+}
 
 interface DetailPageProps {
   params: {
@@ -7,6 +15,7 @@ interface DetailPageProps {
   };
 }
 
-export default function DetailPage({ params }: DetailPageProps) {
-  return <DetailClient url={params.url} id={params.id} />;
+export default async function DetailPage({ params }: DetailPageProps) {
+  const resolvedParams = await params;
+  return <DetailClient url={resolvedParams.url} id={resolvedParams.id} />;
 }
