@@ -113,7 +113,31 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
             )}
           </p>
 
-          <ul>
+          <style>{`
+    .customScroll {
+      height: 400px;
+      overflow-y: scroll;
+    }
+
+    .customScroll::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .customScroll::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+
+    .customScroll::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+    .customScroll::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+  `}</style>
+          <ul className="customScroll">
             {item.list.map((list, i) => (
               <li key={i}>
                 <span className="icon">

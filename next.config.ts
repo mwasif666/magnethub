@@ -4,14 +4,15 @@ const nextConfig: NextConfig = {
   output: 'export',
 
   /* config options here */
+  output: "export",
   images: {
     unoptimized: true,
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'magnatehub.au',
-        port: '',
-        pathname: '/uploads/project/card/**',
+        protocol: "http",
+        hostname: "magnatehub.au",
+        port: "",
+        pathname: "/uploads/project/card/**",
       },
     ],
   },
