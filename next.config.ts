@@ -4,7 +4,6 @@ const nextConfig: NextConfig = {
   output: 'export',
 
   /* config options here */
-  output: "export",
   images: {
     unoptimized: true,
     remotePatterns: [
