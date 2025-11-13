@@ -2,13 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  output: "export",
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'magnatehub.au',
-        port: '',
-        pathname: '/uploads/project/card/**',
+        protocol: "http",
+        hostname: "magnatehub.au",
+        port: "",
+        pathname: "/uploads/project/card/**",
       },
     ],
   },
