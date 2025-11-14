@@ -4,7 +4,7 @@ import listing from '../../../../../data/listing.json';
 export async function generateStaticParams() {
   return listing.map((item: any) => ({
     url: item.url,
-    id: item.id.toString(),
+    id: item.project_id.toString(),
   }));
 }
 

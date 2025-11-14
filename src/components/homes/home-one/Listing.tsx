@@ -2,15 +2,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import Wishlist from "@/svg/home-one/Wishlist";
-import Clock from "@/svg/home-one/Clock";
-import User from "@/svg/home-one/User";
-import Location from "@/svg/home-one/Location";
 import shape_1 from "@/assets/img/listing/su/shape-2.png";
 import shape_2 from "@/assets/img/listing/su/shape-1.png";
 import { useEffect, useState } from "react";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import styles from "../../listing-detail/ListingDetail.module.css";
+
+
 
 const Listing = ({ listing }: { listing: any[] }) => {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ const Listing = ({ listing }: { listing: any[] }) => {
 
   const router = useRouter();
   const redirectUser = (item: any) => {
-    router.push(`/detail/${item.url}/${item.id}`);
+    router.push(`/detail/${item.url}/${item.project_id}`);
   };
 
   return (
@@ -67,8 +67,9 @@ const Listing = ({ listing }: { listing: any[] }) => {
         <div className="row">
           {/* Loading State */}
           {loading ? (
-            <div className="text-center py-5">
-              <p>Loading listings...</p>
+            <div className={styles.loadingContainer}>
+              <div className={styles.spinner}></div>
+              <p className={styles.loadingText}>Loading package details...</p>
             </div>
           ) : data.length > 0 ? (
             data.map((item) => (
@@ -107,39 +108,39 @@ const Listing = ({ listing }: { listing: any[] }) => {
                   </div>
 
                   <div className="tg-listing-card-content">
-                    <div className="tg-listing-card-duration-tour d-flex align-items-center gap-3">
+                    {/* <div className="tg-listing-card-duration-tour d-flex align-items-center gap-3">
                       <span className="tg-listing-card-duration-map mb-5">
                         <Clock /> {item.time}
                       </span>
                       <span className="tg-listing-card-duration-time mb-5">
                         <User /> {item.guest}
                       </span>
-                    </div>
+                    </div> */}
 
                     <h4 className="tg-listing-card-title mb-10">
-                      <Link href="tour-details.html">{item.title}</Link>
+                      <Link href="tour-details.html">
+                        {item.name.length > 30
+                          ? item.name.slice(0, 20) + "..."
+                          : item.name}
+                      </Link>
                     </h4>
 
-                    <div className="tg-listing-card-duration-tour mb-20">
+                    {/* <div className="tg-listing-card-duration-tour mb-20">
                       <span className="tg-listing-card-duration-map">
                         <Location /> {item.location}
                       </span>
-                    </div>
+                    </div> */}
 
                     <div className="tg-listing-card-price d-flex align-items-end justify-content-between">
                       <div>
                         <span className="tg-listing-card-currency-amount d-flex align-items-center">
-                          <span className="currency-symbol mr-5">From</span>$
+                          <span className="currency-symbol mr-5"></span>$
                           {item.price}
                         </span>
                       </div>
                       <div>
                         <span className="tg-listing-rating-icon">
-                          <i className="fa-sharp fa-solid fa-star"></i>{" "}
-                          {item.review}
-                        </span>
-                        <span className="tg-listing-rating-percent">
-                          {item.total_review}
+                         {item?.franchise === "0" ? <i className="fa-sharp fa-solid fa-star"></i> :  item?.franchise === "0"  ? <i className="fa-sharp fa-solid fa-star"></i> : null}
                         </span>
                       </div>
                     </div>

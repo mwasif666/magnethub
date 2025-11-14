@@ -62,7 +62,7 @@ const FeatureArea = ({ listing }: { listing: any }) => {
   }, [listing]);
 
   const redirectUser = (item: any)=>{
-    router.push(`/detail/${item.url}/${item.id}`);
+    router.push(`/detail/${item.url}/${item.project_id}`);
   }
 
   return (

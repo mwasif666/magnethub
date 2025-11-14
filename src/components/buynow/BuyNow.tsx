@@ -106,190 +106,406 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
       ? item.desc.slice(0, 120) + "..."
       : item?.desc;
 
-  if (!item) return <div className="p-5 text-center">Loading...</div>;
+  if (!item) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
+        <p className={styles.loadingText}>Loading package details...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className={`container ${styles.buyNowContainer}`}>
-      <div className="row justify-content-center">
-        {/* FORM SECTION */}
-        <div className="col-lg-7 col-md-8 mb-4">
-          <div className={`card shadow-sm p-4 ${styles.formCard}`}>
-            <h2 className="mb-3 fw-bold">Buy Package</h2>
+    <div className={styles.buyNowContainer}>
+      <div className="container">
+        <div className="row justify-content-center g-4">
+          {/* FORM SECTION */}
+          <div className="col-lg-7 col-md-8">
+            <div className={styles.formCard}>
+              <div className={styles.formHeader}>
+                <h2 className={styles.formTitle}>Complete Your Purchase</h2>
+                <p className={styles.formSubtitle}>
+                  Fill in your details to proceed with the payment
+                </p>
+              </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-              {/* PLAN SELECT */}
-              <div className="mb-4">
-                <label className="form-label">Plan</label>
-                <select
-                  {...register("plan")}
-                  value={selectedSlug}
-                  onChange={(e) => setSelectedSlug(e.target.value)}
-                  className="form-control"
+              <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+                {/* PLAN SELECT */}
+                <div className={styles.formSection}>
+                  <label className={styles.label}>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M9 11l3 3L22 4"></path>
+                      <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                    </svg>
+                    Select Package
+                  </label>
+                  <div className={styles.selectWrapper}>
+                    <select
+                      {...register("plan")}
+                      value={selectedSlug}
+                      onChange={(e) => setSelectedSlug(e.target.value)}
+                      className={styles.select}
+                    >
+                      {pricing_data.map((p) => (
+                        <option key={p.slug} value={p.slug}>
+                          {p.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {errors.plan && (
+                    <p className={styles.error}>{errors.plan.message}</p>
+                  )}
+                </div>
+
+                {/* CONTACT DETAILS */}
+                <div className={styles.formSection}>
+                  <div className={styles.sectionHeader}>
+                    <h4 className={styles.sectionTitle}>Contact Details</h4>
+                    <div className={styles.sectionDivider}></div>
+                  </div>
+
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Full Name</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                          </svg>
+                          <input
+                            className={styles.input}
+                            {...register("name")}
+                            placeholder="John Doe"
+                          />
+                        </div>
+                        {errors.name && (
+                          <p className={styles.error}>{errors.name.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Email Address</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                          </svg>
+                          <input
+                            type="email"
+                            className={styles.input}
+                            {...register("email")}
+                            placeholder="john@example.com"
+                          />
+                        </div>
+                        {errors.email && (
+                          <p className={styles.error}>{errors.email.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Phone Number</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
+                          </svg>
+                          <input
+                            type="tel"
+                            className={styles.input}
+                            {...register("phone")}
+                            placeholder="+61 400 000 000"
+                          />
+                        </div>
+                        {errors.phone && (
+                          <p className={styles.error}>{errors.phone.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Message (Optional)</label>
+                        <textarea
+                          className={styles.textarea}
+                          {...register("message")}
+                          placeholder="Any additional information or questions..."
+                          rows={4}
+                        ></textarea>
+                        {errors.message && (
+                          <p className={styles.error}>{errors.message.message}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* PAYMENT DETAILS */}
+                <div className={styles.formSection}>
+                  <div className={styles.sectionHeader}>
+                    <h4 className={styles.sectionTitle}>Payment Information</h4>
+                    <div className={styles.sectionDivider}></div>
+                  </div>
+
+                  <div className="row g-3">
+                    <div className="col-12">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Name on Card</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                          </svg>
+                          <input
+                            className={styles.input}
+                            {...register("cardName")}
+                            placeholder="JOHN DOE"
+                          />
+                        </div>
+                        {errors.cardName && (
+                          <p className={styles.error}>{errors.cardName.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Card Number</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                          </svg>
+                          <input
+                            className={styles.input}
+                            {...register("cardNumber")}
+                            placeholder="1234 5678 9012 3456"
+                            maxLength={16}
+                          />
+                        </div>
+                        {errors.cardNumber && (
+                          <p className={styles.error}>{errors.cardNumber.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>CVC</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                          </svg>
+                          <input
+                            className={styles.input}
+                            {...register("cvc")}
+                            placeholder="123"
+                            maxLength={4}
+                          />
+                        </div>
+                        {errors.cvc && (
+                          <p className={styles.error}>{errors.cvc.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Expiry Month</label>
+                        <div className={styles.inputWrapper}>
+                          <input
+                            className={styles.input}
+                            {...register("expMonth")}
+                            placeholder="MM"
+                            maxLength={2}
+                          />
+                        </div>
+                        {errors.expMonth && (
+                          <p className={styles.error}>{errors.expMonth.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-4">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Expiry Year</label>
+                        <div className={styles.inputWrapper}>
+                          <input
+                            className={styles.input}
+                            {...register("expYear")}
+                            placeholder="YYYY"
+                            maxLength={4}
+                          />
+                        </div>
+                        {errors.expYear && (
+                          <p className={styles.error}>{errors.expYear.message}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className={styles.submitBtn}
+                  disabled={loading}
                 >
-                  {pricing_data.map((p) => (
-                    <option key={p.slug} value={p.slug}>
-                      {p.title}
-                    </option>
-                  ))}
-                </select>
-                <p className={styles.error}>{errors.plan?.message}</p>
-              </div>
-
-              <h4 className="fw-bold mb-3">Contact Details</h4>
-
-              <div className="row">
-                <div className="col-lg-6 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("name")}
-                    placeholder="Name"
-                  />
-                  <p className={styles.error}>{errors.name?.message}</p>
-                </div>
-
-                <div className="col-lg-6 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("email")}
-                    placeholder="Email"
-                  />
-                  <p className={styles.error}>{errors.email?.message}</p>
-                </div>
-
-                <div className="col-lg-12 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("phone")}
-                    placeholder="Phone"
-                  />
-                  <p className={styles.error}>{errors.phone?.message}</p>
-                </div>
-
-                <div className="col-lg-12 mb-3">
-                  <textarea
-                    className="form-control"
-                    {...register("message")}
-                    placeholder="Message"
-                  ></textarea>
-                  <p className={styles.error}>{errors.message?.message}</p>
-                </div>
-              </div>
-
-              <h4 className="fw-bold mb-3">Payment Details</h4>
-
-              <div className="row">
-                <div className="col-lg-12 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("cardName")}
-                    placeholder="Name on Card"
-                  />
-                  <p className={styles.error}>{errors.cardName?.message}</p>
-                </div>
-
-                <div className="col-lg-12 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("cardNumber")}
-                    placeholder="Card Number"
-                  />
-                  <p className={styles.error}>{errors.cardNumber?.message}</p>
-                </div>
-
-                <div className="col-lg-4 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("cvc")}
-                    placeholder="CVC"
-                  />
-                  <p className={styles.error}>{errors.cvc?.message}</p>
-                </div>
-
-                <div className="col-lg-4 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("expMonth")}
-                    placeholder="MM"
-                  />
-                  <p className={styles.error}>{errors.expMonth?.message}</p>
-                </div>
-
-                <div className="col-lg-4 mb-3">
-                  <input
-                    className="form-control"
-                    {...register("expYear")}
-                    placeholder="YYYY"
-                  />
-                  <p className={styles.error}>{errors.expYear?.message}</p>
-                </div>
-              </div>
-
-              <button
-                className={`btn ${styles.submitBtn} mt-3`}
-                disabled={loading}
-              >
-                {loading ? "Processing..." : "Submit Payment"}
-              </button>
-            </form>
+                  {loading ? (
+                    <>
+                      <span className={styles.spinnerSmall}></span>
+                      Processing Payment...
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M20 6L9 17l-5-5"></path>
+                      </svg>
+                      Complete Payment - ${item.price}/month
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
 
-        {/* PRICING CARD — SAME DESIGN FIXED */}
-        <div className="col-lg-5 col-md-6">
-          <div
-            className="tg-pricing-wrap mb-30 wow fadeInUp"
-            data-wow-delay=".3s"
-            data-wow-duration=".9s"
-          >
-            <div className="tg-pricing-head">
-              <h4 className="tg-pricing-title mb-15">{item.title}</h4>
-            </div>
+          {/* PRICING CARD */}
+          <div className="col-lg-5 col-md-6">
+            <div className={styles.pricingCard}>
+              <div className={styles.pricingHeader}>
+                <div className={styles.pricingBadge}>Selected Plan</div>
+                <h3 className={styles.pricingTitle}>{item.title}</h3>
+              </div>
 
-            <div className="tg-pricing-price mb-25">
-              <h2>
-                <span>$</span> {item.price}
-              </h2>
-              <span className="dates">/month *</span>
-            </div>
+              <div className={styles.pricingAmount}>
+                <div className={styles.priceWrapper}>
+                  <span className={styles.currency}>$</span>
+                  <span className={styles.price}>{item.price}</span>
+                </div>
+                <span className={styles.pricePeriod}>/month</span>
+              </div>
 
-            <div className="tg-pricing-list">
-              <p className="mb-25 pricing list-desc">
-                {showFullText ? item.desc : truncatedText}
-
+              <div className={styles.pricingDescription}>
+                <p className={styles.descriptionText}>
+                  {showFullText ? item.desc : truncatedText}
+                </p>
                 {item.desc.length > 120 && (
                   <button
                     onClick={() => setShowFullText(!showFullText)}
-                    className="see-more-btn ms-2 border-0 bg-transparent p-0"
+                    className={styles.seeMoreBtn}
                   >
                     {showFullText ? "See Less" : "See More"}
                   </button>
                 )}
-              </p>
+              </div>
 
-              <ul>
-                {item.list.map((list, i) => (
-                  <li key={i}>
-                    <span className="icon">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M17 8.26858V9.00458C16.999 10.7297 16.4404 12.4083 15.4075 13.79C14.3745 15.1718 12.9226 16.1826 11.2683 16.6717C9.61394 17.1608 7.8458 17.1021 6.22757 16.5042C4.60934 15.9064 3.22772 14.8015 2.28877 13.3542C1.34981 11.907 0.903833 10.195 1.01734 8.47363C1.13085 6.75223 1.79777 5.11364 2.91862 3.80224C4.03948 2.49083 5.55423 1.57688 7.23695 1.1967C8.91967 0.816507 10.6802 0.990449 12.256 1.69258M17 2.60458L9 10.6126L6.6 8.21258"
-                          stroke="#560CE3"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    <span>{list}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className={styles.featuresList}>
+                <h5 className={styles.featuresTitle}>What's Included:</h5>
+                <ul className={styles.features}>
+                  {item.list.map((list, i) => (
+                    <li key={i} className={styles.featureItem}>
+                      <span className={styles.checkIcon}>
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M17 8.26858V9.00458C16.999 10.7297 16.4404 12.4083 15.4075 13.79C14.3745 15.1718 12.9226 16.1826 11.2683 16.6717C9.61394 17.1608 7.8458 17.1021 6.22757 16.5042C4.60934 15.9064 3.22772 14.8015 2.28877 13.3542C1.34981 11.907 0.903833 10.195 1.01734 8.47363C1.13085 6.75223 1.79777 5.11364 2.91862 3.80224C4.03948 2.49083 5.55423 1.57688 7.23695 1.1967C8.91967 0.816507 10.6802 0.990449 12.256 1.69258M17 2.60458L9 10.6126L6.6 8.21258"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span>{list}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className={styles.securityBadge}>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>Secure Payment</span>
+              </div>
             </div>
           </div>
         </div>
