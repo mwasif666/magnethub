@@ -1,0 +1,65 @@
+.listingContainer {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.headerCard {
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.host {
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
+}
+
+.host span {
+  color: #000;
+  font-weight: 600;
+}
+
+.listingImage {
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.infoCard {
+  border-radius: 12px;
+}
+
+.infoLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #777;
+  margin-bottom: 3px;
+}
+
+.infoValue {
+  font-size: 17px;
+  font-weight: 700;
+  color: #222;
+}
+
+.sectionCard {
+  border-radius: 12px;
+  background: #fff;
+}
+
+.sectionTitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.sectionText {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #444;
+}
