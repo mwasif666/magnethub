@@ -1,0 +1,89 @@
+.wrapper {
+  padding: 40px 0;
+}
+
+.formCard {
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.detailsCard {
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.heading {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.subHeading {
+  font-size: 15px;
+  color: #666;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input {
+  height: 48px;
+  border-radius: 8px;
+}
+
+.textarea {
+  border-radius: 8px;
+}
+
+.error {
+  font-size: 12px;
+  color: red;
+  margin-top: 4px;
+}
+
+.submitBtn {
+  background: #560ce3;
+  color: #fff;
+  padding: 10px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.submitBtn:hover {
+  background: #4408b5;
+}
+
+.planTitle {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.price {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 14px;
+  color: #555;
+}
+
+.seeMoreBtn {
+  border: none;
+  background: transparent;
+  color: #560ce3;
+  margin-left: 6px;
+}
+
+.list {
+  margin-top: 15px;
+  padding-left: 18px;
+}
+
+.list li {
+  padding: 4px 0;
+  font-size: 14px;
+}
