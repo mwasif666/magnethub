@@ -13,30 +13,39 @@
 }
 /* Custom Scroll */
 
-/* SBTSection.module.css ya global CSS me */
 .customScroll {
-  height: 400px;
-  overflow-y: scroll;
+  max-height: 460px; /* adjust as needed */
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #7f3cff transparent;
+  transition: all 0.3s ease;
 }
 
-/* Scrollbar width */
+/* WebKit Scrollbar */
 .customScroll::-webkit-scrollbar {
+  width: 6px;
+  transition: width 0.3s ease;
+}
+
+/* Track */
+.customScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Thumb */
+.customScroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6f00ff, #b06bff);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+/* Hover Animation */
+.customScroll:hover::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #5a00d4, #a25cff);
   width: 8px;
 }
 
-/* Scrollbar track (background) */
-.customScroll::-webkit-scrollbar-track {
-  background: red !important; /* light background */
-  border-radius: 4px;
-}
-
-/* Scrollbar thumb (draggable part) */
-.customScroll::-webkit-scrollbar-thumb {
-  background: #c1c1c1 !important; /* light gray thumb */
-  border-radius: 4px;
-}
-
-/* Optional: hover effect */
-.customScroll::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+.customScroll:hover::-webkit-scrollbar {
+  width: 8px;
 }

@@ -6,6 +6,7 @@ interface DataType {
   price: number;
   list: string[];
   suitable?: string;
+  
 }
 
 const pricing_data: DataType[] = [
