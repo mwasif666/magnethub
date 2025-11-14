@@ -6,7 +6,6 @@ interface DataType {
   price: number;
   list: string[];
   suitable?: string;
-  
 }
 
 const pricing_data: DataType[] = [
@@ -31,7 +30,6 @@ With this tier, you will be able to list your business on our platform and have 
       "Premium positioning when listed",
       "Choice to refresh every 30 days so your seen",
       "Alert buyers that are interested in your ‘Category’ or type of business",
-      "Includes 10% GST",
       " 6 months listing",
     ],
     suitable:
@@ -59,7 +57,6 @@ You will also be guided through the whole process to make sure that the sale goe
       "Statistics Dashboard",
       "Chat feature",
       "listed until sold",
-      "Includes 10% GST",
     ],
     suitable:
       "Business owners who need a little help determining the price of the business as well as the sale process etc",
@@ -80,9 +77,9 @@ You will also be guided through the whole process to make sure that the sale goe
       "Chat feature",
       "Analytics Dashboard",
       "listed until sold",
-      "Includes 10% GST",
     ],
-    suitable:"This is for business brokers who have many businesses, they have unlimited adverts they can post and they don’t expire, they will add and delete as they want to."
+    suitable:
+      "This is for business brokers who have many businesses, they have unlimited adverts they can post and they don’t expire, they will add and delete as they want to.",
   },
   {
     id: 4,
@@ -97,10 +94,8 @@ You will also be guided through the whole process to make sure that the sale goe
       "Free Non-Disclosure Document",
       "Statistics Dashboard",
       "Chat feature",
-      "Includes 10% GST",
     ],
-    suitable:"Startups, established businesses or pre revenue ideas."
-
+    suitable: "Startups, established businesses or pre revenue ideas.",
   },
 ];
 

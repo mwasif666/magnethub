@@ -15,7 +15,7 @@ const HeaderOne = () => {
   const { sticky } = UseSticky();
   const [offCanvas, setOffCanvas] = useState<boolean>(false);
   const [sidebar, setSidebar] = useState<boolean>(false);
-  const {isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
@@ -73,12 +73,21 @@ const HeaderOne = () => {
                     </div>
                   </div> */}
                   <div className="tg-header-btn ml-20 d-none d-sm-block">
-                    {!isAuthenticated ? <Link className="tg-btn-header" href="/login">
-                      <span>
-                        <UserIcon />
-                      </span>
-                      Login
-                    </Link> : <div><h4>User</h4></div>}
+                    {!isAuthenticated ? (
+                      <Link className="tg-btn-header" href="/login">
+                        <span>
+                          <UserIcon />
+                        </span>
+                        Login
+                      </Link>
+                    ) : (
+                      <div className="tg-btn-header">
+                        <span>
+                          <UserIcon />
+                        </span>
+                        User
+                      </div>
+                    )}
                   </div>
                   <div className="tg-header-menu-bar p-relative">
                     <button

@@ -32,9 +32,9 @@ const Listing = ({ listing }: { listing: any[] }) => {
   }, [listing]);
 
   const router = useRouter();
-  const redirectUser = (item: any)=>{
+  const redirectUser = (item: any) => {
     router.push(`/detail/${item.url}/${item.id}`);
-  }
+  };
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
@@ -73,26 +73,29 @@ const Listing = ({ listing }: { listing: any[] }) => {
           ) : data.length > 0 ? (
             data.map((item) => (
               <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
-                <div className="tg-listing-card-item tg-listing-su-card-item mb-25" onClick={()=>redirectUser(item)}>
+                <div
+                  className="tg-listing-card-item tg-listing-su-card-item mb-25"
+                  onClick={() => redirectUser(item)}
+                >
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
-                      <Image
-                        className="tg-card-border w-100"
-                        src={`http://magnatehub.au/uploads/project/card/${item.card}`}
-                        alt={item?.name || "Project listing image"}
-                        width={400}
-                        height={300}
-                        unoptimized
-                        onError={(e) => {
-                          e.currentTarget.src =
-                            "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
-                        }}
-                      />
+                    <Image
+                      className="tg-card-border w-100"
+                      src={`http://magnatehub.au/uploads/project/card/${item.card}`}
+                      alt={item?.name || "Project listing image"}
+                      width={400}
+                      height={300}
+                      unoptimized
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                      }}
+                    />
 
-                      {item.tag && (
-                        <span className="tg-listing-item-price-discount">
-                          {item.tag}
-                        </span>
-                      )}
+                    {item.tag && (
+                      <span className="tg-listing-item-price-discount">
+                        {item.tag}
+                      </span>
+                    )}
                     <div className="tg-listing-item-wishlist">
                       <a
                         onClick={() => handleAddToWishlist(item)}
@@ -150,7 +153,7 @@ const Listing = ({ listing }: { listing: any[] }) => {
             </div>
           )}
 
-          <div className="col-12">
+          {/* <div className="col-12">
             <div className="text-center mt-15">
               <Link
                 href="/tour-grid-1"
@@ -159,7 +162,7 @@ const Listing = ({ listing }: { listing: any[] }) => {
                 See More Tours
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
