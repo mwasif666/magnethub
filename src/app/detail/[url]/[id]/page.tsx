@@ -1,18 +1,18 @@
 import DetailClient from "./DetailClient";
-import listing from "../../../../../data/listing.json";
+import listing from '../../../../../data/listing.json';
 
 export async function generateStaticParams() {
   return listing.map((item: any) => ({
-    url: item.url,   
-    id: item.id.toString(), 
+    url: item.url,
+    id: item.id.toString(),
   }));
 }
 
 interface DetailPageProps {
-  params: {
+  params: Promise<{
     url: string;
     id: string;
-  };
+  }>;
 }
 
 export default async function DetailPage({ params }: DetailPageProps) {

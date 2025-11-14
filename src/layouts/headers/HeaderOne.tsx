@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import NavMenu from "./Menu/NavMenu";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,6 +15,7 @@ const HeaderOne = () => {
   const { sticky } = UseSticky();
   const [offCanvas, setOffCanvas] = useState<boolean>(false);
   const [sidebar, setSidebar] = useState<boolean>(false);
+  const {isAuthenticated} = useAuth();
 
   return (
     <>
@@ -71,12 +73,12 @@ const HeaderOne = () => {
                     </div>
                   </div> */}
                   <div className="tg-header-btn ml-20 d-none d-sm-block">
-                    <Link className="tg-btn-header" href="/login">
+                    {!isAuthenticated ? <Link className="tg-btn-header" href="/login">
                       <span>
                         <UserIcon />
                       </span>
                       Login
-                    </Link>
+                    </Link> : <div><h4>User</h4></div>}
                   </div>
                   <div className="tg-header-menu-bar p-relative">
                     <button

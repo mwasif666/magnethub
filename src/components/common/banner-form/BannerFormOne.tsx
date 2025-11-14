@@ -31,6 +31,8 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<DropDown>([]);
   const [locations, setLocations] = useState<DropDown>([]);
+  const [regions, setRegions] = useState<DropDown>([]);
+  const [regionLoading, setRegionLoading] = useState<boolean>(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleInputChange = (
@@ -59,6 +61,11 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
       const url = constructUrl(newForm);
       if (url) fetchProductDataAsPerFilter(url);
     }
+
+    if(name === 'state'){
+      getRegionsById(value);
+    }
+    
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -76,6 +83,24 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
   const getLocations = async () => {
     return apiRequest({ url: "GetAllProjectLocations", method: "GET" });
   };
+
+  const getRegionsById = async (id: string)=>{
+    try {
+      setRegionLoading(true);
+      const response = await apiRequest({ url: `GetAllRegions?locationId=${id}`, method: "GET" });
+        setRegions(
+          response?.data?.map((c: any) => ({
+            label: c.name,
+            value: c.id,
+          })) || []
+        );
+
+    } catch (error) {
+      throw error;
+    }finally{
+      setRegionLoading(false);
+    }
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -218,8 +243,8 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
   const fetchProductDataAsPerFilter = async (finalUrl: string) => {
     try {
       const response = await apiRequest({ url: finalUrl, method: "GET" });
-      setListing(response.data);
-      saveListingJSON(response.data)
+      setListing(response?.data?.data);
+      saveListingJSON(response?.data?.data)
     } catch (error) {
       console.error(error);
     }
@@ -348,17 +373,25 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                           </select>
                         </div>
                         <div className="col-md-3">
-                          <select
-                            className="form-select"
-                            name="region"
-                            value={formData.region}
-                            onChange={handleInputChange}
-                          >
-                            <option value="">Select regions</option>
-                            <option value="region1">Region 1</option>
-                            <option value="region2">Region 2</option>
-                            <option value="region3">Region 3</option>
-                          </select>
+                        <select
+                          className="form-select"
+                          name="region"
+                          value={formData.region2}
+                          onChange={handleInputChange}
+                        >
+                          {regionLoading ? (
+                            <option>Loading regions...</option>
+                          ) : (
+                            <>
+                              <option value="">Select regions</option>
+                              {regions.map((state, index) => (
+                                <option key={index} value={state.value}>
+                                  {state.label}
+                                </option>
+                              ))}
+                            </>
+                          )}
+                        </select>
                         </div>
                         <div className="col-md-3">
                           <select
@@ -539,16 +572,24 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
                           </select>
                         </div>
                         <div className="col-md-4">
-                          <select
+                         <select
                             className="form-select"
                             name="region2"
                             value={formData.region2}
                             onChange={handleInputChange}
                           >
-                            <option value="">Select regions</option>
-                            <option value="region1">Region 1</option>
-                            <option value="region2">Region 2</option>
-                            <option value="region3">Region 3</option>
+                            {regionLoading ? (
+                              <option>Loading regions...</option>
+                            ) : (
+                              <>
+                                <option value="">Select regions</option>
+                                {regions.map((state, index) => (
+                                  <option key={index} value={state.value}>
+                                    {state.label}
+                                  </option>
+                                ))}
+                              </>
+                            )}
                           </select>
                         </div>
                       </div>

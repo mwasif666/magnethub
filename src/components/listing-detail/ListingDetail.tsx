@@ -1,6 +1,7 @@
+import { apiRequest } from "@/api/axiosInstance";
 import Wishlist from "@/svg/home-one/Wishlist";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface ListingDetailProps {
   url: string;
@@ -8,6 +9,22 @@ interface ListingDetailProps {
 }
 
 const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
+    const [listing, setListing] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const getProductDetails = async () => {
+      try {
+        const response = await apiRequest({ url: `GetAllProjects/${id}`, method: "GET" });
+        setListing(response.data);
+      } catch (error) {
+        throw error;
+      }
+    };
+
+    useEffect(()=>{
+      getProductDetails();
+    },[])
+
   return (
     <>
       <div className="card">

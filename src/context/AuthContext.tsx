@@ -21,6 +21,7 @@ interface AuthResponse {
   data?: User;
   _token?: string;
   user_id?:string;
+  error?:boolean
 }
 
 interface LoginData {
@@ -58,6 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userId, setUserId] = useState<string>('');
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [role, setRole] = useState('');
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -71,14 +73,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const storeDataInLS = (res: AuthResponse) => {
-    if (typeof window !== "undefined") {
-      if (res.user_id) localStorage.setItem("user_id", JSON.stringify(res.user_id));
-      if (res._token) localStorage.setItem("token", res._token);
+    if(!res.error){
+      if (typeof window !== "undefined") {
+        if (res.user_id) localStorage.setItem("user_id", JSON.stringify(res.user_id));
+        if (res._token) localStorage.setItem("token", res._token);
+      }
+  
+      setUserId(res.user_id || '');
+      setToken(res._token || null);
+      setIsAuthenticated(true);
     }
-
-    setUserId(res.user_id || '');
-    setToken(res._token || null);
-    setIsAuthenticated(true);
   };
 
   const loginUser = async (
