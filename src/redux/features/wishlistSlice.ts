@@ -7,6 +7,7 @@ export interface Product {
    title: string;
    thumb: string;
    price: number;
+   name:string;
 }
 
 interface WishlistState {
@@ -24,12 +25,12 @@ const wishlistSlice = createSlice({
       addToWishlist: (state, { payload }: PayloadAction<Product>) => {
          const productIndex = state.wishlist.findIndex((item) => item.id === payload.id);
          if (productIndex >= 0) {
-            toast.info(`${payload.title} is already in your wishlist`, {
+            toast.info(`${payload.name} is already in your wishlist`, {
                position: "top-right",
             });
          } else {
             state.wishlist.push(payload);
-            toast.success(`${payload.title} added to wishlist`, {
+            toast.success(`${payload.name} added to wishlist`, {
                position: "top-right",
             });
             setLocalStorage("wishlist", state.wishlist);

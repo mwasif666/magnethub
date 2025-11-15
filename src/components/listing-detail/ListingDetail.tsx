@@ -1,9 +1,13 @@
+"use client"
 import { apiRequest } from "@/api/axiosInstance";
 import Wishlist from "@/svg/home-one/Wishlist";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import styles from "./ListingDetail.module.css";
 import Loading from "../loading/Loading";
+import { useDispatch } from "react-redux";
+import { addToWishlist } from "@/redux/features/wishlistSlice";
+import { ToastContainer } from "react-toastify";
 
 interface ListingDetailProps {
   url: string;
@@ -11,8 +15,9 @@ interface ListingDetailProps {
 }
 
 const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
+  const dispatch = useDispatch();
   const [listing, setListing] = useState<any>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const getProductDetails = async () => {
     try {
@@ -23,7 +28,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
       });
       setListing(response.data?.data[0]);
     } catch (error) {
-      console.log(error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -37,7 +42,13 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     return JSON.parse(Image);
   };
 
+  const handleAddToWishlist = (item: any) => {
+    dispatch(addToWishlist(item));
+  };
+
   return (
+    <>
+    <ToastContainer position="top-center" />
     <div className={`container ${styles.listingContainer}`}>
       {!loading ? (
         <>
@@ -56,8 +67,14 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                 </h5>
               </div>
 
-              <div className="text-end cursor-pointer">
-                <Wishlist />
+              <div className="text-end cursor-pointer" 
+                  onClick={() => handleAddToWishlist(listing)}
+              >
+                <a
+                  style={{ cursor: "pointer" }}
+                >
+                  <Wishlist />
+                </a>
                 <p className="mt-2 mb-0 fw-semibold">Add To Favorite</p>
               </div>
             </div>
@@ -129,8 +146,8 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
             </div>
           </div>
 
-          
-           {[
+
+          {[
             { label: "Summary", value: listing.summary },
             { label: "Skills", value: listing.skills },
             { label: "Potential", value: listing.potential },
@@ -145,7 +162,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
             <div key={index} className={`card p-4 mb-3 ${styles.sectionCard}`}>
               <h3 className={styles.sectionTitle}>{section.label}</h3>
               <p className={styles.sectionText}>
-               {section.value}
+                {section.value}
               </p>
             </div>
           ))}
@@ -154,6 +171,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
         <Loading loadingText={"Loading Detail Page"} />
       )}
     </div>
+    </>
   );
 };
 
