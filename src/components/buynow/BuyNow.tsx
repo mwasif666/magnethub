@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import pricing_data from "@/data/PricingData";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { toast } from "react-toastify";
 import { apiRequest } from "@/api/axiosInstance";
+import * as yup from "yup";
 import styles from "./BuyNow.module.css";
+import pricing_data from "@/data/PricingData";
+import Loading from "../loading/Loading";
 
 interface BuyNowProps {
   slug: string;
@@ -108,10 +109,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
 
   if (!item) {
     return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}></div>
-        <p className={styles.loadingText}>Loading package details...</p>
-      </div>
+        <Loading loadingText={"Loading Package Details"} />
     );
   }
 

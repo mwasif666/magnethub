@@ -104,7 +104,6 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                         <div className="tg-listing-card-item mb-30">
                           <div
                             className="tg-listing-card-thumb fix mb-15 p-relative"
-                            onClick={() => redirectUser(item)}
                             style={{ cursor: "pointer" }}
                           >
                             <Image
@@ -175,7 +174,8 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                           </div>
                           <div className="tg-listing-main-content">
                             <div className="tg-listing-card-content">
-                              <h4 className="tg-listing-card-title">
+                              <h4 className="tg-listing-card-title" onClick={() => redirectUser(item)}
+                              >
                                 {item.name.length > 20
                                   ? item.name.slice(0, 20) + "..."
                                   : item.name}

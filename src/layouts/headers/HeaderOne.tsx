@@ -85,7 +85,7 @@ const HeaderOne = () => {
                         <span>
                           <UserIcon />
                         </span>
-                        {role && role === "1" ? 'Buyer' : role === "2" ? "Seller" : role === "3" ? "Raiser/Broker" : null}
+                        {role && role === "1" ? 'Buyer' : role === "2" ? "Seller" : role === "3" ? "Raiser/Broker" : 'user'}
                       </div>
                     )}
                   </div>

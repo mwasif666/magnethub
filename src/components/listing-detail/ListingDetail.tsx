@@ -3,6 +3,7 @@ import Wishlist from "@/svg/home-one/Wishlist";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import styles from "./ListingDetail.module.css";
+import Loading from "../loading/Loading";
 
 interface ListingDetailProps {
   url: string;
@@ -150,7 +151,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
           ))}
         </>
       ) : (
-        <p>Loading...</p>
+        <Loading loadingText={"Loading Detail Page"} />
       )}
     </div>
   );

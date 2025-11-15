@@ -8,9 +8,7 @@ import { useEffect, useState } from "react";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import styles from "../../listing-detail/ListingDetail.module.css";
-
-
+import Loading from "@/components/loading/Loading";
 
 const Listing = ({ listing }: { listing: any[] }) => {
   const dispatch = useDispatch();
@@ -67,16 +65,12 @@ const Listing = ({ listing }: { listing: any[] }) => {
         <div className="row">
           {/* Loading State */}
           {loading ? (
-            <div className={styles.loadingContainer}>
-              <div className={styles.spinner}></div>
-              <p className={styles.loadingText}>Loading package details...</p>
-            </div>
+              <Loading loadingText={"Loading..."} />
           ) : data.length > 0 ? (
             data.map((item) => (
               <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
                 <div
                   className="tg-listing-card-item tg-listing-su-card-item mb-25"
-                  onClick={() => redirectUser(item)}
                   style={{cursor:'pointer'}}
                 >
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
@@ -118,7 +112,8 @@ const Listing = ({ listing }: { listing: any[] }) => {
                       </span>
                     </div> */}
 
-                    <h4 className="tg-listing-card-title mb-10">
+                    <h4 className="tg-listing-card-title mb-10" onClick={() => redirectUser(item)}
+                    >
                       <Link href="tour-details.html">
                         {item.name.length > 30
                           ? item.name.slice(0, 20) + "..."
