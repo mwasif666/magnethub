@@ -4,6 +4,11 @@
   padding: 20px 15px;
 }
 
+._listingContainer{
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+
 /* Header Card */
 .headerCard {
   border-radius: 16px;
