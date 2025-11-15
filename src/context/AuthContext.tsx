@@ -21,7 +21,8 @@ interface AuthResponse {
   data?: User;
   _token?: string;
   user_id?:string;
-  error?:boolean
+  error?:boolean;
+  type?:string;
 }
 
 interface LoginData {
@@ -44,6 +45,7 @@ interface AuthContextType {
   loginUser: (loginData: LoginData | FormData) => Promise<AuthResponse>;
   registerUser: (registerData: RegisterData | FormData) => Promise<AuthResponse>;
   logout: () => Promise<void>;
+  role : string | null;
 }
 
 interface AuthProviderProps {
@@ -59,15 +61,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userId, setUserId] = useState<string>('');
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [role, setRole] = useState('');
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedUser = localStorage.getItem("user_id");
       const savedToken = localStorage.getItem("token");
+      const saveRole = localStorage.getItem("role");
 
       if (savedUser) setUserId(JSON.parse(savedUser));
       if (savedToken) setToken(savedToken);
+      if (saveRole) setRole(saveRole);
       if (savedUser && savedToken) setIsAuthenticated(true);
     }
   }, []);
@@ -77,17 +81,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (typeof window !== "undefined") {
         if (res.user_id) localStorage.setItem("user_id", JSON.stringify(res.user_id));
         if (res._token) localStorage.setItem("token", res._token);
+        if (res.type) localStorage.setItem("role", res.type);
       }
   
       setUserId(res.user_id || '');
       setToken(res._token || null);
+      setRole(res.type || null);
       setIsAuthenticated(true);
     }
   };
 
-  const loginUser = async (
-    loginData: LoginData | FormData
-  ): Promise<AuthResponse> => {
+  const loginUser = async (loginData: LoginData | FormData): Promise<AuthResponse> => {
     const res = await apiRequest({
       url: "/Raising/Login",
       method: "POST",
@@ -97,9 +101,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-  const registerUser = async (
-    registerData: RegisterData | FormData
-  ): Promise<AuthResponse> => {
+  const registerUser = async (registerData: RegisterData | FormData): Promise<AuthResponse> => {
     const res = await apiRequest({
       url: "RegisterNewUser",
       method: "POST",
@@ -109,13 +111,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-
   const logout = (): Promise<void> => {
     return new Promise((resolve) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
       setUserId('');
       setToken(null);
+      setRole(null);
       setIsAuthenticated(false);
       resolve();
     });
@@ -130,6 +133,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         loginUser,
         registerUser,
         logout,
+        role
       }}
     >
       {children}

@@ -9,6 +9,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { useRouter } from "next/navigation";
+import styles from "../../listing-detail/ListingDetail.module.css";
 
 const FeatureArea = ({ listing }: { listing: any }) => {
   const dispatch = useDispatch();
@@ -61,9 +62,9 @@ const FeatureArea = ({ listing }: { listing: any }) => {
     }
   }, [listing]);
 
-  const redirectUser = (item: any)=>{
+  const redirectUser = (item: any) => {
     router.push(`/detail/${item.url}/${item.project_id}`);
-  }
+  };
 
   return (
     <div className="tg-listing-grid-area mb-85">
@@ -88,8 +89,11 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                   }`}
                 >
                   {loading ? (
-                    <div className="text-center py-5">
-                      <p>Loading listings...</p>
+                    <div className={styles.loadingContainer}>
+                      <div className={styles.spinner}></div>
+                      <p className={styles.loadingText}>
+                        Loading listing details...
+                      </p>
                     </div>
                   ) : (
                     data?.map((item) => (
@@ -98,50 +102,54 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                         className="col-xxl-3 col-xl-6 col-lg-6 col-md-6 tg-grid-full"
                       >
                         <div className="tg-listing-card-item mb-30">
-                          <div className="tg-listing-card-thumb fix mb-15 p-relative"  onClick={()=>redirectUser(item)}>
-                              <Image
-                                className="tg-card-border w-100"
-                                src={`http://magnatehub.au/uploads/project/card/${item.card}`}
-                                alt={item?.name || "Project listing image"}
-                                width={400}
-                                height={300}
-                                unoptimized
-                                onError={(e) => {
-                                  e.currentTarget.src =
-                                    "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
-                                }}
-                              />
+                          <div
+                            className="tg-listing-card-thumb fix mb-15 p-relative"
+                            onClick={() => redirectUser(item)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <Image
+                              className="tg-card-border"
+                              src={`http://magnatehub.au/uploads/project/card/${item.card}`}
+                              alt={item?.name || "Project listing image"}
+                              width={600}
+                              height={300}
+                              unoptimized
+                              onError={(e) => {
+                                e.currentTarget.src =
+                                  "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                              }}
+                            />
 
-                              {item.tag && (
-                                <span className="tg-listing-item-price-discount shape">
-                                  {item.tag}
-                                </span>
-                              )}
-                              {item.featured && (
-                                <span className="tg-listing-item-price-discount shape-3">
-                                  <svg
-                                    width="12"
-                                    height="14"
-                                    viewBox="0 0 12 14"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M6.60156 1L0.601562 8.2H6.00156L5.40156 13L11.4016 5.8H6.00156L6.60156 1Z"
-                                      stroke="white"
-                                      strokeWidth="0.857143"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </svg>
-                                  {item.featured}
-                                </span>
-                              )}
-                              {item.offer && (
-                                <span className="tg-listing-item-price-discount offer-btm shape-2">
-                                  {item.offer}
-                                </span>
-                              )}
+                            {/* {item.tag && (
+                              <span className="tg-listing-item-price-discount shape">
+                                {item.tag}
+                              </span>
+                            )}
+                            {item.featured && (
+                              <span className="tg-listing-item-price-discount shape-3">
+                                <svg
+                                  width="12"
+                                  height="14"
+                                  viewBox="0 0 12 14"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M6.60156 1L0.601562 8.2H6.00156L5.40156 13L11.4016 5.8H6.00156L6.60156 1Z"
+                                    stroke="white"
+                                    strokeWidth="0.857143"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                                {item.featured}
+                              </span>
+                            )}
+                            {item.offer && (
+                              <span className="tg-listing-item-price-discount offer-btm shape-2">
+                                {item.offer}
+                              </span>
+                            )} */}
                             <div className="tg-listing-item-wishlist">
                               <a
                                 onClick={() => handleAddToWishlist(item)}
@@ -168,9 +176,11 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                           <div className="tg-listing-main-content">
                             <div className="tg-listing-card-content">
                               <h4 className="tg-listing-card-title">
-                                <Link href="/tour-details">{item.title}</Link>
+                                {item.name.length > 20
+                                  ? item.name.slice(0, 20) + "..."
+                                  : item.name}
                               </h4>
-                              <div className="tg-listing-card-duration-tour">
+                              {/* <div className="tg-listing-card-duration-tour">
                                 <span className="tg-listing-card-duration-map mb-5">
                                   <svg
                                     width="13"
@@ -195,8 +205,10 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                                     />
                                   </svg>
                                   {item?.location_information.length > 20
-                                    ? item.location_information.substring(0, 20) +
-                                      "..."
+                                    ? item.location_information.substring(
+                                        0,
+                                        20
+                                      ) + "..."
                                     : item.location_information}
                                 </span>
                                 <span className="tg-listing-card-duration-time">
@@ -217,7 +229,7 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                                   </svg>
                                   {item?.time}
                                 </span>
-                              </div>
+                              </div> */}
                             </div>
                             <div className="tg-listing-card-price d-flex align-items-end justify-content-between">
                               <div className="tg-listing-card-price-wrap price-bg d-flex align-items-center">
@@ -233,10 +245,11 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                               </div>
                               <div className="tg-listing-card-review space">
                                 <span className="tg-listing-rating-icon">
-                                  <i className="fa-sharp fa-solid fa-star"></i>
-                                </span>
-                                <span className="tg-listing-rating-percent">
-                                  ({item.total_review} Reviews)
+                                  {item?.franchise === "1" ? (
+                                    <i className="fa-sharp fa-solid fa-star"></i>
+                                  ) : item?.premium === "1" ? (
+                                    <i className="fa-sharp fa-solid fa-crown"></i>
+                                  ) : null}
                                 </span>
                               </div>
                             </div>

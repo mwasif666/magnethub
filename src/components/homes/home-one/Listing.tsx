@@ -77,6 +77,7 @@ const Listing = ({ listing }: { listing: any[] }) => {
                 <div
                   className="tg-listing-card-item tg-listing-su-card-item mb-25"
                   onClick={() => redirectUser(item)}
+                  style={{cursor:'pointer'}}
                 >
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
                     <Image
@@ -140,7 +141,7 @@ const Listing = ({ listing }: { listing: any[] }) => {
                       </div>
                       <div>
                         <span className="tg-listing-rating-icon">
-                         {item?.franchise === "0" ? <i className="fa-sharp fa-solid fa-star"></i> :  item?.franchise === "0"  ? <i className="fa-sharp fa-solid fa-star"></i> : null}
+                         {item?.franchise === "1" ? <i className="fa-sharp fa-solid fa-star"></i> :  item?.premium === "1" ? <i className="fa-sharp fa-solid fa-crown"></i> : null}
                         </span>
                       </div>
                     </div>

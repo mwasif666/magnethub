@@ -15,7 +15,7 @@ const HeaderOne = () => {
   const { sticky } = UseSticky();
   const [offCanvas, setOffCanvas] = useState<boolean>(false);
   const [sidebar, setSidebar] = useState<boolean>(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, role } = useAuth();
 
   return (
     <>
@@ -85,7 +85,7 @@ const HeaderOne = () => {
                         <span>
                           <UserIcon />
                         </span>
-                        User
+                        {role && role === "1" ? 'Buyer' : role === "2" ? "Seller" : role === "3" ? "Raiser/Broker" : null}
                       </div>
                     )}
                   </div>

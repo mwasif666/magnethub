@@ -1,6 +1,6 @@
 import { apiRequest } from "@/api/axiosInstance";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRedo, FaSearch } from "react-icons/fa";
 
 type BannerFormProps = {
@@ -33,7 +33,6 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
   const [locations, setLocations] = useState<DropDown>([]);
   const [regions, setRegions] = useState<DropDown>([]);
   const [regionLoading, setRegionLoading] = useState<boolean>(true);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -48,20 +47,6 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
 
     setFormData(newForm);
 
-    if (name === "businessId") {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-      timeoutRef.current = setTimeout(() => {
-        const url = constructUrl(newForm);
-        if (url) fetchProductDataAsPerFilter(url);
-      }, 300);
-    }
-
-    if (name !== "businessId" && name !== "postcode") {
-      const url = constructUrl(newForm);
-      if (url) fetchProductDataAsPerFilter(url);
-    }
-
     if(name === 'state'){
       getRegionsById(value);
     }
@@ -70,10 +55,8 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.postcode.length > 3) {
       const url = constructUrl(formData);
       if (url) fetchProductDataAsPerFilter(url);
-    }
   };
 
   const getCategories = async () => {

@@ -51,7 +51,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                     : ""}
                 </h2>
                 <h5 className={styles.host}>
-                  <span>Hosted By:</span> {listing.host_name || "N/A"}
+                  <span>Hosted By:</span> {listing.user_first_name + " " + listing.user_last_name || "N/A"}
                 </h5>
               </div>
 
@@ -113,8 +113,8 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
 
             <div className="row g-4">
               {[
-                { label: "Location", value: listing?.location_id },
-                { label: "Category", value: listing?.category_id },
+                { label: "Location", value: listing?.location_name },
+                { label: "Category", value: listing?.category_name },
                 { label: "Price", value: listing?.price },
                 { label: "Yearly Trading", value: listing?.trading },
                 { label: "Earning Type", value: listing?.earning_type },
