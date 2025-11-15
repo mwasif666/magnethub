@@ -38,11 +38,17 @@ interface RegisterData {
   [key: string]: any;
 }
 
+interface OTP {
+  code: string | any;
+}
+
+
 interface AuthContextType {
   token: string | null;
   userId: string | null;
   isAuthenticated: boolean;
   loginUser: (loginData: LoginData | FormData) => Promise<AuthResponse>;
+  verifiyOtp:(otp:OTP | FormData) => Promise<AuthResponse>;
   registerUser: (registerData: RegisterData | FormData) => Promise<AuthResponse>;
   logout: () => Promise<void>;
   role : string | null;
@@ -103,13 +109,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const registerUser = async (registerData: RegisterData | FormData): Promise<AuthResponse> => {
     const res = await apiRequest({
-      url: "RegisterNewUser",
+      url: "Raising/Register",
       method: "POST",
       data: registerData,
     });
-    storeDataInLS(res);
     return res;
   };
+
+   const verifiyOtp = async (otp: OTP | FormData): Promise<AuthResponse> => {
+    const res = await apiRequest({
+      url: "Raising/Check/Otp",
+      method: "POST",
+      data: otp,
+    });
+    return res;
+  };
+
 
   const logout = (): Promise<void> => {
     return new Promise((resolve) => {
@@ -132,6 +147,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         isAuthenticated,
         loginUser,
         registerUser,
+        verifiyOtp,
         logout,
         role
       }}

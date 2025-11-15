@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { useAuth } from "@/context/AuthContext"; // ✅ use your AuthContext hook
+import { useAuth } from "@/context/AuthContext"; 
+import * as yup from "yup";
+import { useRouter } from "next/navigation";
 
 interface RegisterData {
   firstName: string;
@@ -36,6 +37,7 @@ const RegisterForm = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [loading, setLoading] = useState(false);
   const { registerUser } = useAuth();
+  const router = useRouter();
 
   const {
     register,
@@ -72,8 +74,7 @@ const RegisterForm = () => {
         });
         return;
       }
-
-      toast.success("Registered successfully!", { position: "top-center" });
+      router.push('/verifiyOtp');
       reset();
     } catch (error: any) {
       console.error("Registration error:", error);
