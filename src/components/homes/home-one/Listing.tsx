@@ -9,6 +9,7 @@ import Wishlist from "@/svg/home-one/Wishlist";
 import shape_1 from "@/assets/img/listing/su/shape-2.png";
 import shape_2 from "@/assets/img/listing/su/shape-1.png";
 import Loading from "@/components/loading/Loading";
+import Location from "@/svg/home-one/Location";
 
 const Listing = ({ listing }: { listing: any[] }) => {
   const dispatch = useDispatch();
@@ -121,11 +122,11 @@ const Listing = ({ listing }: { listing: any[] }) => {
                       </Link>
                     </h4>
 
-                    {/* <div className="tg-listing-card-duration-tour mb-20">
+                    <div className="tg-listing-card-duration-tour mb-20">
                       <span className="tg-listing-card-duration-map">
-                        <Location /> {item.location}
+                        <Location /> {item.location_name}
                       </span>
-                    </div> */}
+                    </div>
 
                     <div className="tg-listing-card-price d-flex align-items-end justify-content-between">
                       <div>

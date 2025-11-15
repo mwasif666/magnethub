@@ -1,13 +1,14 @@
 "use client"
-import { apiRequest } from "@/api/axiosInstance";
-import Wishlist from "@/svg/home-one/Wishlist";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import styles from "./ListingDetail.module.css";
-import Loading from "../loading/Loading";
+import { apiRequest } from "@/api/axiosInstance";
 import { useDispatch } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { ToastContainer } from "react-toastify";
+import Wishlist from "@/svg/home-one/Wishlist";
+import Image from "next/image";
+import styles from "./ListingDetail.module.css";
+import Loading from "../loading/Loading";
+import { useAuth } from "@/context/AuthContext";
 
 interface ListingDetailProps {
   url: string;
@@ -16,8 +17,11 @@ interface ListingDetailProps {
 
 const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const dispatch = useDispatch();
+  const {role, isAuthenticated} = useAuth();
   const [listing, setListing] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
+  const [similarListing, setSimilarListing] = useState<any>([]);
+  const [similarLoading , setSimilarLoading] = useState<boolean>(true);
 
   const getProductDetails = async () => {
     try {
@@ -34,8 +38,24 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     }
   };
 
+  const getSimilarListing = async () => {
+    try {
+      setSimilarLoading(true);
+      const response = await apiRequest({
+        url: `GetAllProjects/similar?project_id=${id}`,
+        method: "GET",
+      });
+      setSimilarListing (response.data);
+    } catch (error) {
+      throw error;
+    } finally {
+      setSimilarLoading(false);
+    }
+  };
+
   useEffect(() => {
     getProductDetails();
+    getSimilarListing();
   }, []);
 
   const parseImage = (Image: string) => {
@@ -50,6 +70,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     <>
     <ToastContainer position="top-center" />
     <div className={`container ${styles.listingContainer}`}>
+      <div className="row">
       {!loading ? (
         <>
           <div className={`card p-4 mb-3 ${styles.headerCard}`}>
@@ -170,6 +191,15 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
       ) : (
         <Loading loadingText={"Loading Detail Page"} />
       )}
+
+      <div>
+        <div>Chat</div>
+        <div>
+          <h2>Similar Listings</h2>
+        </div>
+      </div>
+
+      </div>
     </div>
     </>
   );
