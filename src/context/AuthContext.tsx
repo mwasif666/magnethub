@@ -23,6 +23,9 @@ interface AuthResponse {
   user_id?:string;
   error?:boolean;
   type?:string;
+  code?:string;
+  otp?:string;
+  message?: string;
 }
 
 interface LoginData {

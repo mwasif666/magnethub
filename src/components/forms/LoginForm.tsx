@@ -57,7 +57,7 @@ const LoginForm = () => {
       }
 
       toast.success("Login successful!", { position: "top-center" });
-
+      localStorage.removeItem('code');
       reset();
       if ((response as any)?.link) {
         window.open((response as any).link, "_blank");

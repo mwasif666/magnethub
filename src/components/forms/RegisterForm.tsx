@@ -74,7 +74,11 @@ const RegisterForm = () => {
         });
         return;
       }
-      router.push('/verifiyOtp');
+      if(!response.error && response.code){
+        localStorage.setItem('code',response.code)
+        localStorage.setItem('otp',response.otp || '')
+        router.push('/verifiy-otp');
+      }
       reset();
     } catch (error: any) {
       console.error("Registration error:", error);
