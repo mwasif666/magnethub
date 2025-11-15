@@ -9,6 +9,7 @@ import Wishlist from "@/svg/home-one/Wishlist";
 import Image from "next/image";
 import styles from "./ListingDetail.module.css";
 import Loading from "../loading/Loading";
+import { useRouter } from "next/navigation";
 
 interface ListingDetailProps {
   url: string;
@@ -17,6 +18,7 @@ interface ListingDetailProps {
 
 const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { role, isAuthenticated } = useAuth();
   const [listing, setListing] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
@@ -64,6 +66,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
 
   const handleAddToWishlist = (item: any) => {
     dispatch(addToWishlist(item));
+  };
+
+  const redirectUser = (item: any) => {
+    router.push(`/detail/${item.url}/${item.project_id}`);
   };
 
   return (
@@ -215,7 +221,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                     }}
                   />
                   <div>
-                    <h4>{item.name.length > 15 ? item.name.slice(0, 15) + "..." : item.name}</h4>
+                    <h4 onClick={()=>redirectUser(item)}>{item.name.length > 15 ? item.name.slice(0, 15) + "..." : item.name}</h4>
                     <h6>{item.date}</h6>
                   </div>
                 </div>
