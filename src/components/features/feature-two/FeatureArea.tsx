@@ -99,7 +99,7 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                     data?.map((item) => (
                       <div
                         key={item.id}
-                        className={`col-xxl-3 col-xl-6 col-lg-6 col-md-6 tg-grid-full ${styles.listing_detail}`}
+                        className={`col-xxl-4 col-xl-6 col-lg-6 col-md-6 tg-grid-full ${styles.listing_detail}`}
                       >
                         <div className="tg-listing-card-item mb-30">
                           <div
@@ -111,17 +111,17 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                               style={{
                                 position: "relative",
                                 width: "100%",
-                                height: "200px",
+                                height: "250px",
                               }}
                             >
-                              <Image
+                              <img
                                 src={`http://magnatehub.au/uploads/project/card/${item.card}`}
                                 alt={item?.name || "Project listing image"}
-                                fill
-                                unoptimized
                                 style={{
                                   objectFit: "cover",
                                   borderRadius: "8px",
+                                  width: "100%",
+                                  height: "250px",
                                 }}
                                 onError={(e) => {
                                   e.currentTarget.src =
