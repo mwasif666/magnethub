@@ -66,21 +66,21 @@ const Listing = ({ listing }: { listing: any[] }) => {
         <div className="row">
           {/* Loading State */}
           {loading ? (
-              <Loading loadingText={"Loading..."} />
+            <Loading loadingText={"Loading..."} />
           ) : data.length > 0 ? (
             data.map((item) => (
               <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
                 <div
                   className="tg-listing-card-item tg-listing-su-card-item mb-25"
-                  style={{cursor:'pointer'}}
+                  style={{ cursor: "pointer" }}
                 >
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
                     <Image
                       className="tg-card-border w-100"
                       src={`http://magnatehub.au/uploads/project/card/${item.card}`}
                       alt={item?.name || "Project listing image"}
-                      width={400}
-                      height={300}
+                      width={250}
+                      height={250}
                       unoptimized
                       onError={(e) => {
                         e.currentTarget.src =
@@ -113,7 +113,9 @@ const Listing = ({ listing }: { listing: any[] }) => {
                       </span>
                     </div> */}
 
-                    <h4 className="tg-listing-card-title mb-10" onClick={() => redirectUser(item)}
+                    <h4
+                      className="tg-listing-card-title mb-10"
+                      onClick={() => redirectUser(item)}
                     >
                       <Link href="tour-details.html">
                         {item.name.length > 30
@@ -137,7 +139,11 @@ const Listing = ({ listing }: { listing: any[] }) => {
                       </div>
                       <div>
                         <span className="tg-listing-rating-icon">
-                         {item?.franchise === "1" ? <i className="fa-sharp fa-solid fa-star"></i> :  item?.premium === "1" ? <i className="fa-sharp fa-solid fa-crown"></i> : null}
+                          {item?.franchise === "1" ? (
+                            <i className="fa-sharp fa-solid fa-star"></i>
+                          ) : item?.premium === "1" ? (
+                            <i className="fa-sharp fa-solid fa-crown"></i>
+                          ) : null}
                         </span>
                       </div>
                     </div>

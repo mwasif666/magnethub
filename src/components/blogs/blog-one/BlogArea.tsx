@@ -74,11 +74,11 @@ const BlogArea = () => {
                         <nav>
                            <ReactPaginate
                               breakLabel="..."
-                              nextLabel={<i className="p-btn">Next Page</i>}
+                              nextLabel={<i className="p-btn">{'>'}</i>}
                               onPageChange={handlePageClick}
                               pageRangeDisplayed={3}
                               pageCount={pageCount}
-                              previousLabel={<i className="p-btn">Previous Page</i>}
+                              previousLabel={<i className="p-btn"> {'<'} </i>}
                               renderOnZeroPageCount={null}
                            />
                         </nav>

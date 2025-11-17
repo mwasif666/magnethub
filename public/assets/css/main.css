@@ -2526,6 +2526,9 @@ textarea {
 .nice-select .option.selected {
   font-weight: bold;
 }
+.selected:hover {
+  color: white !important;
+}
 .nice-select .option.disabled {
   background-color: transparent;
   color: #999;
@@ -2569,7 +2572,7 @@ textarea {
   border-radius: 8px;
 }
 .tg-pagenation-wrap nav ul li a:hover {
-  color: var(--tg-common-white);
+  color: var(--tg-common-white) !important;
   background: var(--tg-theme-primary);
 }
 .tg-pagenation-wrap nav ul li a.active {
@@ -4761,6 +4764,7 @@ textarea {
   background: var(--tg-common-white);
   border: 1px solid var(--tg-border-3);
   border-radius: 12px;
+  padding: 20px;
 }
 .tg-listing-card-item:hover .tg-listing-card-thumb::before {
   opacity: 1;
@@ -5532,7 +5536,7 @@ textarea {
   color: var(--tg-grey-1);
 }
 .tg-listing-su-card-item .tg-listing-card-title {
-  font-size: 22px;
+  font-size: 18px;
   line-height: 30px;
   font-family: var(--tg-ff-outfit);
 }

@@ -4,7 +4,7 @@
   padding: 20px 15px;
 }
 
-._listingContainer{
+._listingContainer {
   margin-left: 3rem;
   margin-right: 3rem;
 }
@@ -121,7 +121,20 @@
   object-fit: cover;
   border-radius: 12px;
 }
-
+.similar_img {
+  border-bottom: 2px solid rgba(177, 177, 177, 0.473);
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+.similar_img img {
+  width: 100% !important;
+}
+.listingImage {
+  margin-bottom: 10px;
+}
+.hero_img img {
+  object-fit: cover;
+}
 .imageNavButton {
   position: absolute;
   top: 50%;
@@ -398,7 +411,6 @@
     width: fit-content;
   }
 }
-
 
 .loadingContainer {
   display: flex;

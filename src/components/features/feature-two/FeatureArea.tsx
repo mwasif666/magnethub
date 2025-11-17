@@ -99,25 +99,36 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                     data?.map((item) => (
                       <div
                         key={item.id}
-                        className="col-xxl-3 col-xl-6 col-lg-6 col-md-6 tg-grid-full"
+                        className={`col-xxl-3 col-xl-6 col-lg-6 col-md-6 tg-grid-full ${styles.listing_detail}`}
                       >
                         <div className="tg-listing-card-item mb-30">
                           <div
                             className="tg-listing-card-thumb fix mb-15 p-relative"
                             style={{ cursor: "pointer" }}
                           >
-                            <Image
+                            <div
                               className="tg-card-border"
-                              src={`http://magnatehub.au/uploads/project/card/${item.card}`}
-                              alt={item?.name || "Project listing image"}
-                              width={600}
-                              height={300}
-                              unoptimized
-                              onError={(e) => {
-                                e.currentTarget.src =
-                                  "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                              style={{
+                                position: "relative",
+                                width: "100%",
+                                height: "200px",
                               }}
-                            />
+                            >
+                              <Image
+                                src={`http://magnatehub.au/uploads/project/card/${item.card}`}
+                                alt={item?.name || "Project listing image"}
+                                fill
+                                unoptimized
+                                style={{
+                                  objectFit: "cover",
+                                  borderRadius: "8px",
+                                }}
+                                onError={(e) => {
+                                  e.currentTarget.src =
+                                    "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                                }}
+                              />
+                            </div>
 
                             {/* {item.tag && (
                               <span className="tg-listing-item-price-discount shape">
@@ -174,7 +185,9 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                           </div>
                           <div className="tg-listing-main-content">
                             <div className="tg-listing-card-content">
-                              <h4 className="tg-listing-card-title" onClick={() => redirectUser(item)}
+                              <h4
+                                className="tg-listing-card-title"
+                                onClick={() => redirectUser(item)}
                               >
                                 {item.name.length > 20
                                   ? item.name.slice(0, 20) + "..."
@@ -263,11 +276,11 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                   <nav>
                     <ReactPaginate
                       breakLabel="..."
-                      nextLabel={<i className="p-btn">Next Page</i>}
+                      nextLabel={<i className="p-btn">{">"}</i>}
                       onPageChange={handlePageClick}
                       pageRangeDisplayed={3}
                       pageCount={totalPages}
-                      previousLabel={<i className="p-btn">Previous Page</i>}
+                      previousLabel={<i className="p-btn">{"<"}</i>}
                       renderOnZeroPageCount={null}
                     />
                   </nav>
