@@ -78,7 +78,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
         className="tg-pricing-wrap mb-30 wow fadeInUp"
         data-wow-delay=".3s"
         data-wow-duration=".9s"
-        style={{ height: "129vh" }}
+        style={{ height: "100vh" }}
       >
         <div className="tg-pricing-head">
           <h4 className="tg-pricing-title mb-15">{item.title}</h4>
