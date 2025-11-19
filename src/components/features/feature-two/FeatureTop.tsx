@@ -86,7 +86,7 @@ const FeatureTop = ({ startOffset, endOffset, totalItems, setProducts, isListVie
                         name=""
                         placeholder="" />
                   </div> */}
-                  <div className="d-none d-sm-block">
+                  {/* <div className="d-none d-sm-block">
                      <div className="tg-listing-box-view ml-10 d-flex">
                         <div className="list-switch-item">
                            <button className={`grid-view ${!isListView ? 'active' : ''}`} onClick={handleGridViewClick}>
@@ -106,7 +106,7 @@ const FeatureTop = ({ startOffset, endOffset, totalItems, setProducts, isListVie
                            </button>
                         </div>
                      </div>
-                  </div>
+                  </div> */}
                </div>
             </div>
          </div>

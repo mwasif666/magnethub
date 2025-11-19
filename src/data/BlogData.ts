@@ -26,6 +26,7 @@ interface DataType {
    title: string;
    date: string;
    time: string;
+   url?:string;
    desc: string;
 }
 
@@ -38,6 +39,7 @@ const blog_data: DataType[] = [
       title: "Spiritual Sojourn mageey for Soul Seekers",
       date: "26th Sep, 2024",
       time: "5 mins Read",
+      url:"magnet-hub.com",
       desc: "Are you tired the typical tourist destinat ons and looking step out of your comf ort zone travel."
    },
    {
@@ -70,7 +72,9 @@ const blog_data: DataType[] = [
       title: "Exploring The Green Spac Realar Residence Area Harmony",
       date: "26th Sep, 2024",
       time: "5 mins Read",
-      desc: "Welcome to Realar Residence, where sustainability meets comfort in every corner. In this blog post, we explore the green innovations.",
+      
+            url:"magnet-hub.com",
+desc: "Welcome to Realar Residence, where sustainability meets comfort in every corner. In this blog post, we explore the green innovations.",
    },
    {
       id: 2,

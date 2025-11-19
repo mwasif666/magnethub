@@ -1,14 +1,18 @@
 "use client"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import blog_data from "@/data/BlogData"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import BlogSidebar from "../blog-sidebar";
 import Button from "@/components/common/Button";
+import { apiRequest } from "@/api/axiosInstance";
 
 const BlogArea = () => {
-
+   const router = useRouter(); 
+   const [blogLoading, setBlogLoading] = useState<boolean>(true);
+   const [blogData, setBlogData] = useState<any>([])
    const blog = blog_data.filter((items) => items.page === "inner_1");
 
    const itemsPerPage = 8;
@@ -22,6 +26,29 @@ const BlogArea = () => {
       setItemOffset(newOffset);
    };
 
+   const redirectToBlogDetail = (item: any) =>{
+      router.push(`/blog-details?id=${item.id}&slug=${item.url}`);
+   }
+
+   const getBlogs = async()=>{
+      try {
+         setBlogLoading(true);
+         const response = await apiRequest({
+            url:"blogs",
+            method:"GET"
+         }) 
+         setBlogData(response.data);
+      } catch (error) {
+         throw error;
+      }finally{
+         setBlogLoading(false);
+      }
+   }
+
+   useEffect(()=>{
+      getBlogs();
+   },[])
+
    return (
       <div className="tg-blog-grid-area pt-130 pb-100">
          <div className="container">
@@ -33,11 +60,11 @@ const BlogArea = () => {
                            <div key={item.id} className="col-xl-6 col-lg-12 col-md-6">
                               <div className="tg-blog-grid-item mb-30">
                                  <div className="tg-blog-standard-thumb mb-15">
-                                    <Link href="/blog-details"><Image className="w-100" src={item.thumb} alt="blog" /></Link>
+                                    <span onClick={()=>redirectToBlogDetail(item)}><Image className="w-100" src={item.thumb} alt="blog" /></span>
                                  </div>
                                  <div className="tg-blog-standard-content">
                                     <h2 className="tg-blog-standard-title">
-                                       <Link href="/blog-details">{item.title}</Link>
+                                       <span onClick={()=>redirectToBlogDetail(item)}>{item.title}</span>
                                     </h2>
                                     <div className="tg-blog-standard-date mb-10">
                                        <span>

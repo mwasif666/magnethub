@@ -10,6 +10,7 @@ import shape_1 from "@/assets/img/listing/su/shape-2.png";
 import shape_2 from "@/assets/img/listing/su/shape-1.png";
 import Loading from "@/components/loading/Loading";
 import Location from "@/svg/home-one/Location";
+import ReactPaginate from "react-paginate";
 
 const Listing = ({ listing }: { listing: any[] }) => {
   const dispatch = useDispatch();
@@ -34,6 +35,13 @@ const Listing = ({ listing }: { listing: any[] }) => {
   const redirectUser = (item: any) => {
     router.push(`/detail/${item.url}/${item.project_id}`);
   };
+
+  const handlePageClick = ()=>{
+
+  }
+
+  const totalPages = 12
+
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
@@ -157,16 +165,19 @@ const Listing = ({ listing }: { listing: any[] }) => {
             </div>
           )}
 
-          {/* <div className="col-12">
-            <div className="text-center mt-15">
-              <Link
-                href="/tour-grid-1"
-                className="tg-btn tg-btn-transparent tg-btn-su-transparent"
-              >
-                See More Tours
-              </Link>
-            </div>
-          </div> */}
+            <div className="tg-pagenation-wrap text-center mt-50 mb-30">
+                  <nav>
+                    <ReactPaginate
+                      breakLabel="..."
+                      nextLabel={<i className="p-btn">{">"}</i>}
+                      onPageChange={handlePageClick}
+                      pageRangeDisplayed={3}
+                      pageCount={totalPages}
+                      previousLabel={<i className="p-btn">{"<"}</i>}
+                      renderOnZeroPageCount={null}
+                    />
+                  </nav>
+                </div>
         </div>
       </div>
     </div>

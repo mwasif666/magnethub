@@ -61,7 +61,11 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   }, []);
 
   const parseImage = (Image: string) => {
-    return JSON.parse(Image);
+    if(Image){
+      return JSON.parse(Image);
+    }
+
+    return [];
   };
 
   const handleAddToWishlist = (item: any) => {

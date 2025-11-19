@@ -8,12 +8,14 @@ import FooterOne from "@/layouts/footers/FooterOne";
 
 const FeatureTwo = () => {
   const [listing, setListing] = useState<any[]>([]);
+  const [pagination,setPagination] = useState<any>({});
+
   return (
     <>
       <HeaderOne />
       <main>
         <BreadCrumb title="Listings" sub_title="" />
-        <BannerForm setListing={setListing} />
+        <BannerForm setListing={setListing} setPagination={setPagination}/>
         <FeatureArea listing={listing} />
       </main>
       <FooterOne />

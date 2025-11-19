@@ -65,8 +65,8 @@ const menu_data: MenuItem[] = [
   },
   {
     id: 7,
-    title: "Media",
-    link: "/media1",
+    title: "Blogs",
+    link: "/blogs",
     has_dropdown: false,
   },
   //   {

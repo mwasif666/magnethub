@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import Image from "next/image";
-import Link from "next/link";
-import UseProducts from "@/hooks/UseProducts";
-import FeatureTop from "./FeatureTop";
-import ReactPaginate from "react-paginate";
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { useRouter } from "next/navigation";
+import FeatureTop from "./FeatureTop";
+import ReactPaginate from "react-paginate";
+import UseProducts from "@/hooks/UseProducts";
 import styles from "../../listing-detail/ListingDetail.module.css";
 
 const FeatureArea = ({ listing }: { listing: any }) => {

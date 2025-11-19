@@ -5,9 +5,10 @@ import { FaRedo, FaSearch } from "react-icons/fa";
 
 type BannerFormProps = {
   setListing: React.Dispatch<React.SetStateAction<any[]>>;
+  setPagination: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
-const BannerFormOne = ({ setListing }: BannerFormProps) => {
+const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
   const pathname = usePathname();
   type DropDown = { label: string; value: string }[];
   const [activeTab, setActiveTab] = useState("businesses");
@@ -227,6 +228,7 @@ const BannerFormOne = ({ setListing }: BannerFormProps) => {
     try {
       const response = await apiRequest({ url: finalUrl, method: "GET" });
       setListing(response?.data?.data);
+      // setPagination({ totalPage: response.data.last_page, currentPage:response.data.current_page, perPage:response.data.per_page, total:response.data.total});
       saveListingJSON(response?.data?.data)
     } catch (error) {
       console.error(error);
