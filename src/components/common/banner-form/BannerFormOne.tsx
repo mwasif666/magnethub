@@ -1,15 +1,32 @@
 import { apiRequest } from "@/api/axiosInstance";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FaRedo, FaSearch } from "react-icons/fa";
 
 type BannerFormProps = {
   setListing: React.Dispatch<React.SetStateAction<any[]>>;
-  setPagination: React.Dispatch<React.SetStateAction<any[]>>;
+  setLocalPagination?: React.Dispatch<
+    React.SetStateAction<{
+      totalPage: number;
+      currentPage: number;
+      perPage: number;
+      total: number;
+      nextPageUrl?: string | null;
+      prevPageUrl?: string | null;
+    }>
+  >;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;  
 };
 
-const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
+const BannerFormOne = ({
+  setListing,
+  setLocalPagination,
+  currentPage = 1,
+  onPageChange,
+}: BannerFormProps) => {
   const pathname = usePathname();
+  const isInitialMount = useRef(true);
   type DropDown = { label: string; value: string }[];
   const [activeTab, setActiveTab] = useState("businesses");
   const [formData, setFormData] = useState({
@@ -48,16 +65,18 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
 
     setFormData(newForm);
 
-    if(name === 'state'){
+    if (name === "state") {
       getRegionsById(value);
     }
-    
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-      const url = constructUrl(formData);
-      if (url) fetchProductDataAsPerFilter(url);
+    if (onPageChange) onPageChange(1);
+    const url = constructUrl(formData, 1);
+    if (url) {
+      fetchProductDataAsPerFilter(url);
+    }
   };
 
   const getCategories = async () => {
@@ -68,23 +87,25 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
     return apiRequest({ url: "GetAllProjectLocations", method: "GET" });
   };
 
-  const getRegionsById = async (id: string)=>{
+  const getRegionsById = async (id: string) => {
     try {
       setRegionLoading(true);
-      const response = await apiRequest({ url: `GetAllRegions?locationId=${id}`, method: "GET" });
-        setRegions(
-          response?.data?.map((c: any) => ({
-            label: c.name,
-            value: c.id,
-          })) || []
-        );
-
+      const response = await apiRequest({
+        url: `GetAllRegions?locationId=${id}`,
+        method: "GET",
+      });
+      setRegions(
+        response?.data?.map((c: any) => ({
+          label: c.name,
+          value: c.id,
+        })) || []
+      );
     } catch (error) {
       throw error;
-    }finally{
+    } finally {
       setRegionLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -108,9 +129,8 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
       .finally(() => setLoading(false));
   }, []);
 
-  const constructUrl = (filters: any) => {
+  const constructUrl = (filters: any, page: number = 1, perPage: number = 12) => {
     let params: any = {};
-
     if (activeTab === "businesses") {
       if (filters.postcode) params.postcode = filters.postcode;
       if (filters.businessId) params.businessId = filters.businessId;
@@ -124,9 +144,10 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
         if (filters.franchise) params.franchise = "";
         if (filters.premium) params.premium = "";
       }
-
+      params.per_page = perPage;
+      params.page = page;
       return `GetAllProjects?${Object.keys(params)
-        .map((key) => (params[key] === "" ? key : `${params[key]}`))
+        .map((key) => (params[key] === "" ? key : `${key}=${params[key]}`))
         .join("&")}`;
     }
 
@@ -135,7 +156,8 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
       if (filters.agency) params.agency = filters.agency;
       if (filters.state2) params.state = filters.state2;
       if (filters.region2) params.region = filters.region2;
-
+      params.per_page = perPage;
+      params.page = page;
       return `GetAllAgencies?${Object.keys(params)
         .map((key) => `${key}=${params[key]}`)
         .join("&")}`;
@@ -202,23 +224,24 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
     });
 
     setListing([]);
-    getListingData();
+    if (onPageChange) onPageChange(1);
+    getListingData(1);
   };
 
   const saveListingJSON = async (listingData: any) => {
-  try {
-    await fetch("/api/generate-json", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(listingData),
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
+    try {
+      await fetch("/api/generate-json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(listingData),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  const getListingData = () => {
-    const initialUrl = constructUrl(formData);
+  const getListingData = (page: number = 1) => {
+    const initialUrl = constructUrl(formData, page);
     if (initialUrl) {
       fetchProductDataAsPerFilter(initialUrl);
     }
@@ -227,16 +250,45 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
   const fetchProductDataAsPerFilter = async (finalUrl: string) => {
     try {
       const response = await apiRequest({ url: finalUrl, method: "GET" });
-      setListing(response?.data?.data);
-      // setPagination({ totalPage: response.data.last_page, currentPage:response.data.current_page, perPage:response.data.per_page, total:response.data.total});
-      saveListingJSON(response?.data?.data)
+      setListing(response?.data?.data || []);
+      if (setLocalPagination) {
+        setLocalPagination({
+          totalPage: response?.data?.last_page || 1,
+          currentPage: response?.data?.current_page || 1,
+          perPage: response?.data?.per_page || 12,
+          total: response?.data?.total || 0,
+          nextPageUrl: response?.data?.next_page_url,
+          prevPageUrl: response?.data?.prev_page_url,
+        });
+      }
+      
+      saveListingJSON(response?.data?.data);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // Fetch data when currentPage changes (only if pagination is enabled)
   useEffect(() => {
-    getListingData();
+    // Skip on initial mount to avoid double fetching with the initial useEffect
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    
+    // Only fetch if pagination is enabled and currentPage is valid
+    if (setLocalPagination && currentPage && currentPage >= 1) {
+      console.log('Page changed, fetching data for page:', currentPage);
+      getListingData(currentPage);
+    } else {
+      console.log('Skipping fetch - setLocalPagination:', !!setLocalPagination, 'currentPage:', currentPage);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
+  // Initial data fetch on mount
+  useEffect(() => {
+    getListingData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -358,25 +410,25 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
                           </select>
                         </div>
                         <div className="col-md-3">
-                        <select
-                          className="form-select"
-                          name="region"
-                          value={formData.region2}
-                          onChange={handleInputChange}
-                        >
-                          {regionLoading ? (
-                            <option>Loading regions...</option>
-                          ) : (
-                            <>
-                              <option value="">Select regions</option>
-                              {regions.map((state, index) => (
-                                <option key={index} value={state.value}>
-                                  {state.label}
-                                </option>
-                              ))}
-                            </>
-                          )}
-                        </select>
+                          <select
+                            className="form-select"
+                            name="region"
+                            value={formData.region2}
+                            onChange={handleInputChange}
+                          >
+                            {regionLoading ? (
+                              <option>Loading regions...</option>
+                            ) : (
+                              <>
+                                <option value="">Select regions</option>
+                                {regions.map((state, index) => (
+                                  <option key={index} value={state.value}>
+                                    {state.label}
+                                  </option>
+                                ))}
+                              </>
+                            )}
+                          </select>
                         </div>
                         <div className="col-md-3">
                           <select
@@ -557,7 +609,7 @@ const BannerFormOne = ({ setListing, setPagination }: BannerFormProps) => {
                           </select>
                         </div>
                         <div className="col-md-4">
-                         <select
+                          <select
                             className="form-select"
                             name="region2"
                             value={formData.region2}

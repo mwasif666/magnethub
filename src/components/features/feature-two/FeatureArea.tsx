@@ -9,7 +9,21 @@ import ReactPaginate from "react-paginate";
 import UseProducts from "@/hooks/UseProducts";
 import styles from "../../listing-detail/ListingDetail.module.css";
 
-const FeatureArea = ({ listing }: { listing: any }) => {
+type FeatureAreaProps = {
+  listing: any[];
+  pagination?: {
+    totalPage: number;
+    currentPage: number;
+    perPage: number;
+    total: number;
+    nextPageUrl?: string | null;
+    prevPageUrl?: string | null;
+  };
+  onPageChange?: (page: number) => void;
+  activePage?: number; // Add activePage prop to track the currently active page
+};
+
+const FeatureArea = ({ listing, pagination, onPageChange, activePage }: FeatureAreaProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -18,22 +32,20 @@ const FeatureArea = ({ listing }: { listing: any }) => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const itemsPerPage = 9;
-  const [itemOffset, setItemOffset] = useState(0);
-  const filteredProducts = products.filter((item) => item.page === "shop_2");
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const currentItems = filteredProducts.slice(
-    itemOffset,
-    itemOffset + itemsPerPage
-  );
-
-  const startOffset = itemOffset + 1;
-  const endOffset = Math.min(itemOffset + itemsPerPage, products.length);
-  const totalItems = products.length;
+  const totalPages = pagination?.totalPage || 1;
+  // Use activePage if provided, otherwise fall back to pagination.currentPage
+  const currentPage = activePage !== undefined ? activePage : (pagination?.currentPage || 1);
+  const totalItems = pagination?.total || 0;
+  const perPage = pagination?.perPage || 12;
+  const startOffset = totalItems > 0 ? ((currentPage - 1) * perPage) + 1 : 0;
+  const endOffset = Math.min(currentPage * perPage, totalItems);
 
   const handlePageClick = ({ selected }: { selected: number }) => {
-    const newOffset = selected * itemsPerPage;
-    setItemOffset(newOffset);
+    // selected is 0-indexed, but API uses 1-indexed pages
+    const page = selected + 1;
+    if (onPageChange) {
+      onPageChange(page);
+    }
   };
 
   const handleAddToWishlist = useCallback(
@@ -73,8 +85,8 @@ const FeatureArea = ({ listing }: { listing: any }) => {
             <div className="tg-listing-item-box-wrap ml-10">
               <FeatureTop
                 startOffset={startOffset}
-                endOffset={Math.min(endOffset, totalItems)}
-                totalItems={listing?.length}
+                endOffset={endOffset}
+                totalItems={totalItems}
                 setProducts={setProducts}
                 isListView={isListView}
                 handleListViewClick={handleListViewClick}
@@ -270,19 +282,24 @@ const FeatureArea = ({ listing }: { listing: any }) => {
                     ))
                   )}
                 </div>
-                <div className="tg-pagenation-wrap text-center mt-50 mb-30">
-                  <nav>
-                    <ReactPaginate
-                      breakLabel="..."
-                      nextLabel={<i className="p-btn">{">"}</i>}
-                      onPageChange={handlePageClick}
-                      pageRangeDisplayed={3}
-                      pageCount={totalPages}
-                      previousLabel={<i className="p-btn">{"<"}</i>}
-                      renderOnZeroPageCount={null}
-                    />
-                  </nav>
-                </div>
+                {totalPages > 1 && (
+                  <div className="tg-pagenation-wrap text-center mt-50 mb-30">
+                    <nav>
+                      <ReactPaginate
+                        breakLabel="..."
+                        nextLabel={<i className="p-btn">{">"}</i>}
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={3}
+                        pageCount={totalPages}
+                        previousLabel={<i className="p-btn">{"<"}</i>}
+                        renderOnZeroPageCount={null}
+                        forcePage={Math.max(0, currentPage - 1)}
+                        marginPagesDisplayed={2}
+                        key={`paginate-${currentPage}-${totalPages}`}
+                      />
+                    </nav>
+                  </div>
+                )}
               </div>
             </div>
           </div>
