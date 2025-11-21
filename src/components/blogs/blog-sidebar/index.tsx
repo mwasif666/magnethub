@@ -1,7 +1,7 @@
-import Ads from "./Ads"
-import Category from "./Category"
+// import Ads from "./Ads"
+// import Category from "./Category"
+// import Tags 
 import RecentPost from "./RecentPost"
-import Tags from "./Tags"
 
 const BlogSidebar = () => {
    return (
@@ -26,10 +26,10 @@ const BlogSidebar = () => {
                </form>
             </div>
          </div>
-         <Category />
+         {/* <Category /> */}
          <RecentPost />
-         <Ads />
-         <Tags />
+         {/* <Ads /> */}
+         {/* <Tags /> */}
       </div>
    )
 }

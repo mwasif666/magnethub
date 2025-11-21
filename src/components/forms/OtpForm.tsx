@@ -67,11 +67,13 @@ const OtpForm = () => {
 
   const handleResend = async () => {
     const code = getCode();
+    const formData = new FormData();
+    formData.append("code", code || "");
     try {
       const response = await apiRequest({
         url: "Raising/Resend/Otp",
         method: "POST",
-        data: code,
+        data: formData,
       });
       if ((response as any)?.error) {
         toast.error(response.message || "Some thing went wrong", {
@@ -102,7 +104,7 @@ const OtpForm = () => {
             placeholder="Enter OTP"
             {...register("otp")}
           />
-          <p className="form_error">{errors.otp?.message || "error"}</p>
+          <p className="form_error">{errors.otp?.message}</p>
         </div>
 
         <div className="d-flex align-items-center justify-content-between mb-3">

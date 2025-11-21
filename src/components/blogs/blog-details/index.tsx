@@ -5,16 +5,16 @@ import HeaderOne from "@/layouts/headers/HeaderOne"
 
 type BlogDetailsProps = {
   id: string | null;
-  slug: string | null;
+  url: string | null;
 };
 
-const BlogDetails = ({ id, slug }: BlogDetailsProps) => {
+const BlogDetails = ({ id, url }: BlogDetailsProps) => {
   return (
     <>
       <HeaderOne />
       <main>
         <BreadCrumb title="Blog Details" sub_title="Exploring The Green Spac Realar Residence Area Harmony" />
-        <BlogDetailsArea id={id} slug={slug}/>
+        <BlogDetailsArea id={id} url={url}/>
       </main>
       <FooterFive />
     </>

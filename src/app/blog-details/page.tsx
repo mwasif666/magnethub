@@ -10,10 +10,10 @@ import { useSearchParams } from "next/navigation";
 const page = () => {
   const params = useSearchParams();
   const id = params.get("id");
-  const slug = params.get("slug");
+  const  url = params.get("url");
   return (
     <Wrapper>
-      <BlogDetails id={id} slug={slug}/>
+      <BlogDetails id={id} url={url}/>
     </Wrapper>
   );
 };

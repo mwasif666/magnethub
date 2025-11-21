@@ -1,8 +1,14 @@
 import Image from "next/image"
 import comment from "@/assets/img/blog/details/avatar.png"
 
-const Comment = () => {
+type commentPropsType = {
+   blogCommetData: any;
+}
+
+const Comment = ({blogCommetData}: commentPropsType) => {
    return (
+      <div>
+     {blogCommetData && blogCommetData.length > 0 && blogCommetData.map((item: any)=>(
       <div className="tg-tour-about-cus-review-wrap tg-blog-details-review mb-25">
          <ul>
             <li className="mb-40">
@@ -20,6 +26,8 @@ const Comment = () => {
                </div>
             </li>
          </ul>
+      </div>
+     )) }
       </div>
    )
 }
