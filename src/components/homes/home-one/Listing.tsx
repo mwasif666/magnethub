@@ -10,10 +10,30 @@ import shape_1 from "@/assets/img/listing/su/shape-2.png";
 import shape_2 from "@/assets/img/listing/su/shape-1.png";
 import Loading from "@/components/loading/Loading";
 import Location from "@/svg/home-one/Location";
-import ReactPaginate from "react-paginate";
+import Pagination from "@/components/pagination/Pagination";
 
-const Listing = ({ listing }: { listing: any[] }) => {
+type listingProps = {
+  listing: any[];
+  pagination?: {
+    totalPage: number;
+    currentPage: number;
+    perPage: number;
+    total: number;
+    nextPageUrl?: string | null;
+    prevPageUrl?: string | null;
+  };
+  onPageChange?: (page: number) => void;
+  activePage?: number;
+};
+
+const Listing = ({
+  listing,
+  pagination,
+  onPageChange,
+  activePage,
+}: listingProps) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,17 +51,13 @@ const Listing = ({ listing }: { listing: any[] }) => {
     }
   }, [listing]);
 
-  const router = useRouter();
   const redirectUser = (item: any) => {
     router.push(`/detail/${item.url}/${item.project_id}`);
   };
 
-  const handlePageClick = ()=>{
-
-  }
-
-  const totalPages = 12
-
+  const totalPages = pagination?.totalPage || 1;
+  const currentPage =
+    activePage !== undefined ? activePage : pagination?.currentPage || 1;
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
@@ -72,7 +88,7 @@ const Listing = ({ listing }: { listing: any[] }) => {
         </div>
 
         <div className="row">
-          {/* Loading State */}
+
           {loading ? (
             <Loading loadingText={"Loading..."} />
           ) : data.length > 0 ? (
@@ -160,24 +176,25 @@ const Listing = ({ listing }: { listing: any[] }) => {
               </div>
             ))
           ) : (
+            
             <div className="text-center py-5">
               <p>No listings found.</p>
             </div>
           )}
 
-            <div className="tg-pagenation-wrap text-center mt-50 mb-30">
-                  <nav>
-                    <ReactPaginate
-                      breakLabel="..."
-                      nextLabel={<i className="p-btn">{">"}</i>}
-                      onPageChange={handlePageClick}
-                      pageRangeDisplayed={3}
-                      pageCount={totalPages}
-                      previousLabel={<i className="p-btn">{"<"}</i>}
-                      renderOnZeroPageCount={null}
-                    />
-                  </nav>
-                </div>
+          {totalPages > 1 && (
+            <div className="text-center mt-50 mb-30">
+              <nav>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={(page) => {
+                    if (onPageChange) onPageChange(page);
+                  }}
+                />
+              </nav>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -5,9 +5,9 @@ import { useDispatch } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { useRouter } from "next/navigation";
 import FeatureTop from "./FeatureTop";
-import ReactPaginate from "react-paginate";
 import UseProducts from "@/hooks/UseProducts";
 import styles from "../../listing-detail/ListingDetail.module.css";
+import Pagination from "@/components/pagination/Pagination";
 
 type FeatureAreaProps = {
   listing: any[];
@@ -20,10 +20,15 @@ type FeatureAreaProps = {
     prevPageUrl?: string | null;
   };
   onPageChange?: (page: number) => void;
-  activePage?: number; // Add activePage prop to track the currently active page
+  activePage?: number;
 };
 
-const FeatureArea = ({ listing, pagination, onPageChange, activePage }: FeatureAreaProps) => {
+const FeatureArea = ({
+  listing,
+  pagination,
+  onPageChange,
+  activePage,
+}: FeatureAreaProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -33,20 +38,13 @@ const FeatureArea = ({ listing, pagination, onPageChange, activePage }: FeatureA
   const [loading, setLoading] = useState(true);
 
   const totalPages = pagination?.totalPage || 1;
-  // Use activePage if provided, otherwise fall back to pagination.currentPage
-  const currentPage = activePage !== undefined ? activePage : (pagination?.currentPage || 1);
+  const currentPage =
+    activePage !== undefined ? activePage : pagination?.currentPage || 1;
   const totalItems = pagination?.total || 0;
   const perPage = pagination?.perPage || 12;
-  const startOffset = totalItems > 0 ? ((currentPage - 1) * perPage) + 1 : 0;
+  const startOffset = totalItems > 0 ? (currentPage - 1) * perPage + 1 : 0;
   const endOffset = Math.min(currentPage * perPage, totalItems);
 
-  const handlePageClick = ({ selected }: { selected: number }) => {
-    // selected is 0-indexed, but API uses 1-indexed pages
-    const page = selected + 1;
-    if (onPageChange) {
-      onPageChange(page);
-    }
-  };
 
   const handleAddToWishlist = useCallback(
     (item: any) => {
@@ -283,19 +281,14 @@ const FeatureArea = ({ listing, pagination, onPageChange, activePage }: FeatureA
                   )}
                 </div>
                 {totalPages > 1 && (
-                  <div className="tg-pagenation-wrap text-center mt-50 mb-30">
+                  <div className="text-center mt-50 mb-30">
                     <nav>
-                      <ReactPaginate
-                        breakLabel="..."
-                        nextLabel={<i className="p-btn">{">"}</i>}
-                        onPageChange={handlePageClick}
-                        pageRangeDisplayed={3}
-                        pageCount={totalPages}
-                        previousLabel={<i className="p-btn">{"<"}</i>}
-                        renderOnZeroPageCount={null}
-                        forcePage={Math.max(0, currentPage - 1)}
-                        marginPagesDisplayed={2}
-                        key={`paginate-${currentPage}-${totalPages}`}
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page) => {
+                          if (onPageChange) onPageChange(page);
+                        }}
                       />
                     </nav>
                   </div>

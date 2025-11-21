@@ -1,9 +1,9 @@
 "use client";
+import { useState, useEffect } from "react";
 import FeatureArea from "./FeatureArea";
 import BreadCrumb from "@/components/common/BreadCrumb";
 import BannerForm from "./BannerForm";
 import HeaderOne from "@/layouts/headers/HeaderOne";
-import { useState, useEffect } from "react";
 import FooterOne from "@/layouts/footers/FooterOne";
 
 const FeatureTwo = () => {
@@ -34,6 +34,7 @@ const FeatureTwo = () => {
       setCurrentPage(localPagination.currentPage);
     }
   }, [localPagination.currentPage]);
+
   return (
     <>
       <HeaderOne />

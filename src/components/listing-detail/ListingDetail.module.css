@@ -441,3 +441,11 @@
   color: #6b7280;
   font-weight: 500;
 }
+
+.active {
+  background: #000;
+  color: #fff;
+}
+.active a {
+  color: #fff !important;
+}
