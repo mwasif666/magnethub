@@ -1,47 +1,130 @@
+"use client";
 
-"use client"
+import { useAuth } from "@/context/AuthContext";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { apiRequest } from "@/api/axiosInstance";
 
-const BlogForm = () => {
-
-   return (
-      <form onSubmit={(e) => e.preventDefault()}>
-         <div className="row gx-15">
-            <div className="col-lg-12">
-               <textarea className="textarea  mb-5" placeholder="Comment"></textarea>
-            </div>
-            <div className="col-lg-4 mb-15">
-               <input className="input" type="text" placeholder="Name" />
-            </div>
-            <div className="col-lg-4 mb-15">
-               <input className="input" type="email" placeholder="Email" />
-            </div>
-            <div className="col-lg-4 mb-15">
-               <input className="input" type="text" placeholder="Website" />
-            </div>
-            <div className="col-lg-12">
-               <div className="review-checkbox d-flex align-items-center mb-25">
-                  <input className="tg-checkbox" type="checkbox" id="australia" />
-                  <label htmlFor="australia" className="tg-label">Save my name, email, and website in this browser for the next time I comment.</label>
-               </div>
-               <button type="submit" className="tg-btn tg-btn-switch-animation">
-                  <span className="d-flex align-items-center justify-content-center">
-                     <span className="btn-text">Submit Post</span>
-                     <span className="btn-icon ml-5">
-                        <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M1.0017 8.00001H19.9514M19.9514 8.00001L12.9766 1.02515M19.9514 8.00001L12.9766 14.9749" stroke="white" strokeWidth="1.77778" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                     </span>
-                     <span className="btn-icon ml-5">
-                        <svg width="21" height="16" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M1.0017 8.00001H19.9514M19.9514 8.00001L12.9766 1.02515M19.9514 8.00001L12.9766 14.9749" stroke="white" strokeWidth="1.77778" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                     </span>
-                  </span>
-               </button>
-            </div>
-         </div>
-      </form>
-   )
+interface BlogCommentForm {
+  comment: string;
+  name: string;
+  email: string;
+  phone?: string; 
 }
 
-export default BlogForm
+const schema: yup.ObjectSchema<BlogCommentForm> = yup.object({
+  comment: yup.string().required("Comment is required"),
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  phone: yup
+    .string()
+    .matches(/^[0-9]*$/, "Phone must be numeric")
+    .optional(),
+});
+
+const BlogForm = ({ blogId }: { blogId: number }) => {
+  const { userId } = useAuth();
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<BlogCommentForm>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<BlogCommentForm> = async (data) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("blogId", blogId.toString());
+      formData.append("userId", userId?.toString() ?? "0");
+      formData.append("comment", data.comment);
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      if (data.phone) {
+        formData.append("phone", data.phone);
+      }
+
+      await apiRequest({
+        url: "/GetAllBlogs/comment",
+        method: "POST",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      toast.success("Comment submitted!", { position: "top-center" });
+
+      reset();
+    } catch (error) {
+      console.error(error);
+      toast.error("Error submitting comment", { position: "top-center" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="row gx-15">
+        <div className="col-lg-12">
+          <textarea
+            className="textarea mb-5"
+            placeholder="Comment"
+            {...register("comment")}
+          ></textarea>
+          <p className="form_error">{errors.comment?.message}</p>
+        </div>
+        <div className="col-lg-4 mb-15">
+          <input
+            className="input"
+            type="text"
+            placeholder="Name"
+            {...register("name")}
+          />
+          <p className="form_error">{errors.name?.message}</p>
+        </div>
+        <div className="col-lg-4 mb-15">
+          <input
+            className="input"
+            type="email"
+            placeholder="Email"
+            {...register("email")}
+          />
+          <p className="form_error">{errors.email?.message}</p>
+        </div>
+        <div className="col-lg-4 mb-15">
+          <input
+            className="input"
+            type="text"
+            placeholder="Phone (optional)"
+            {...register("phone")}
+          />
+          <p className="form_error">{errors.phone?.message}</p>
+        </div>
+        <div className="col-lg-12">
+          <button type="submit" className="tg-btn tg-btn-switch-animation" disabled={loading}>
+            <span className="d-flex align-items-center justify-content-center">
+              <span className="btn-text">{loading ? "Submitting..." : "Submit Comment"}</span>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .form_error {
+          color: red !important;
+          font-size: 11px;
+          margin: 4px 0 0;
+        }
+      `}</style>
+    </form>
+  );
+};
+
+export default BlogForm;

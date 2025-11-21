@@ -7,6 +7,7 @@ import BlogSidebar from "../blog-sidebar";
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/api/axiosInstance";
 import Loading from "@/components/loading/Loading";
+import { useAuth } from "@/context/AuthContext";
 
 type BlogDetailsProps = {
   id: string | null;
@@ -14,6 +15,7 @@ type BlogDetailsProps = {
 };
 
 const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
+  const {isAuthenticated} = useAuth();
   const [blogLoading, setBlogLoading] = useState<boolean>(true);
   const [blogDetailData, setBlogDetailData] = useState<any>([]);
   const [blogCommetData, setBlogCommentData] = useState<any>([]);
@@ -151,10 +153,10 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
                   </div>
                 </div>
                 <Comment blogCommetData={blogCommetData}/>
-                <div className="tg-tour-about-review-form tg-blog-details-review-form">
+                {isAuthenticated ?<div className="tg-tour-about-review-form tg-blog-details-review-form">
                   <h4 className="tg-tour-about-title mb-10">Post a comment</h4>
-                  <BlogForm />
-                </div>
+                  <BlogForm blogId={blogDetailData.Id}/>
+                </div> : <div>Please <Link href="/login">login</Link> to post a comment.</div>}
               </div>
             </div>
           )}
