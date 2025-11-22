@@ -19,6 +19,7 @@ interface PricingItem {
   slug?: string;
   desc: string;
   list: string[];
+  id:any;
 }
 
 interface FormData {
@@ -59,6 +60,12 @@ const schema = yup.object({
   plan: yup.string().required("Please select a plan"),
 });
 
+declare global {
+  interface Window {
+    Stripe: any;
+  }
+}
+
 const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
   const [selectedSlug, setSelectedSlug] = useState(slug);
   const [item, setItem] = useState<PricingItem | null>(null);
@@ -84,13 +91,47 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
     getPackageDetails(selectedSlug);
   }, [selectedSlug]);
 
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (window.Stripe) {
+        window.Stripe.setPublishableKey(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+        clearInterval(interval);
+      }
+    }, 500);
+  }, []);
+
+
+
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
+       const stripeResponse = await new Promise((resolve, reject) => {
+        window.Stripe.createToken(
+          {
+            number: data.cardNumber,
+            cvc: data.cvc,
+            exp_month: data.expMonth,
+            exp_year: data.expYear,
+            name: data.cardName,
+          },
+          (status: number, response: any) => {
+            if (response.error) reject(response.error.message);
+            else resolve(response);
+          }
+        );
+      });
+
+      const token = (stripeResponse as any).id;
+
+      const formData =  new FormData();
+      formData.append("stripeToken", token);
+      formData.append("plan_id", item && item.id);
+      
       await apiRequest({
-        url: "/SaveContactForm",
+        url: "/stripe",
         method: "POST",
-        data,
+        data: formData,
       });
       toast.success("Message sent successfully!");
       reset({ ...data, plan: selectedSlug });
@@ -101,16 +142,14 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
     }
   };
 
-  // FIXED — truncation
+
   const truncatedText =
     item?.desc && item.desc.length > 120
       ? item.desc.slice(0, 120) + "..."
       : item?.desc;
 
   if (!item) {
-    return (
-        <Loading loadingText={"Loading Package Details"} />
-    );
+    return <Loading loadingText={"Loading Package Details"} />;
   }
 
   return (
@@ -201,7 +240,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
 
                     <div className="col-md-6">
                       <div className={styles.inputGroup}>
-                        <label className={styles.inputLabel}>Email Address</label>
+                        <label className={styles.inputLabel}>
+                          Email Address
+                        </label>
                         <div className={styles.inputWrapper}>
                           <svg
                             className={styles.inputIcon}
@@ -230,7 +271,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
 
                     <div className="col-12">
                       <div className={styles.inputGroup}>
-                        <label className={styles.inputLabel}>Phone Number</label>
+                        <label className={styles.inputLabel}>
+                          Phone Number
+                        </label>
                         <div className={styles.inputWrapper}>
                           <svg
                             className={styles.inputIcon}
@@ -258,7 +301,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
 
                     <div className="col-12">
                       <div className={styles.inputGroup}>
-                        <label className={styles.inputLabel}>Message (Optional)</label>
+                        <label className={styles.inputLabel}>
+                          Message (Optional)
+                        </label>
                         <textarea
                           className={styles.textarea}
                           {...register("message")}
@@ -266,7 +311,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           rows={4}
                         ></textarea>
                         {errors.message && (
-                          <p className={styles.error}>{errors.message.message}</p>
+                          <p className={styles.error}>
+                            {errors.message.message}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -283,7 +330,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                   <div className="row g-3">
                     <div className="col-12">
                       <div className={styles.inputGroup}>
-                        <label className={styles.inputLabel}>Name on Card</label>
+                        <label className={styles.inputLabel}>
+                          Name on Card
+                        </label>
                         <div className={styles.inputWrapper}>
                           <svg
                             className={styles.inputIcon}
@@ -304,7 +353,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           />
                         </div>
                         {errors.cardName && (
-                          <p className={styles.error}>{errors.cardName.message}</p>
+                          <p className={styles.error}>
+                            {errors.cardName.message}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -322,7 +373,14 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                             stroke="currentColor"
                             strokeWidth="2"
                           >
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <rect
+                              x="1"
+                              y="4"
+                              width="22"
+                              height="16"
+                              rx="2"
+                              ry="2"
+                            ></rect>
                             <line x1="1" y1="10" x2="23" y2="10"></line>
                           </svg>
                           <input
@@ -333,7 +391,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           />
                         </div>
                         {errors.cardNumber && (
-                          <p className={styles.error}>{errors.cardNumber.message}</p>
+                          <p className={styles.error}>
+                            {errors.cardNumber.message}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -351,7 +411,14 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                             stroke="currentColor"
                             strokeWidth="2"
                           >
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <rect
+                              x="1"
+                              y="4"
+                              width="22"
+                              height="16"
+                              rx="2"
+                              ry="2"
+                            ></rect>
                             <line x1="1" y1="10" x2="23" y2="10"></line>
                           </svg>
                           <input
@@ -369,7 +436,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
 
                     <div className="col-md-4">
                       <div className={styles.inputGroup}>
-                        <label className={styles.inputLabel}>Expiry Month</label>
+                        <label className={styles.inputLabel}>
+                          Expiry Month
+                        </label>
                         <div className={styles.inputWrapper}>
                           <input
                             className={styles.input}
@@ -379,7 +448,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           />
                         </div>
                         {errors.expMonth && (
-                          <p className={styles.error}>{errors.expMonth.message}</p>
+                          <p className={styles.error}>
+                            {errors.expMonth.message}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -396,7 +467,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           />
                         </div>
                         {errors.expYear && (
-                          <p className={styles.error}>{errors.expYear.message}</p>
+                          <p className={styles.error}>
+                            {errors.expYear.message}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -462,7 +535,10 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                   </button>
                 )}
               </div>
-
+              <div className="d-flex align-items-center gap-2">
+                <p><strong>Includes:</strong></p>
+                <p>10% GST</p>
+              </div>
               <div className={styles.featuresList}>
                 <h5 className={styles.featuresTitle}>What's Included:</h5>
                 <ul className={styles.features}>
