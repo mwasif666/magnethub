@@ -302,7 +302,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                     <div className="col-12">
                       <div className={styles.inputGroup}>
                         <label className={styles.inputLabel}>
-                          Message (Optional)
+                          Message
                         </label>
                         <textarea
                           className={styles.textarea}

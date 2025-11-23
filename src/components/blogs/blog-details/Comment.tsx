@@ -5,8 +5,8 @@ type commentPropsType = {
 const Comment = ({blogCommetData}: commentPropsType) => {
    return (
       <div>
-     {blogCommetData && blogCommetData.length > 0 && blogCommetData.map((item: any)=>(
-      <div className="tg-tour-about-cus-review-wrap tg-blog-details-review mb-25">
+     {blogCommetData && blogCommetData.length > 0 && blogCommetData.map((item: any, idx: number)=>(
+      <div key={item.comment_id  ?? idx} className="tg-tour-about-cus-review-wrap tg-blog-details-review mb-25">
          <ul>
             <li className="mb-40">
                <div className="tg-tour-about-cus-review d-flex">

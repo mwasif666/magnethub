@@ -13,19 +13,29 @@ interface User {
   id: string;
   name?: string;
   email?: string;
-  [key: string]: any; 
+  [key: string]: any;
 }
 
 interface AuthResponse {
   user?: User;
   data?: User;
   _token?: string;
-  user_id?:string;
-  error?:boolean;
-  type?:string;
-  code?:string;
-  otp?:string;
+  user_id?: string;
+  error?: boolean;
+  type?: string;
+  code?: string;
+  otp?: string;
   message?: string;
+}
+
+interface sessionResponse {
+  raising_id: string;
+  name: string;
+  email: string;
+  profile: null;
+  type: string;
+  plan_type: string | null;
+  plan_expiry: null;
 }
 
 interface LoginData {
@@ -45,16 +55,17 @@ interface OTP {
   code: string | any;
 }
 
-
 interface AuthContextType {
   token: string | null;
   userId: string | null;
   isAuthenticated: boolean;
   loginUser: (loginData: LoginData | FormData) => Promise<AuthResponse>;
-  verifiyOtp:(otp:OTP | FormData) => Promise<AuthResponse>;
-  registerUser: (registerData: RegisterData | FormData) => Promise<AuthResponse>;
+  verifiyOtp: (otp: OTP | FormData) => Promise<AuthResponse>;
+  registerUser: (
+    registerData: RegisterData | FormData
+  ) => Promise<AuthResponse>;
   logout: () => Promise<void>;
-  role : string | null;
+  role: string | null;
 }
 
 interface AuthProviderProps {
@@ -67,7 +78,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [userId, setUserId] = useState<string>('');
+  const [userId, setUserId] = useState<string>("");
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState<string | null>(null);
@@ -86,31 +97,47 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const storeDataInLS = (res: AuthResponse) => {
-    if(!res.error){
+    if (!res.error) {
       if (typeof window !== "undefined") {
-        if (res.user_id) localStorage.setItem("user_id", JSON.stringify(res.user_id));
+        if (res.user_id)
+          localStorage.setItem("user_id", JSON.stringify(res.user_id));
         if (res._token) localStorage.setItem("token", res._token);
         if (res.type) localStorage.setItem("role", res.type);
       }
-  
-      setUserId(res.user_id || '');
+
+      setUserId(res.user_id || "");
       setToken(res._token || null);
       setRole(res.type || null);
       setIsAuthenticated(true);
     }
   };
 
-  const loginUser = async (loginData: LoginData | FormData): Promise<AuthResponse> => {
+  const storeDataISession = (res: sessionResponse) => {
+     sessionStorage.setItem("raising_id", JSON.stringify(res.raising_id));
+     sessionStorage.setItem("name", JSON.stringify(res.name));
+     sessionStorage.setItem("email", JSON.stringify(res.email));
+     sessionStorage.setItem("profile", JSON.stringify(res.profile));
+     sessionStorage.setItem("type", JSON.stringify(res.type));
+     sessionStorage.setItem("plan_type", JSON.stringify(res.plan_type));
+     sessionStorage.setItem("plan_expiry", JSON.stringify(res.plan_expiry));
+  };
+
+  const loginUser = async (
+    loginData: LoginData | FormData
+  ): Promise<AuthResponse> => {
     const res = await apiRequest({
       url: "/Raising/Login",
       method: "POST",
       data: loginData,
     });
     storeDataInLS(res);
+    storeDataISession(res.sessions);
     return res;
   };
 
-  const registerUser = async (registerData: RegisterData | FormData): Promise<AuthResponse> => {
+  const registerUser = async (
+    registerData: RegisterData | FormData
+  ): Promise<AuthResponse> => {
     const res = await apiRequest({
       url: "Raising/Register",
       method: "POST",
@@ -119,7 +146,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-   const verifiyOtp = async (otp: OTP | FormData): Promise<AuthResponse> => {
+  const verifiyOtp = async (otp: OTP | FormData): Promise<AuthResponse> => {
     const res = await apiRequest({
       url: "Raising/Check/Otp",
       method: "POST",
@@ -128,13 +155,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-
   const logout = (): Promise<void> => {
     return new Promise((resolve) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       localStorage.removeItem("role");
-      setUserId('');
+      setUserId("");
       setToken(null);
       setRole(null);
       setIsAuthenticated(false);
@@ -152,7 +178,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         registerUser,
         verifiyOtp,
         logout,
-        role
+        role,
       }}
     >
       {children}

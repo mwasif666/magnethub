@@ -12,10 +12,10 @@ const RecentPost = () => {
     try {
       setBlogsLoading(true);
       const response = await apiRequest({
-        url: `GetAllBlogs/recent`,
+        url: `GetAllRecentBlogs`,
         method: "GET",
       });
-      setRecentBlogs(response.data?.blog || {});
+      setRecentBlogs(response.data || {});
     } catch (error) {
       throw error;
     } finally {

@@ -155,7 +155,7 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
                 <Comment blogCommetData={blogCommetData}/>
                 {isAuthenticated ?<div className="tg-tour-about-review-form tg-blog-details-review-form">
                   <h4 className="tg-tour-about-title mb-10">Post a comment</h4>
-                  <BlogForm blogId={blogDetailData.Id}/>
+                  <BlogForm blogId={blogDetailData.blog_id}/>
                 </div> : <div>Please <Link href="/login">login</Link> to post a comment.</div>}
               </div>
             </div>
