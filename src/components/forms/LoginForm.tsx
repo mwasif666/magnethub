@@ -51,8 +51,14 @@ const LoginForm = () => {
         return;
       }
 
-      if ((response as any)?.error) {
-        toast.error((response as any)?.message || "Login failed.", {
+      if (response?.error) {
+        if(response.message === "Account Not Verified"){
+          toast.error("Account not verified. Redirecting to OTP verification.", { position: "top-center" });
+          localStorage.setItem('code', response.code || '');
+          router.push('/verifiy-otp');
+          return;
+        }
+        toast.error(response?.message || "Login failed.", {
           position: "top-center",
         });
         return;

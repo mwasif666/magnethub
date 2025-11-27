@@ -130,8 +130,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       method: "POST",
       data: loginData,
     });
-    storeDataInLS(res);
-    storeDataISession(res.sessions);
+    if(!res.error){
+      storeDataInLS(res);
+      storeDataISession(res.sessions);
+    }
     return res;
   };
 

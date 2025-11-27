@@ -133,7 +133,7 @@ const FeatureArea = ({
                                 }}
                                 onError={(e) => {
                                   e.currentTarget.src =
-                                    "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                                    "assets/img/notfound/image_notfound.png";
                                 }}
                               />
                             </div>
