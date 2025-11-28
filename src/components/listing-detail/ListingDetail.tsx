@@ -61,7 +61,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   }, []);
 
   const parseImage = (Image: string) => {
-    if(Image){
+    if (Image) {
       return JSON.parse(Image);
     }
 
@@ -220,8 +220,11 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                     <h2>No Similar Product found</h2>
                   </div>
                 ) : (
-                  similarListing.map((item: any, index:number) => (
-                    <div key={item.id || index} className={`${styles.similar_img}`}>
+                  similarListing.map((item: any, index: number) => (
+                    <div
+                      key={item.id || index}
+                      className={`${styles.similar_img}`}
+                    >
                       <Image
                         className={`w-100 rounded ${styles.listingImage}`}
                         src={`http://magnatehub.au/uploads/project/card/${item?.title_images}`}
