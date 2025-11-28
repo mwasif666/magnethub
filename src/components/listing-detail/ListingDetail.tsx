@@ -78,7 +78,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
 
   const openChatWithSeller = (userId: string, projectId: string) => {
     // const url = `/chat?user_id=${userId}&project_id=${projectId}`;
-    const url = 'http://magnatehub.au/dashboard/professionals/chat'
+    const url = "http://magnatehub.au/dashboard/professionals/chat";
     window.open(url, "_blank");
   };
 
