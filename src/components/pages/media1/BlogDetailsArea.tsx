@@ -133,7 +133,7 @@ const BlogDetailsArea = () => {
                      <div className="tg-tour-about-review-form tg-blog-details-review-form">
                         <h4 className="tg-tour-about-title mb-10">Post a comment</h4>
                         <p>Your email address will not be published. Required fields are marked *</p>
-                        <BlogForm />
+                        {/* <BlogForm /> */}
                      </div>
                   </div>
                </div>

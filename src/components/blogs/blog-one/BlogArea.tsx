@@ -1,54 +1,67 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import blog_data from "@/data/BlogData";
+import { apiRequest } from "@/api/axiosInstance";
 import Image from "next/image";
 import Link from "next/link";
-import ReactPaginate from "react-paginate";
 import BlogSidebar from "../blog-sidebar";
 import Button from "@/components/common/Button";
-import { apiRequest } from "@/api/axiosInstance";
 import Loading from "@/components/loading/Loading";
+import Pagination from "@/components/pagination/Pagination";
 
 const BlogArea = () => {
   const router = useRouter();
   const [blogLoading, setBlogLoading] = useState<boolean>(true);
   const [blogData, setBlogData] = useState<any>([]);
-  const blog = blog_data.filter((items) => items.page === "inner_1");
-
-  const itemsPerPage = 8;
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = blog.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(blog.length / itemsPerPage);
-  // click to request another page.
-  const handlePageClick = (event: { selected: number }) => {
-    const newOffset = (event.selected * itemsPerPage) % blog.length;
-    setItemOffset(newOffset);
-  };
+  const [localPagination, setLocalPagination] = useState<{
+    totalPage: number;
+    currentPage: number;
+    perPage: number;
+    total: number;
+    nextPageUrl?: string | null;
+    prevPageUrl?: string | null;
+  }>({
+    totalPage: 1,
+    currentPage: 1,
+    perPage: 12,
+    total: 0,
+  });
+  const [page, setPage] = useState(1);
 
   const redirectToBlogDetail = (item: any) => {
     router.push(`/blog-details?url=${item.url}&id=${item.id}`);
   };
 
-  const getBlogs = async () => {
+  const getBlogs = async (pageNumber = 1) => {
     try {
       setBlogLoading(true);
+
       const response = await apiRequest({
-        url: "GetAllBlogs",
+        url: `GetAllBlogs?page=${pageNumber}`,
         method: "GET",
       });
+
       setBlogData(response.data.data);
-    } catch (error) {
-      throw error;
+      setLocalPagination({
+        totalPage: response.data.last_page || 1,
+        currentPage: response.data.current_page || 1,
+        perPage: response.data.per_page || 12,
+        total: response.data.total || 0,
+        nextPageUrl: response.data.next_page_url,
+        prevPageUrl: response.data.prev_page_url,
+      });
     } finally {
       setBlogLoading(false);
     }
   };
 
   useEffect(() => {
-    getBlogs();
-  }, []);
+    getBlogs(page);
+  }, [page]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setPage(pageNumber);
+  };
 
   const getLimitedHtml = (html: string, limit: number) => {
     const stripped = html.replace(/<[^>]+>/g, "");
@@ -56,9 +69,10 @@ const BlogArea = () => {
     if (stripped.length > limit) {
       limited += "...";
     }
-
     return limited;
   };
+
+  const totalPages = localPagination?.totalPage || 1;
 
   return (
     <div className="tg-blog-grid-area pt-130 pb-100">
@@ -164,10 +178,10 @@ const BlogArea = () => {
                           />
                           <div className="tg-blog-sidebar-btn">
                             <span className="tg-btn tg-btn-switch-animation">
-                              <Link href={`/blog-details?url=${item.url}&id=${item.id}`}>
-                              <Button
-                                text="Read More"
-                              />
+                              <Link
+                                href={`/blog-details?url=${item.url}&id=${item.id}`}
+                              >
+                                <Button text="Read More" />
                               </Link>
                             </span>
                           </div>
@@ -176,19 +190,17 @@ const BlogArea = () => {
                     </div>
                   ))}
                 </div>
-                <div className="tg-pagenation-wrap text-center pt-80 mb-30">
-                  <nav>
-                    <ReactPaginate
-                      breakLabel="..."
-                      nextLabel={<i className="p-btn">{">"}</i>}
-                      onPageChange={handlePageClick}
-                      pageRangeDisplayed={3}
-                      pageCount={pageCount}
-                      previousLabel={<i className="p-btn"> {"<"} </i>}
-                      renderOnZeroPageCount={null}
-                    />
-                  </nav>
-                </div>
+                {totalPages > 1 && (
+                  <div className="text-center mt-50 mb-30">
+                    <nav>
+                      <Pagination
+                        currentPage={localPagination.currentPage}
+                        totalPages={localPagination.totalPage}
+                        onPageChange={handlePageChange}
+                      />
+                    </nav>
+                  </div>
+                )}
               </div>
             </div>
           )}

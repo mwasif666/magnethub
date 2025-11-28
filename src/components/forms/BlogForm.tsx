@@ -16,7 +16,7 @@ interface BlogCommentForm {
 }
 
 const schema: yup.ObjectSchema<BlogCommentForm> = yup.object({
-  comment: yup.string().required("Comment is required"),
+  comment: yup.string().required("Message is required"),
   name: yup.string().required("Name is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
   phone: yup
@@ -25,7 +25,11 @@ const schema: yup.ObjectSchema<BlogCommentForm> = yup.object({
     .optional(),
 });
 
-const BlogForm = ({ blogId }: { blogId: number }) => {
+type BlogFormProps = {
+  blogId: number;
+};
+
+const BlogForm = ({ blogId }: BlogFormProps) => {
   const { userId } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -42,9 +46,9 @@ const BlogForm = ({ blogId }: { blogId: number }) => {
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("blogId", blogId.toString());
-      formData.append("userId", userId?.toString() ?? "0");
-      formData.append("comment", data.comment);
+      formData.append("blog_id", blogId?.toString());
+      formData.append("user_id", userId ?? "0");
+      formData.append("message", data.comment);
       formData.append("name", data.name);
       formData.append("email", data.email);
       if (data.phone) {

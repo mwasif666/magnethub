@@ -28,8 +28,9 @@ const Pagination: React.FC<PaginationProps> = ({
         className={styles.navBtn}
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
+        aria-label="Previous page"
       >
-        {"<"}
+        <i className="fa-solid fa-chevron-left"></i>
       </button>
 
       {start > 1 && (
@@ -51,6 +52,8 @@ const Pagination: React.FC<PaginationProps> = ({
           className={`${styles.pageBtn} ${
             num === currentPage ? styles.active : ""
           }`}
+          aria-label={`Page ${num}`}
+          aria-current={num === currentPage ? "page" : undefined}
         >
           {num}
         </button>
@@ -72,8 +75,9 @@ const Pagination: React.FC<PaginationProps> = ({
         className={styles.navBtn}
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
+        aria-label="Next page"
       >
-        {">"}
+        <i className="fa-solid fa-chevron-right"></i>
       </button>
     </nav>
   );

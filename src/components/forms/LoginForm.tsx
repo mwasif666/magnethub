@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface LoginData {
   email: string;
@@ -21,8 +22,9 @@ const schema = yup.object({
 });
 
 const LoginForm = () => {
+  const router = useRouter(); 
+  const { loginUser } = useAuth();
   const [loading, setLoading] = useState(false);
- const { loginUser } = useAuth();
 
   const {
     register,
@@ -49,8 +51,14 @@ const LoginForm = () => {
         return;
       }
 
-      if ((response as any)?.error) {
-        toast.error((response as any)?.message || "Login failed.", {
+      if (response?.error) {
+        if(response.message === "Account Not Verified"){
+          toast.error("Account not verified. Redirecting to OTP verification.", { position: "top-center" });
+          localStorage.setItem('code', response.code || '');
+          router.push('/verifiy-otp');
+          return;
+        }
+        toast.error(response?.message || "Login failed.", {
           position: "top-center",
         });
         return;
@@ -62,6 +70,7 @@ const LoginForm = () => {
       if ((response as any)?.link) {
         window.open((response as any).link, "_blank");
       }
+      router.push("/");
     } catch (error: any) {
       console.error("Login error:", error);
       const message =

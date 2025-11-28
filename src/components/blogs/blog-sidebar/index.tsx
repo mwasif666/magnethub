@@ -5,7 +5,8 @@ import RecentPost from "./RecentPost"
 
 const BlogSidebar = () => {
    return (
-      <div className="tg-blog-sidebar top-sticky mb-30">
+      <div>
+      {/* <div className="tg-blog-sidebar top-sticky mb-30">
          <div className="tg-blog-sidebar-search tg-blog-sidebar-box mb-40">
             <h5 className="tg-blog-sidebar-title mb-15">Search</h5>
             <div className="tg-blog-sidebar-form">
@@ -25,11 +26,12 @@ const BlogSidebar = () => {
                   </button>
                </form>
             </div>
-         </div>
+         </div> */}
          {/* <Category /> */}
          <RecentPost />
          {/* <Ads /> */}
          {/* <Tags /> */}
+      {/* </div> */}
       </div>
    )
 }

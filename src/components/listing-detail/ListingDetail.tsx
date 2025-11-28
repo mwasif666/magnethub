@@ -76,6 +76,12 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     router.push(`/detail/${item.url}/${item.project_id}`);
   };
 
+  const openChatWithSeller = (userId: string, projectId: string) => {
+    // const url = `/chat?user_id=${userId}&project_id=${projectId}`;
+    const url = 'http://magnatehub.au/dashboard/professionals/chat'
+    window.open(url, "_blank");
+  };
+
   return (
     <>
       <ToastContainer position="top-center" />
@@ -96,6 +102,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             : ""}
                         </h2>
                         <h5 className={styles.host}>
+                          <i className="fa-solid fa-user me-2"></i>
                           <span>Hosted By:</span>{" "}
                           {listing.user_first_name +
                             " " +
@@ -104,13 +111,13 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                       </div>
 
                       <div
-                        className="text-end cursor-pointer"
+                        className={styles.wishlistContainer}
                         onClick={() => handleAddToWishlist(listing)}
                       >
-                        <a style={{ cursor: "pointer" }}>
-                          <Wishlist />
-                        </a>
-                        <p className="mt-2 mb-0 fw-semibold">Add To Favorite</p>
+                        <p className={styles.wishlistText}>
+                          <i className="fa-solid fa-heart me-1"></i>
+                          Add To Favorite
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -162,91 +169,226 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                   </div>
 
                   <div className={`card p-4 mb-4 ${styles.infoCard}`}>
-                    <h3 className="mb-3">Business Overview</h3>
+                    <h3 className={`mb-4 ${styles.sectionTitle}`}>
+                      <i className="fa-solid fa-chart-line me-2"></i>
+                      Business Overview
+                    </h3>
 
                     <div className="row g-4">
                       {[
-                        { label: "Location", value: listing?.location_name },
-                        { label: "Category", value: listing?.category_name },
-                        { label: "Price", value: listing?.price },
-                        { label: "Yearly Trading", value: listing?.trading },
-                        { label: "Earning Type", value: listing?.earning_type },
-                        { label: "Stock Level", value: listing?.stock_level },
+                        {
+                          label: "Location",
+                          value: listing?.location_name || "N/A",
+                          icon: "fa-solid fa-location-dot",
+                          color: "#ef4444",
+                        },
+                        {
+                          label: "Category",
+                          value: listing?.category_name || "N/A",
+                          icon: "fa-solid fa-tags",
+                          color: "#3b82f6",
+                        },
+                        {
+                          label: "Price",
+                          value: listing?.price ? `$${listing.price}` : "N/A",
+                          icon: "fa-solid fa-dollar-sign",
+                          color: "#10b981",
+                        },
+                        {
+                          label: "Yearly Trading",
+                          value: listing?.trading || "N/A",
+                          icon: "fa-solid fa-chart-line",
+                          color: "#f59e0b",
+                        },
+                        {
+                          label: "Earning Type",
+                          value: listing?.earning_type || "N/A",
+                          icon: "fa-solid fa-money-bill-wave",
+                          color: "#8b5cf6",
+                        },
+                        {
+                          label: "Stock Level",
+                          value: listing?.stock_level || "N/A",
+                          icon: "fa-solid fa-boxes-stacked",
+                          color: "#06b6d4",
+                        },
                       ].map((item, i) => (
                         <div className="col-6 col-md-4" key={i}>
-                          <p className={styles.infoLabel}>{item.label}</p>
-                          <h6 className={styles.infoValue}>{item.value}</h6>
+                          <div className={styles.infoItem}>
+                            <div
+                              className={styles.infoIcon}
+                              style={{
+                                backgroundColor: `${item.color}15`,
+                                color: item.color,
+                              }}
+                            >
+                              <i className={item.icon}></i>
+                            </div>
+                            <p className={styles.infoLabel}>{item.label}</p>
+                            <h6 className={styles.infoValue}>{item.value}</h6>
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {[
-                    { label: "Summary", value: listing.summary },
-                    { label: "Skills", value: listing.skills },
-                    { label: "Potential", value: listing.potential },
-                    { label: "Hours", value: listing.hours },
-                    { label: "Staff", value: listing.staff },
-                    { label: "Lease", value: listing.lease },
-                    { label: "Business", value: listing.business_established },
-                    { label: "Training", value: listing.training },
-                    { label: "Awards", value: listing.awards },
-                    { label: "Selling Reason", value: listing.reason_for_sale },
-                  ].map((section, index) => (
-                    <div
-                      key={index}
-                      className={`card p-4 mb-3 ${styles.sectionCard}`}
-                    >
-                      <h3 className={styles.sectionTitle}>{section.label}</h3>
-                      <p className={styles.sectionText}>{section.value}</p>
-                    </div>
-                  ))}
+                    {
+                      label: "Summary",
+                      value: listing.summary,
+                      icon: "fa-solid fa-file-lines",
+                    },
+                    {
+                      label: "Skills",
+                      value: listing.skills,
+                      icon: "fa-solid fa-lightbulb",
+                    },
+                    {
+                      label: "Potential",
+                      value: listing.potential,
+                      icon: "fa-solid fa-rocket",
+                    },
+                    {
+                      label: "Hours",
+                      value: listing.hours,
+                      icon: "fa-solid fa-clock",
+                    },
+                    {
+                      label: "Staff",
+                      value: listing.staff,
+                      icon: "fa-solid fa-users",
+                    },
+                    {
+                      label: "Lease",
+                      value: listing.lease,
+                      icon: "fa-solid fa-file-contract",
+                    },
+                    {
+                      label: "Business",
+                      value: listing.business_established,
+                      icon: "fa-solid fa-building",
+                    },
+                    {
+                      label: "Training",
+                      value: listing.training,
+                      icon: "fa-solid fa-graduation-cap",
+                    },
+                    {
+                      label: "Awards",
+                      value: listing.awards,
+                      icon: "fa-solid fa-trophy",
+                    },
+                    {
+                      label: "Selling Reason",
+                      value: listing.reason_for_sale,
+                      icon: "fa-solid fa-info-circle",
+                    },
+                  ].map(
+                    (section, index) =>
+                      section.value && (
+                        <div
+                          key={index}
+                          className={`card p-4 mb-3 ${styles.sectionCard}`}
+                        >
+                          <h3 className={styles.sectionTitle}>
+                            <i className={`${section.icon} me-2`}></i>
+                            {section.label}
+                          </h3>
+                          <p className={styles.sectionText}>{section.value}</p>
+                        </div>
+                      )
+                  )}
                 </>
               ) : (
                 <Loading loadingText={"Loading Detail Page"} />
               )}
             </div>
             <div className="col-lg-4 col-md-12">
-              <div className="card p-3 mb-3">
-                <h4>Chat</h4>
-                <div>Chat component goes here...</div>
+              <div className={`card p-4 mb-3 ${styles.chatCard}`}>
+                <div className={styles.chatHeader}>
+                  <i className="fa-solid fa-comments me-2"></i>
+                  <h4 className="mb-0">Chat with Seller</h4>
+                </div>
+                <p className={styles.chatDescription}>
+                  Have questions about this listing? Start a conversation with
+                  the seller.
+                </p>
+                {!isAuthenticated ? (
+                  <button
+                    className={styles.chatButton}
+                    onClick={() => router.push(`/login`)}
+                  >
+                    <i className="fa-solid fa-right-to-bracket me-2"></i>
+                    Login to Chat
+                  </button>
+                ) : (
+                  <button
+                    className={styles.chatButton}
+                    onClick={() =>
+                      openChatWithSeller(listing.user_id, listing.project_id)
+                    }
+                  >
+                    <i className="fa-solid fa-message me-2"></i>
+                    Start Chat
+                  </button>
+                )}
               </div>
-              <div className="card p-3">
-                <h2>Similar Listings</h2>
+              <div className={`card p-4 ${styles.similarCard}`}>
+                <h3 className={styles.similarTitle}>
+                  <i className="fa-solid fa-list me-2"></i>
+                  Similar Listings
+                </h3>
                 {similarLoading ? (
                   <Loading loadingText={"Loading..."} />
                 ) : similarListing && similarListing.length === 0 ? (
-                  <div>
-                    <h2>No Similar Product found</h2>
+                  <div className={styles.noSimilar}>
+                    <i className="fa-solid fa-inbox mb-3"></i>
+                    <p>No Similar Listings Found</p>
                   </div>
                 ) : (
-                  similarListing.map((item: any, index: number) => (
-                    <div
-                      key={item.id || index}
-                      className={`${styles.similar_img}`}
-                    >
-                      <Image
-                        className={`w-100 rounded ${styles.listingImage}`}
-                        src={`http://magnatehub.au/uploads/project/card/${item?.title_images}`}
-                        alt="Project Image"
-                        width={100}
-                        height={200}
-                        unoptimized
-                        onError={(e) => {
-                          e.currentTarget.src =
-                            "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
-                        }}
-                      />
-                      <div>
-                        <h4 onClick={() => redirectUser(item)}>
-                          {item.name.length > 15
-                            ? item.name.slice(0, 15) + "..."
-                            : item.name}
-                        </h4>
-                        <h6>{item.date}</h6>
+                  <div className={styles.similarList}>
+                    {similarListing.map((item: any, index: number) => (
+                      <div
+                        key={item.id || index}
+                        className={styles.similarItem}
+                        onClick={() => redirectUser(item)}
+                      >
+                        <div className={styles.similarImageWrapper}>
+                          <Image
+                            className={styles.similarImage}
+                            src={`http://magnatehub.au/uploads/project/card/${item?.title_images}`}
+                            alt="Project Image"
+                            width={120}
+                            height={100}
+                            unoptimized
+                            onError={(e) => {
+                              e.currentTarget.src =
+                                "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                            }}
+                          />
+                        </div>
+                        <div className={styles.similarContent}>
+                          <h5 className={styles.similarName}>
+                            {item.name && item.name.length > 20
+                              ? item.name.slice(0, 20) + "..."
+                              : item.name || "Untitled"}
+                          </h5>
+                          {item.date && (
+                            <p className={styles.similarDate}>
+                              <i className="fa-solid fa-calendar me-1"></i>
+                              {item.date}
+                            </p>
+                          )}
+                          {item.price && (
+                            <p className={styles.similarPrice}>
+                              <i className="fa-solid fa-dollar-sign me-1"></i>$
+                              {item.price}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    ))}
+                  </div>
                 )}
               </div>
             </div>

@@ -1,21 +1,17 @@
-"use client";
-import BlogDetails from "@/components/blogs/blog-details";
+import { Suspense } from "react"
 import Wrapper from "@/layouts/Wrapper";
-import { useSearchParams } from "next/navigation";
+import BlogDetailsWrapper from "./BlogDetailsWrapper";
 
-// export const metadata = {
-//   title:
-//     "Blog Details Magnet Hub - Tour & Travel Booking React Next js Template",
-// };
-const page = () => {
-  const params = useSearchParams();
-  const id = params.get("id");
-  const  url = params.get("url");
-  return (
-    <Wrapper>
-      <BlogDetails id={id} url={url}/>
-    </Wrapper>
-  );
+export const metadata = {
+  title: "Blog Details Magnet Hub - Tour & Travel Booking React Next js Template",
 };
 
-export default page;
+export default function Page() {
+  return (
+    <Wrapper>
+      <Suspense fallback={<div>Loading...</div>}>
+        <BlogDetailsWrapper />
+      </Suspense>
+    </Wrapper>
+  );
+}
