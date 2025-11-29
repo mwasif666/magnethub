@@ -1,9 +1,9 @@
 "use client";
 import BreadCrumb from "@/components/common/BreadCrumb";
-import ListingDetail from "@/components/listing-detail/ListingDetail";
 import FooterOne from "@/layouts/footers/FooterOne";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import React from "react";
+import ListingDetail from "./ListingDetail";
 
 interface DetailClientProps {
   url: string;

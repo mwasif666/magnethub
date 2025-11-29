@@ -1,16 +1,16 @@
 import { Suspense } from "react"
 import Wrapper from "@/layouts/Wrapper";
-import BlogDetailsWrapper from "./BlogDetailsWrapper";
+import ListingDetailsWrapper from "./ListingDetailWrapper";
 
 export const metadata = {
-  title: "Blog Details Magnet Hub",
+  title: "Listing Details Magnet Hub",
 };
 
 export default function Page() {
   return (
     <Wrapper>
       <Suspense fallback={<div>Loading...</div>}>
-        <BlogDetailsWrapper />
+        <ListingDetailsWrapper />
       </Suspense>
     </Wrapper>
   );

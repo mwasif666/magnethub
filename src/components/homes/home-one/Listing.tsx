@@ -52,7 +52,7 @@ const Listing = ({
   }, [listing]);
 
   const redirectUser = (item: any) => {
-    router.push(`/detail/${item.url}/${item.project_id}`);
+    router.push(`/detail?url=${item.url}&id=${item.project_id}`);
   };
 
   const totalPages = pagination?.totalPage || 1;

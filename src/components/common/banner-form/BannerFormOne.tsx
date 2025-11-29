@@ -228,18 +228,6 @@ const BannerFormOne = ({
     getListingData(1);
   };
 
-  const saveListingJSON = async (listingData: any) => {
-    try {
-      await fetch("/api/generate-json", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(listingData),
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const getListingData = (page: number = 1) => {
     const initialUrl = constructUrl(formData, page);
     if (initialUrl) {
@@ -261,8 +249,6 @@ const BannerFormOne = ({
           prevPageUrl: response?.data?.prev_page_url,
         });
       }
-      
-      saveListingJSON(response?.data?.data);
     } catch (error) {
       console.error(error);
     }
