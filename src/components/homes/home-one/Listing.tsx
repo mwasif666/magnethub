@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,6 +36,7 @@ const Listing = ({
   const router = useRouter();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const wishlist = useSelector((state: any) => state.wishlist.wishlist);
 
   const handleAddToWishlist = (item: any) => {
     dispatch(addToWishlist(item));
@@ -58,6 +59,10 @@ const Listing = ({
   const totalPages = pagination?.totalPage || 1;
   const currentPage =
     activePage !== undefined ? activePage : pagination?.currentPage || 1;
+
+  const isInWishlist = (id: number) => {
+    return wishlist.some((item: any) => item.id === id);
+  };
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
@@ -88,7 +93,6 @@ const Listing = ({
         </div>
 
         <div className="row">
-
           {loading ? (
             <Loading loadingText={"Loading..."} />
           ) : data.length > 0 ? (
@@ -122,53 +126,90 @@ const Listing = ({
                         onClick={() => handleAddToWishlist(item)}
                         style={{ cursor: "pointer" }}
                       >
-                        <Wishlist />
+                        <Wishlist
+                          filled={isInWishlist(item.id)}
+                          style={{
+                            color: isInWishlist(item.id) ? "red" : "#444",
+                          }}
+                        />
                       </a>
                     </div>
                   </div>
 
                   <div className="tg-listing-card-content">
-                    {/* <div className="tg-listing-card-duration-tour d-flex align-items-center gap-3">
-                      <span className="tg-listing-card-duration-map mb-5">
-                        <Clock /> {item.time}
-                      </span>
-                      <span className="tg-listing-card-duration-time mb-5">
-                        <User /> {item.guest}
-                      </span>
-                    </div> */}
-
                     <h4
                       className="tg-listing-card-title mb-10"
                       onClick={() => redirectUser(item)}
+                      style={{ cursor: "pointer" }}
                     >
-                      <Link href="tour-details.html">
-                        {item.name.length > 30
-                          ? item.name.slice(0, 20) + "..."
-                          : item.name}
+                      <Link
+                        href={`/detail?url=${item.url}&id=${item.project_id}`}
+                      >
+                        <span
+                          style={{
+                            fontWeight: 600,
+                            fontSize: "18px",
+                            color: "#1a1a1a",
+                          }}
+                        >
+                          {item.name.length > 30
+                            ? item.name.slice(0, 25) + "..."
+                            : item.name}
+                        </span>
                       </Link>
                     </h4>
-
-                    <div className="tg-listing-card-duration-tour mb-20">
-                      <span className="tg-listing-card-duration-map">
-                        <Location /> {item.location_name}
+                    <div className="mb-15">
+                      <span
+                        style={{
+                          padding: "4px 10px",
+                          background: "#eef4ff",
+                          borderRadius: "6px",
+                          fontSize: "13px",
+                          color: "#2a5bd7",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {item.category_name}
                       </span>
                     </div>
 
-                    <div className="tg-listing-card-price d-flex align-items-end justify-content-between">
+                    <div
+                      className="mb-20 d-flex align-items-center"
+                      style={{ color: "#666" }}
+                    >
+                      <Location />
+                      <span style={{ marginLeft: "6px" }}>
+                        {item.location_name}
+                      </span>
+                    </div>
+
+                    <div className="d-flex align-items-end justify-content-between mt-10 pt-20 border-top">
                       <div>
-                        <span className="tg-listing-card-currency-amount d-flex align-items-center">
-                          <span className="currency-symbol mr-5"></span>$
+                        <span
+                          className="d-flex align-items-center"
+                          style={{
+                            fontSize: "20px",
+                            fontWeight: 700,
+                            color: "#111",
+                          }}
+                        >
+                          <span className="mr-5">$</span>
                           {item.price}
                         </span>
                       </div>
+
                       <div>
-                        <span className="tg-listing-rating-icon">
-                          {item?.franchise === "1" ? (
-                            <i className="fa-sharp fa-solid fa-star"></i>
-                          ) : item?.premium === "1" ? (
-                            <i className="fa-sharp fa-solid fa-crown"></i>
-                          ) : null}
-                        </span>
+                        {item?.franchise === "1" ? (
+                          <i
+                            className="fa-sharp fa-solid fa-star"
+                            style={{ color: "#ffb703", fontSize: "20px" }}
+                          ></i>
+                        ) : item?.premium === "1" ? (
+                          <i
+                            className="fa-sharp fa-solid fa-crown"
+                            style={{ color: "#d7263d", fontSize: "20px" }}
+                          ></i>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -176,7 +217,6 @@ const Listing = ({
               </div>
             ))
           ) : (
-            
             <div className="text-center py-5">
               <p>No listings found.</p>
             </div>

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { setLocalStorage, getLocalStorage } from "../../utils/localstorage";
+import { get } from "http";
 
 export interface Product {
    id: number;
@@ -47,6 +48,12 @@ const wishlistSlice = createSlice({
          state.wishlist = [];
          setLocalStorage("wishlist", state.wishlist);
       },
+      getWhistlistFromLocalStorage: (state) => {
+         const storedWishlist = getLocalStorage<Product>("wishlist");
+         if (storedWishlist) {
+            state.wishlist = storedWishlist;
+         }  
+      },
    },
 });
 
@@ -54,6 +61,7 @@ export const {
    addToWishlist,
    removeFromWishlist,
    clearWishlist,
+   getWhistlistFromLocalStorage
 } = wishlistSlice.actions;
 
 export default wishlistSlice.reducer;

@@ -5579,12 +5579,12 @@ textarea {
   padding: 0;
 }
 .tg-listing-su-card-item .tg-listing-card-content {
-  padding: 0px 40px 30px 20px;
+  padding: 0px 20px 10px 10px;
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px),
   (max-width: 575px) {
   .tg-listing-su-card-item .tg-listing-card-content {
-    padding: 0px 20px 20px 20px;
+    padding: 0px 20px 20px 10px;
   }
 }
 .tg-listing-su-shape {
