@@ -4,20 +4,16 @@ import Link from "next/link";
 
 import shape_1 from "@/assets/img/about/details/shape.png";
 import shape_2 from "@/assets/img/about/details/shape-2.png";
-import shape_3 from "@/assets/img/chose/chose-3/circle-text.png";
-import shape_4 from "@/assets/img/chose/chose-3/star.png";
 import thumb_1 from "@/assets/img/imgs/5.jpg";
-import thumb_2 from "@/assets/img/imgs/2.jpg";
-import thumb_3 from "@/assets/img/imgs/5.jpg";
 
 const AboutArea = () => {
   return (
     <div className="tg-about-area p-relative z-index-1 pt-140 pb-105">
-      <Image
+      {/* <Image
         className="tg-about-details-shape p-absolute d-none d-lg-block"
         src={shape_1}
         alt="shape"
-      />
+      /> */}
       <div className="container">
         <div className="row align-items-center">
           <div className="col-lg-6">

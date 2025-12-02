@@ -6,8 +6,6 @@ import { FaStore, FaUserCheck, FaMoneyBillTrendUp } from "react-icons/fa6";
 import process_1 from "@/assets/img/imgs/market.jpg";
 import process_2 from "@/assets/img/imgs/user.png";
 import process_3 from "@/assets/img/imgs/increase.jpg";
-import shape from "@/assets/img/chose/chose-2/shape.png";
-
 interface DataType {
   id: number;
   thumb?: StaticImageData;
@@ -52,11 +50,6 @@ const process_data: DataType[] = [
 const Process = () => {
   return (
     <div className="tg-chose-area tg-chose-su-wrap pt-100 pb-105 p-relative z-index-9">
-      <Image
-        className="tg-chose-2-shape d-none d-lg-block"
-        src={shape}
-        alt="shape"
-      />
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-6 col-md-8">

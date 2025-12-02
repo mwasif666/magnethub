@@ -53,7 +53,6 @@ const FooterOne = () => {
         <div className="container">
           <div className="tg-footer-top mb-45">
             <div className="row">
-              {/* Column 1 - About Section */}
               <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                 <div className="tg-footer-widget mb-40">
                   <div className="tg-footer-logo mb-20">
@@ -70,7 +69,6 @@ const FooterOne = () => {
                     entrepreneurs in one trusted marketplace. Buy, sell, or
                     invest in businesses with confidence and transparency.
                   </p>
-                  {/* Newsletter Form */}
                   <div className="tg-footer-form mb-30">
                     <form onSubmit={submitNewsLetter}>
                       <input
@@ -138,8 +136,6 @@ const FooterOne = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Column 2 - Quick Links */}
               <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                 <div className="tg-footer-widget tg-footer-link ml-80 mb-40">
                   <h3 className="tg-footer-widget-title mb-25">Quick Links</h3>
@@ -173,8 +169,6 @@ const FooterOne = () => {
                   </ul>
                 </div>
               </div>
-
-              {/* Column 3 - Contact Information */}
               <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                 <div className="tg-footer-widget tg-footer-info mb-40">
                   <h3 className="tg-footer-widget-title mb-25">
@@ -203,7 +197,6 @@ const FooterOne = () => {
                     </li>
                   </ul>
 
-                  {/* Map */}
                   <div className="tg-footer-map mb-30">
                     <iframe
                       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31513469.254011944!2d113.33895365032925!3d-25.73496854357832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d43f27b8b15%3A0x5045675218ceed30!2sMelbourne%20VIC%2C%20Australia!5e0!3m2!1sen!2sau!4v1730945742000!5m2!1sen!2sau"
@@ -219,8 +212,6 @@ const FooterOne = () => {
             </div>
           </div>
         </div>
-
-        {/* Copyright */}
         <div className="tg-footer-copyright text-center">
           <span>
             Copyright © {new Date().getFullYear()}{" "}

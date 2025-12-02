@@ -399,7 +399,7 @@ const BannerFormOne = ({
                           <select
                             className="form-select"
                             name="region"
-                            value={formData.region2}
+                            value={formData.region}
                             onChange={handleInputChange}
                           >
                             {regionLoading ? (

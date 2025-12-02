@@ -9,8 +9,6 @@ import avatar_1 from "@/assets/img/testimonial/tes-4/tes-1.png"
 import avatar_2 from "@/assets/img/testimonial/tes-4/tes-2.png"
 import avatar_3 from "@/assets/img/testimonial/tes-4/tes-3.png"
 import avatar_4 from "@/assets/img/testimonial/tes-4/tes-4.png"
-import shape_1 from "@/assets/img/testimonial/su/shape.png"
-import shape_2 from "@/assets/img/testimonial/su/shape-2.png"
 
 const avatar_data: StaticImageData[] = [avatar_1, avatar_2, avatar_3, avatar_4, avatar_2,];
 
@@ -25,38 +23,38 @@ interface DataType {
 const testi_data: DataType[] = [
    {
       id: 1,
-      name: "Mr.Robey Alexa",
-      designation: "CEO, logistra Agency",
+      name: "Sarah Mitchell",
+      designation: "CEO, TechVenture Solutions",
       rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",],
-      desc: (<>“ Morem ipsum dolor sit amet, consectetur adipisc Service follwing arrea fowlwo awing  elita florai sum dolor sit amet, consectetur area raweaeaw ecall edBorem<br /> ipsum dolor sit amet, consectetur.”</>),
+      desc: (<>“ Working with Magnate Hub transformed our business strategy. Their expertise in market analysis and strategic planning helped us identify new growth opportunities we hadn't considered. The team's dedication and professional approach exceeded our expectations.”</>),
    },
    {
       id: 2,
-      name: "Jamie L. Jorgensen",
-      designation: "CEO, logistra Agency",
+      name: "James Robertsonn",
+      designation: "Founder, Robertson Consulting",
       rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",],
-      desc: (<>“ Morem ipsum dolor sit amet, consectetur adipisc Service follwing arrea fowlwo awing  elita florai sum dolor sit amet, consectetur area raweaeaw ecall edBorem<br /> ipsum dolor sit amet, consectetur.”</>),
+      desc: (<>“ The insights and guidance provided by Magnate Hub were invaluable during our expansion phase. They helped us navigate complex challenges with practical solutions that delivered real results. Highly recommend their services to any business looking to scale.”</>),
    },
    {
       id: 3,
-      name: "Mr.Robey Alexa",
-      designation: "CEO, logistra Agency",
+      name: "Emily Chen",
+      designation: "Managing Director, Apex Industries",
       rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",],
-      desc: (<>“ Morem ipsum dolor sit amet, consectetur adipisc Service follwing arrea fowlwo awing  elita florai sum dolor sit amet, consectetur area raweaeaw ecall edBorem<br /> ipsum dolor sit amet, consectetur.”</>),
+      desc: (<>“ Magnate Hub's strategic approach to business development is second to none. They took the time to understand our unique challenges and delivered tailored solutions that made a measurable impact on our bottom line. True professionals in every sense.”</>),
    },
    {
       id: 4,
-      name: "Jason Whitmore",
-      designation: "Founder",
+      name: "Michael Thompson",
+      designation: "Director of Operations, GrowthPath Co",
       rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",],
-      desc: (<>“ Morem ipsum dolor sit amet, consectetur adipisc Service follwing arrea fowlwo awing  elita florai sum dolor sit amet, consectetur area raweaeaw ecall edBorem<br /> ipsum dolor sit amet, consectetur.”</>),
+      desc: (<>“ The team at Magnate Hub brought clarity to our business objectives and helped us implement strategies that actually work. Their data-driven approach and hands-on support throughout the process made all the difference in achieving our goals.”</>),
    },
    {
       id: 5,
-      name: "Jamie L. Jorgensen",
-      designation: "CEO, logistra Agency",
+      name: "Lisa Anderson",
+      designation: "Co-Founder, Innovation Partners",
       rating: ["fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star", "fa-sharp fa-solid fa-star",],
-      desc: (<>“ Morem ipsum dolor sit amet, consectetur adipisc Service follwing arrea fowlwo awing  elita florai sum dolor sit amet, consectetur area raweaeaw ecall edBorem<br /> ipsum dolor sit amet, consectetur.”</>),
+      desc: (<>“ Outstanding service from start to finish. Magnate Hub helped us restructure our business model and identify new revenue streams. Their expertise and commitment to our success was evident in every interaction. We couldn't be happier with the results.”</>),
    },
 ];
 
@@ -90,8 +88,6 @@ const Testimonial = () => {
 
    return (
       <div className="tg-testimonial-area tg-testimonial-su-wrap p-relative pt-160 pb-50">
-         <Image className="tg-testimonial-su-shape d-none d-xxl-block" src={shape_1} alt="" />
-         <Image className="tg-testimonial-su-shape-2 d-none d-lg-block" src={shape_2} alt="" />
          <div className="container">
             <div className="row justify-content-center">
                <div className="col-xl-10">

@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { apiRequest } from "@/api/axiosInstance";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
-import Wishlist from "@/svg/home-one/Wishlist";
 import Image from "next/image";
 import styles from "./ListingDetail.module.css";
 import Loading from "../loading/Loading";
@@ -19,7 +18,8 @@ interface ListingDetailProps {
 const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { role, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const wishlist = useSelector((state: any) => state.wishlist.wishlist);
   const [listing, setListing] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [similarListing, setSimilarListing] = useState<any>([]);
@@ -82,6 +82,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     window.open(url, "_blank");
   };
 
+  const isInWishlist = (id: number) => {
+    return wishlist.some((item: any) => item.id === id);
+  };
+
   return (
     <>
       <ToastContainer position="top-center" />
@@ -115,8 +119,17 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         onClick={() => handleAddToWishlist(listing)}
                       >
                         <p className={styles.wishlistText}>
-                          <i className="fa-solid fa-heart me-1"></i>
-                          Add To Favorite
+                          <i
+                            className={`fa-heart me-1 ${
+                              isInWishlist(listing.id)
+                                ? "fa-solid text-danger"
+                                : "fa-regular"
+                            }`}
+                            style={{ cursor: "pointer" }}
+                          ></i>
+                          {isInWishlist(listing.id)
+                            ? "Added to Favorite"
+                            : "Add To Favorite"}
                         </p>
                       </div>
                     </div>
