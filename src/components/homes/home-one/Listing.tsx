@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Wishlist from "@/svg/home-one/Wishlist";
-import shape_1 from "@/assets/img/listing/su/shape-2.png";
-import shape_2 from "@/assets/img/listing/su/shape-1.png";
 import Loading from "@/components/loading/Loading";
 import Location from "@/svg/home-one/Location";
 import Pagination from "@/components/pagination/Pagination";
@@ -66,17 +64,6 @@ const Listing = ({
 
   return (
     <div className="tg-listing-area pb-80 tg-grey-bg-2 pt-120 p-relative">
-      <Image
-        className="tg-listing-su-shape d-none d-xl-block"
-        src={shape_1}
-        alt=""
-      />
-      <Image
-        className="tg-listing-su-shape-2 d-none d-xxl-block"
-        src={shape_2}
-        alt=""
-      />
-
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-6">
@@ -109,6 +96,9 @@ const Listing = ({
                       alt={item?.name || "Project listing image"}
                       width={250}
                       height={250}
+                      style={{
+                        objectFit: "cover",
+                      }}
                       unoptimized
                       onError={(e) => {
                         e.currentTarget.src =

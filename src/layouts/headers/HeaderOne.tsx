@@ -45,15 +45,7 @@ const HeaderOne = () => {
                       <Image src={logo_1} alt="Logo" />
                     </Link>
                   </div>
-                  {/* <button
-                    onClick={() => setSidebar(true)}
-                    style={{ cursor: "pointer" }}
-                    className="tgmenu-offcanvas-open-btn menu-tigger d-none d-xl-block"
-                  >
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </button> */}
+          
                   <nav className="tgmenu__nav tgmenu-1-space">
                     <div className="tgmenu__navbar-wrap tgmenu__main-menu d-none d-xl-flex">
                       <NavMenu />
@@ -63,15 +55,7 @@ const HeaderOne = () => {
               </div>
               <div className="col-xxl-2 col-xl-2 col-lg-2 col-6">
                 <div className="tg-menu-right-action d-flex align-items-center justify-content-end">
-                  {/* <div className="tg-header-contact-info d-flex align-items-center">
-                    <span className="tg-header-contact-icon mr-10 d-none d-xl-block">
-                      <PhoneIcon />
-                    </span>
-                    <div className="tg-header-contact-number d-none d-xl-block">
-                      <span>Call Us:</span>
-                      <Link href="tel:+123595966">+123 5959 66</Link>
-                    </div>
-                  </div> */}
+    
                   <div className="tg-header-btn ml-20 d-none d-sm-block">
                     {!isAuthenticated ? (
                       <Link className="tg-btn-header" href="/login">

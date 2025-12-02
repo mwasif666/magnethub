@@ -79,7 +79,7 @@ const Process = () => {
         <div className="tg-chose-area p-relative z-index-9 pt-135 pb-140">
           <div className="container">
             <div className="col-12 text-center mb-60">
-              <h1 className="tg-section-subtitle">Investor</h1>
+              <h1 className="tg-section">Investor</h1>
               <p className="tg-section-su-para">
                 Welcome to Magnate Hub, the premier platform for connecting
                 entrepreneurs and startups with investors. Our platform offers a

@@ -5,13 +5,14 @@ const PricingArea = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="tg-location-section-title text-center mb-40">
-              <h1
-                className="tg-section-subtitle mb-15 wow fadeInUp"
-                data-wow-delay=".3s"
+              <h2
+                className="tg-section-su-title text-capitalize wow fadeInUp mb-15"
+                data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >
                 Magnate Hub Pricing Plans
-              </h1>
+              </h2>
+
               <p
                 className="mb-15 wow fadeInUp"
                 data-wow-delay=".4s"

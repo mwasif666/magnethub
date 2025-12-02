@@ -1,7 +1,7 @@
-import BreadCrumb from "@/components/common/BreadCrumb"
-import BlogDetailsArea from "./BlogDetailsArea"
-import FooterFive from "@/layouts/footers/FooterFive"
-import HeaderOne from "@/layouts/headers/HeaderOne"
+import BreadCrumb from "@/components/common/BreadCrumb";
+import BlogDetailsArea from "./BlogDetailsArea";
+import HeaderOne from "@/layouts/headers/HeaderOne";
+import FooterOne from "@/layouts/footers/FooterOne";
 
 type BlogDetailsProps = {
   id: string | null;
@@ -13,12 +13,15 @@ const BlogDetails = ({ id, url }: BlogDetailsProps) => {
     <>
       <HeaderOne />
       <main>
-        <BreadCrumb title="Blog Details" sub_title="Exploring The Green Spac Realar Residence Area Harmony" />
-        <BlogDetailsArea id={id} url={url}/>
+        <BreadCrumb
+          title="Blog Details"
+          sub_title="Exploring The Green Spac Realar Residence Area Harmony"
+        />
+        <BlogDetailsArea id={id} url={url} />
       </main>
-      <FooterFive />
+      <FooterOne />
     </>
-  )
-}
+  );
+};
 
-export default BlogDetails
+export default BlogDetails;

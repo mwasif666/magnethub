@@ -3297,7 +3297,7 @@ textarea {
   background: transparent;
 }
 .header-sticky .tgmenu-offcanvas-open-btn span {
-  background-color: var(--tg-common-black);
+  background-color: white;
 }
 .header-sticky .logo-1 {
   display: none;
@@ -10574,3 +10574,11 @@ textarea {
 }
 
 /*# sourceMappingURL=main.css.map */
+.btn-blogs .btn-text,
+.btn-blogs svg {
+  color: #fff !important;
+}
+.btn-blogs button:hover .btn-text,
+.btn-blogs button:hover i {
+  color: #fff !important;
+}
