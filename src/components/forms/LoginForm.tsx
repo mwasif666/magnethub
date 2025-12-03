@@ -70,7 +70,7 @@ const LoginForm = () => {
       if ((response as any)?.link) {
         window.open((response as any).link, "_blank");
       }
-      router.push("/");
+      router.push("https://dash.magnatehub.au/dashboard/professionals");
     } catch (error: any) {
       console.error("Login error:", error);
       const message =
