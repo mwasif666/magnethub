@@ -66,7 +66,7 @@ const RecentPost = () => {
             >
               <div className={styles.thumbWrapper}>
                 <Image
-                  src={`http://magnatehub.au/uploads/blog/card/${item.card}`}
+                  src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
                   width={80}
                   height={80}
                   alt={item.name}

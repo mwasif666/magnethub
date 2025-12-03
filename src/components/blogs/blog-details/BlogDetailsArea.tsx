@@ -93,7 +93,7 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
                           className={styles.heroImage}
                           width={1200}
                           height={550}
-                          src={`http://magnatehub.au/uploads/blog/card/${blogDetailData.card}`}
+                          src={`https://dash.magnatehub.au/uploads/blog/card/${blogDetailData.card}`}
                           alt={blogDetailData?.name || "blog"}
                         />
                         <div className={styles.thumbOverlay} />

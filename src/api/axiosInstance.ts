@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, Method } from "axios";
 
 const api = axios.create({
-  baseURL: "http://dash.magnatehub.au/",
+  baseURL: "https://dash.magnatehub.au/",
   headers: {
     Accept: "application/json",
   },

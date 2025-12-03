@@ -107,7 +107,7 @@ const Blog = ({ style }: PropTypes) => {
                         className="w-100"
                         width={150}
                         height={300}
-                        src={`http://magnatehub.au/uploads/blog/card/${item.card}`}
+                        src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
                         alt={item?.name || "blog"}
                       />
                     </span>

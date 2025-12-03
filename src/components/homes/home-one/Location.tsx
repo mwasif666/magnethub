@@ -120,14 +120,14 @@ const Location = () => {
                       <div className="tg-location-thumb tg-round-25">
                         <Image
                           className="w-100 tg-round-25"
-                          src={`http://magnatehub.au/uploads/category/card/${item?.card}`}
+                          src={`https://dash.magnatehub.au/uploads/category/card/${item?.card}`}
                           alt="categories"
                           width={400}
                           height={300}
                           unoptimized
                           onError={(e) => {
                             e.currentTarget.src =
-                              "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                              "https://dash.magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
                           }}
                         />
                       </div>

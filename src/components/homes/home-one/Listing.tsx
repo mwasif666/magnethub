@@ -92,7 +92,7 @@ const Listing = ({
                   <div className="tg-listing-card-thumb fix mb-25 p-relative">
                     <Image
                       className="tg-card-border w-100"
-                      src={`http://magnatehub.au/uploads/project/card/${item.card}`}
+                      src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
                       alt={item?.name || "Project listing image"}
                       width={250}
                       height={250}

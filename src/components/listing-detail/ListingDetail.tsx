@@ -138,14 +138,14 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                   <div className={`card p-3 mb-3 ${styles.hero_img}`}>
                     <Image
                       className={`w-100 rounded ${styles.listingImage}`}
-                      src={`http://magnatehub.au/uploads/project/card/${listing?.card}`}
+                      src={`https://dash.magnatehub.au/uploads/project/card/${listing?.card}`}
                       alt="Project Image"
                       width={500}
                       height={500}
                       unoptimized
                       onError={(e) => {
                         e.currentTarget.src =
-                          "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                          "assets/img/notfound/image_notfound.png";
                       }}
                     />
 
@@ -163,17 +163,17 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             }}
                           >
                             <Image
-                              src={`http://magnatehub.au/uploads/project/card/${img}`}
+                              src={`https://dash.magnatehub.au/uploads/project/card/${img}`}
                               alt="Sub Image"
                               width={150}
                               height={120}
                               className="rounded"
                               unoptimized
                               style={{ objectFit: "cover" }}
-                              onError={(e) => {
-                                e.currentTarget.src =
-                                  "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
-                              }}
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "assets/img/notfound/image_notfound.png";
+                      }}
                             />
                           </div>
                         )
@@ -369,15 +369,15 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         <div className={styles.similarImageWrapper}>
                           <Image
                             className={styles.similarImage}
-                            src={`http://magnatehub.au/uploads/project/card/${item?.title_images}`}
+                            src={`https://dash.magnatehub.au/uploads/project/card/${item?.title_images}`}
                             alt="Project Image"
                             width={120}
                             height={100}
                             unoptimized
-                            onError={(e) => {
-                              e.currentTarget.src =
-                                "http://magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
-                            }}
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "assets/img/notfound/image_notfound.png";
+                      }}
                           />
                         </div>
                         <div className={styles.similarContent}>

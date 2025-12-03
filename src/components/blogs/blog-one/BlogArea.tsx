@@ -119,7 +119,7 @@ const BlogArea = () => {
                               className={styles.cardImage}
                               width={400}
                               height={260}
-                              src={`http://magnatehub.au/uploads/blog/card/${item.card}`}
+                              src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
                               alt={item.name}
                             />
                           </div>
