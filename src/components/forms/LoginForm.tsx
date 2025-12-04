@@ -68,9 +68,12 @@ const LoginForm = () => {
       localStorage.removeItem('code');
       reset();
       if ((response as any)?.link) {
-        window.open((response as any).link, "_blank");
+        window.open("https://dash.magnatehub.au/dashboard/professionals", "_blank")
+        // router.push("https://dash.magnatehub.au/dashboard/professionals");
+        // window.open((response as any).link, "_blank");
       }
-      router.push("https://dash.magnatehub.au/dashboard/professionals");
+      router.push("/");
+
     } catch (error: any) {
       console.error("Login error:", error);
       const message =
