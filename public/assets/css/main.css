@@ -1146,10 +1146,10 @@ textarea {
   font-size: 16px;
   border-radius: 0;
   z-index: 99;
-  color: var(--tg-common-white);
+  color: #560ce3;
   text-align: center;
   cursor: pointer;
-  background: var(--tg-theme-primary);
+  background: white;
   transition: 1s ease;
   border-radius: 50%;
 }
@@ -8032,20 +8032,20 @@ textarea {
   color: var(--tg-common-white);
 }
 .tg-footer-su-wrapper .tg-footer-copyright {
-  border-top: 1px solid #231145;
+  border-top: 1px solid white;
 }
 .tg-footer-su-wrapper .tg-footer-widget-title {
   font-family: var(--tg-ff-outfit);
 }
 .tg-footer-su-wrapper .tg-footer-link ul li a {
   font-family: var(--tg-ff-outfit);
-  color: #ccc3dc;
+  color: white;
 }
 .tg-footer-su-wrapper .tg-footer-info ul li {
-  color: #ccc3dc;
+  color: white;
 }
 .tg-footer-su-wrapper .tg-footer-widget p {
-  color: #ccc3dc;
+  color: white;
   line-height: 26px;
   font-family: var(--tg-ff-outfit);
   font-size: 16px;
@@ -8070,7 +8070,7 @@ textarea {
 .tg-footer-su-wrapper .tg-footer-copyright span {
   font-weight: 400;
   font-family: var(--tg-ff-outfit);
-  color: #6c6280;
+  color: white;
   font-size: 18px;
 }
 .tg-footer-su-wrapper .tg-footer-social a {

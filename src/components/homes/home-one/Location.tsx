@@ -1,11 +1,11 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
 
 import location_bg from "@/assets/img/destination/tu/bg.png";
-import { useEffect, useState } from "react";
 import { apiRequest } from "@/api/axiosInstance";
 
 const setting = {
@@ -17,21 +17,18 @@ const setting = {
     disableOnInteraction: false,
   },
   pagination: false,
-  navigation: {
-    prevEl: ".tg-listing-5-slide-prev",
-    nextEl: ".tg-listing-5-slide-next",
-  },
+  // NOTE: navigation yahan se hata diya, hum React refs se handle karenge
   breakpoints: {
-    "1400": {
+    1400: {
       slidesPerView: 4,
     },
-    "1200": {
+    1200: {
       slidesPerView: 3,
     },
-    "768": {
+    768: {
       slidesPerView: 2,
     },
-    "0": {
+    0: {
       slidesPerView: 1,
     },
   },
@@ -39,7 +36,11 @@ const setting = {
 
 const Location = () => {
   const [loading, setLoading] = useState(true);
-  const [locationData, setLocationData] = useState([]);
+  const [locationData, setLocationData] = useState<any[]>([]);
+
+  // Navigation buttons ke refs
+  const prevRef = useRef<HTMLButtonElement | null>(null);
+  const nextRef = useRef<HTMLButtonElement | null>(null);
 
   const getLocationData = async () => {
     try {
@@ -48,9 +49,9 @@ const Location = () => {
         method: "GET",
         url: "GetAllProjectCategories",
       });
-      setLocationData(response?.data);
+      setLocationData(response?.data || []);
     } catch (error) {
-      throw error;
+      console.error("Error fetching location data", error);
     } finally {
       setLoading(false);
     }
@@ -92,31 +93,57 @@ const Location = () => {
               data-wow-delay=".4s"
               data-wow-duration="1s"
             >
-              <button className="tg-listing-5-slide-prev">
+              {/* Prev Button */}
+              <button
+                className="tg-listing-5-slide-prev"
+                ref={prevRef}
+                type="button"
+              >
                 <i className="fa-solid fa-arrow-left-long"></i>
               </button>
-              <button className="tg-listing-5-slide-next">
+
+              {/* Next Button */}
+              <button
+                className="tg-listing-5-slide-next"
+                ref={nextRef}
+                type="button"
+              >
                 <i className="fa-solid fa-arrow-right-long"></i>
               </button>
             </div>
           </div>
         </div>
+
         <div className="row">
           <div className="col-12">
-            <Swiper
-              {...setting}
-              modules={[Autoplay, Navigation]}
-              className="swiper-container tg-location-su-slider"
-            >
-              {loading ? (
-                <div>
-                  <h6>Loading...</h6>
-                </div>
-              ) : (
-                locationData.length > 0 &&
-                locationData.map((item: any) => (
+            {loading ? (
+              <div>
+                <h6>Loading...</h6>
+              </div>
+            ) : locationData.length === 0 ? (
+              <div>
+                <h6>No categories found.</h6>
+              </div>
+            ) : (
+              <Swiper
+                {...setting}
+                modules={[Autoplay, Navigation]}
+                className="swiper-container tg-location-su-slider"
+                // Yahan Swiper ko bata rahe hain ke navigation in buttons se hoga
+                onSwiper={(swiper) => {
+                  if (prevRef.current && nextRef.current) {
+                    // @ts-ignore
+                    swiper.params.navigation.prevEl = prevRef.current;
+                    // @ts-ignore
+                    swiper.params.navigation.nextEl = nextRef.current;
+                    swiper.navigation.init();
+                    swiper.navigation.update();
+                  }
+                }}
+              >
+                {locationData.map((item: any) => (
                   <SwiperSlide key={item.id} className="swiper-slide">
-                    <div className="tg-location-3-wrap  tg-location-su-wrap  p-relative mb-30 tg-round-25">
+                    <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
                       <div className="tg-location-thumb tg-round-25">
                         <Image
                           className="w-100 tg-round-25"
@@ -126,7 +153,10 @@ const Location = () => {
                           height={300}
                           unoptimized
                           onError={(e) => {
-                            e.currentTarget.src =
+                            // Next/Image ke liye thora alag handle hota hai,
+                            // lekin basic idea ye hi hai
+                            const target = e.target as HTMLImageElement;
+                            target.src =
                               "https://dash.magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
                           }}
                         />
@@ -160,9 +190,9 @@ const Location = () => {
                       </div>
                     </div>
                   </SwiperSlide>
-                ))
-              )}
-            </Swiper>
+                ))}
+              </Swiper>
+            )}
           </div>
         </div>
       </div>

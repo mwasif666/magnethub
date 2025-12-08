@@ -24,13 +24,6 @@ const Pricing = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="tg-pricing-section-title-wrap text-center mb-40">
-              <h5
-                className="tg-section-su-subtitle su-subtitle-2 mb-15 wow fadeInUp"
-                data-wow-delay=".4s"
-                data-wow-duration=".9s"
-              >
-                Popular packages
-              </h5>
               <h2
                 className="tg-section-su-title text-capitalize wow fadeInUp mb-15"
                 data-wow-delay=".5s"
@@ -87,7 +80,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
             <span>$</span>
             {item.price}
           </h2>
-          <span className="dates">/month *</span>
+          {/* <span className="dates">/month *</span> */}
         </div>
         <div className="tg-pricing-btns mb-40">
           <span

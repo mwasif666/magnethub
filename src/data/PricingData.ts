@@ -30,7 +30,7 @@ With this tier, you will be able to list your business on our platform and have 
       "Premium positioning when listed",
       "Choice to refresh every 30 days so your seen",
       "Alert buyers that are interested in your ‘Category’ or type of business",
-      " 6 months listing",
+      "03 months listing",
     ],
     suitable:
       "This tier is a great option for those who have the time and expertise to handle the sale process themselves and are looking for an affordable way to gain exposure for their business.",

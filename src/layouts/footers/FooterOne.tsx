@@ -48,7 +48,7 @@ const FooterOne = () => {
       <div
         className="tg-footer-area tg-footer-su-wrapper pt-100"
         style={{
-          backgroundColor: "#0f0520",
+          backgroundColor: "#560ce3",
         }}
       >
         <div className="container">
