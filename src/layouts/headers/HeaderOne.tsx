@@ -35,7 +35,7 @@ const HeaderOne = () => {
         >
           <div className="container">
             <div className="row align-items-center">
-              <div className="col-xxl-10 col-xl-10 col-lg-10 col-6">
+              <div className="col-xxl-10 col-xl-10 col-lg-9 col-6">
                 <div className="tgmenu__wrap d-flex align-items-center justify-content-between">
                   <div className="logo">
                     <Link className="logo-1" href="/">
@@ -45,7 +45,7 @@ const HeaderOne = () => {
                       <Image src={logo_1} alt="Logo" />
                     </Link>
                   </div>
-          
+
                   <nav className="tgmenu__nav tgmenu-1-space">
                     <div className="tgmenu__navbar-wrap tgmenu__main-menu d-none d-xl-flex">
                       <NavMenu />
@@ -53,9 +53,8 @@ const HeaderOne = () => {
                   </nav>
                 </div>
               </div>
-              <div className="col-xxl-2 col-xl-2 col-lg-2 col-6">
+              <div className="col-xxl-2 col-xl-2 col-lg-3 col-6">
                 <div className="tg-menu-right-action d-flex align-items-center justify-content-end">
-    
                   <div className="tg-header-btn ml-20 d-none d-sm-block">
                     {!isAuthenticated ? (
                       <Link className="tg-btn-header" href="/login">
@@ -69,7 +68,13 @@ const HeaderOne = () => {
                         <span>
                           <UserIcon />
                         </span>
-                        {role && role === "1" ? 'Buyer' : role === "2" ? "Seller" : role === "3" ? "Raiser/Broker" : 'user'}
+                        {role && role === "1"
+                          ? "Buyer"
+                          : role === "2"
+                          ? "Seller"
+                          : role === "3"
+                          ? "Raiser/Broker"
+                          : "user"}
                       </div>
                     )}
                   </div>

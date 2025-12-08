@@ -43,12 +43,13 @@ const FooterOne = () => {
     }
   };
 
-
   return (
     <footer>
       <div
         className="tg-footer-area tg-footer-su-wrapper pt-100"
-        style={{ backgroundImage: `url(/assets/img/footer/footer.jpg)` }}
+        style={{
+          backgroundColor: "#0f0520",
+        }}
       >
         <div className="container">
           <div className="tg-footer-top mb-45">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,7 +22,7 @@ const schema = yup.object({
 });
 
 const LoginForm = () => {
-  const router = useRouter(); 
+  const router = useRouter();
   const { loginUser } = useAuth();
   const [loading, setLoading] = useState(false);
 
@@ -52,10 +52,13 @@ const LoginForm = () => {
       }
 
       if (response?.error) {
-        if(response.message === "Account Not Verified"){
-          toast.error("Account not verified. Redirecting to OTP verification.", { position: "top-center" });
-          localStorage.setItem('code', response.code || '');
-          router.push('/verifiy-otp');
+        if (response.message === "Account Not Verified") {
+          toast.error(
+            "Account not verified. Redirecting to OTP verification.",
+            { position: "top-center" }
+          );
+          localStorage.setItem("code", response.code || "");
+          router.push("/verifiy-otp");
           return;
         }
         toast.error(response?.message || "Login failed.", {
@@ -65,15 +68,17 @@ const LoginForm = () => {
       }
 
       toast.success("Login successful!", { position: "top-center" });
-      localStorage.removeItem('code');
+      localStorage.removeItem("code");
       reset();
       if ((response as any)?.link) {
-        window.open("https://dash.magnatehub.au/dashboard/professionals", "_blank")
+        window.open(
+          "https://dash.magnatehub.au/dashboard/professionals",
+          "_blank"
+        );
         // router.push("https://dash.magnatehub.au/dashboard/professionals");
         // window.open((response as any).link, "_blank");
       }
       router.push("/");
-
     } catch (error: any) {
       console.error("Login error:", error);
       const message =
@@ -89,7 +94,7 @@ const LoginForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="row">
+        <div className="row text-white">
           <div className="col-lg-12 mb-25">
             <input
               className="input"
@@ -119,12 +124,20 @@ const LoginForm = () => {
                   id="rememberMe"
                   {...register("rememberMe")}
                 />
-                <label htmlFor="rememberMe" className="tg-label">
+                <label htmlFor="rememberMe" className="tg-label text-white">
                   Remember me
                 </label>
               </div>
-              <div className="tg-login-navigate mb-25">
-                <Link href="/register">Register Now</Link>
+              <div className="tg-login-navigate mb-25 text-white">
+                <Link
+                  href="/register"
+                  className="text-white"
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Register Now
+                </Link>
               </div>
             </div>
 

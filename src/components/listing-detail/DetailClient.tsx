@@ -12,10 +12,10 @@ interface DetailClientProps {
 
 const DetailClient: React.FC<DetailClientProps> = ({ url, id }) => {
   return (
-      <>
+    <>
       <HeaderOne />
       <main>
-        <BreadCrumb title="Listing Detail" sub_title="" />
+        <BreadCrumb title="Listing Details" sub_title="" />
         <div className="tg-chose-area p-relative z-index-9 pt-135 pb-140">
           <ListingDetail url={url} id={id}></ListingDetail>
         </div>
