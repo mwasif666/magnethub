@@ -78,7 +78,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
 
   const openChatWithSeller = (userId: string, projectId: string) => {
     // const url = `/chat?user_id=${userId}&project_id=${projectId}`;
-    const url = "http://magnatehub.au/dashboard/professionals/chat";
+    const url = "https://dash.magnatehub.au/dashboard/professionals/chat";
     window.open(url, "_blank");
   };
 
@@ -112,6 +112,17 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             " " +
                             listing.user_last_name || "N/A"}
                         </h5>
+                        <p
+                          style={{
+                            fontSize: "13px",
+                            color: "#777",
+                            marginTop: "10px",
+                            marginBottom: "-6px",
+                          }}
+                        >
+                          MGH-{new Date().getFullYear()}-{listing.project_id}
+                        </p>
+
                       </div>
 
                       <div
@@ -120,11 +131,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                       >
                         <p className={styles.wishlistText}>
                           <i
-                            className={`fa-heart me-1 ${
-                              isInWishlist(listing.id)
-                                ? "fa-solid text-danger"
-                                : "fa-regular"
-                            }`}
+                            className={`fa-heart me-1 ${isInWishlist(listing.id)
+                              ? "fa-solid text-danger"
+                              : "fa-regular"
+                              }`}
                             style={{ cursor: "pointer" }}
                           ></i>
                           {isInWishlist(listing.id)
@@ -170,10 +180,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                               className="rounded"
                               unoptimized
                               style={{ objectFit: "cover" }}
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "assets/img/notfound/image_notfound.png";
-                      }}
+                              onError={(e) => {
+                                e.currentTarget.src =
+                                  "assets/img/notfound/image_notfound.png";
+                              }}
                             />
                           </div>
                         )
@@ -374,10 +384,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             width={120}
                             height={100}
                             unoptimized
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "assets/img/notfound/image_notfound.png";
-                      }}
+                            onError={(e) => {
+                              e.currentTarget.src =
+                                "assets/img/notfound/image_notfound.png";
+                            }}
                           />
                         </div>
                         <div className={styles.similarContent}>

@@ -148,6 +148,15 @@ const Listing = ({
                         </span>
                       </Link>
                     </h4>
+                    <p
+                      style={{
+                        fontSize: "13px",
+                        color: "#777",
+                        marginTop: "10px",
+                      }}
+                    >
+                      MGH-{new Date().getFullYear()}-{item.project_id}
+                    </p>
                     <div className="mb-15">
                       <span
                         style={{

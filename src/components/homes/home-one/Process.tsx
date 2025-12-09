@@ -102,7 +102,7 @@ const Process = () => {
                   data-wow-delay=".4s"
                   data-wow-duration=".6s"
                 >
-                  <div className="tg-chose-2-icon mb-20 fs-1 text-primary">
+                  <div className="tg-chose-2-icon mb-20 fs-1" style={{color:"#560CE3"}}>
                     {item.icon}
                   </div>
                   <h4 className="tg-chose-2-title mb-15">

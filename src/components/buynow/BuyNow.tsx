@@ -156,7 +156,6 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
     <div className={styles.buyNowContainer}>
       <div className="container">
         <div className="row justify-content-center g-4">
-          {/* FORM SECTION */}
           <div className="col-lg-7 col-md-8">
             <div className={styles.formCard}>
               <div className={styles.formHeader}>
@@ -167,7 +166,6 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-                {/* PLAN SELECT */}
                 <div className={styles.formSection}>
                   <label className={styles.label}>
                     <svg
@@ -319,8 +317,6 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                     </div>
                   </div>
                 </div>
-
-                {/* PAYMENT DETAILS */}
                 <div className={styles.formSection}>
                   <div className={styles.sectionHeader}>
                     <h4 className={styles.sectionTitle}>Payment Information</h4>
@@ -505,8 +501,6 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
               </form>
             </div>
           </div>
-
-          {/* PRICING CARD */}
           <div className="col-lg-5 col-md-6">
             <div className={styles.pricingCard}>
               <div className={styles.pricingHeader}>
@@ -519,7 +513,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                   <span className={styles.currency}>$</span>
                   <span className={styles.price}>{item.price}</span>
                 </div>
-                <span className={styles.pricePeriod}>/month</span>
+                {/* <span className={styles.pricePeriod}>/month</span> */}
               </div>
 
               <div className={styles.pricingDescription}>
