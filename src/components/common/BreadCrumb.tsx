@@ -3,6 +3,7 @@ import Link from "next/link";
 interface DataType {
    sub_title: string;
    title: string;
+   image?:string;
 }
 const BreadCrumb = ({ sub_title, title }: DataType) => {
    return (
