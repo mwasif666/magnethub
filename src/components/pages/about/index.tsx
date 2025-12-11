@@ -3,9 +3,9 @@ import AboutArea from "./AboutArea";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import Features from "./Features";
 import FooterOne from "@/layouts/footers/FooterOne";
-import About3 from "../../homes/home-three/About";
+import About3 from "./About";
 import Choose from "./Choose";
-import ChooseArea from "@/components/homes/home-seven/ChooseArea";
+import ChooseArea from "@/components/homes/home-one/ChooseArea";
 import Work from "./Work";
 
 const About = () => {

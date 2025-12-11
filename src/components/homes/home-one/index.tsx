@@ -1,19 +1,18 @@
 "use client";
+import { useEffect, useState } from "react";
 import HeaderOne from "@/layouts/headers/HeaderOne";
-import Banner from "./Banner";
 import FooterOne from "@/layouts/footers/FooterOne";
-import Location from "./Location";
+import Features from "@/components/pages/about/Features";
+import Banner from "./Banner";
 import Listing from "./Listing";
 import Process from "./Process";
 import Testimonial from "./Testimonial";
 import Blog from "./Blog";
-// import Cta from "./Cta";
-import Choose from "../home-three/Choose";
-import ChooseArea from "../home-seven/ChooseArea";
-import Features from "@/components/pages/about/Features";
+import Choose from "./Choose";
+import ChooseArea from "./ChooseArea";
 import OurLocation from "./ourLocations";
-import Pricing from "../home-two/Pricing";
-import { useEffect, useState } from "react";
+import Pricing from "./Pricing";
+import Category from "./Category";
 
 const HomeOne = () => {
   const [listing, setListing] = useState<any[]>([]);
@@ -58,7 +57,7 @@ const HomeOne = () => {
           onPageChange={handlePageChange}
           activePage={currentPage} />
         <Choose />
-        <Location />
+        <Category/>
         <ChooseArea />
         <Features />
         <OurLocation />
