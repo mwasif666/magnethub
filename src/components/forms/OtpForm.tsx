@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { apiRequest } from "@/api/axiosInstance";
+import { useState } from "react";
 
 interface OtpData {
   otp: string;
@@ -30,6 +31,8 @@ const OtpForm = () => {
   } = useForm<OtpData>({
     resolver: yupResolver(schema),
   });
+  const [otpResendLoading, setOtpResendLoading] = useState(false);
+  const [otpVerifyLoading, setOtpVerifyLoading] = useState(false);
 
   const getCode = () => {
     const code = localStorage.getItem("code");
@@ -51,6 +54,7 @@ const OtpForm = () => {
       }
     }
     try {
+      setOtpVerifyLoading(true);
       const response = await verifiyOtp(formData);
       if ((response as any)?.error) {
         toast.error(response.message || "Invalid OTP!", {
@@ -62,6 +66,8 @@ const OtpForm = () => {
       router.push("/login");
     } catch (error: any) {
       toast.error("Something went wrong!", { position: "top-center" });
+    } finally {
+      setOtpVerifyLoading(false);
     }
   };
 
@@ -69,7 +75,11 @@ const OtpForm = () => {
     const code = getCode();
     const formData = new FormData();
     formData.append("code", code || "");
+    toast.info("Generating OTP", {
+      position: "top-right",
+    });
     try {
+      setOtpResendLoading(true);
       const response = await apiRequest({
         url: "Raising/Resend/Otp",
         method: "POST",
@@ -77,14 +87,16 @@ const OtpForm = () => {
       });
       if ((response as any)?.error) {
         toast.error(response.message || "Some thing went wrong", {
-          position: "top-center",
+          position: "top-right",
         });
         return;
       }
       storeData(response);
-      toast.success("OTP resend sucessfully", { position: "top-center" });
+      toast.success("OTP resend sucessfully", { position: "top-right" });
     } catch {
-      toast.error("Failed to resend OTP", { position: "top-center" });
+      toast.error("Failed to resend OTP", { position: "top-right" });
+    } finally {
+      setOtpResendLoading(false);
     }
   };
 
@@ -95,7 +107,6 @@ const OtpForm = () => {
 
   return (
     <>
-      <ToastContainer />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="col-lg-12 mb-25">
           <input
@@ -114,8 +125,8 @@ const OtpForm = () => {
           </button>
         </div>
 
-        <button type="submit" className="tg-btn w-100">
-          Verify OTP
+        <button type="submit" className="tg-btn w-100" disabled={otpResendLoading || otpVerifyLoading}>
+          {otpVerifyLoading ? 'Verify OTP...' : 'Verify OTP'}
         </button>
       </form>
 
@@ -128,7 +139,7 @@ const OtpForm = () => {
         .resend-btn {
           background: none;
           border: none;
-          color: #316ff6;
+          color: white;
           text-decoration: underline;
           cursor: pointer;
           font-size: 14px;

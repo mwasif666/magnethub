@@ -83,7 +83,7 @@ const HeaderOne = () => {
                         <span>
                           <UserIcon />
                         </span>
-                        Login
+                        Login / SignUp
                       </Link>
                     ) : (
                       <div

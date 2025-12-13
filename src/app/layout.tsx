@@ -1,14 +1,16 @@
 "use client";
+import store from "@/redux/store";
+import Script from "next/script";
 
 import "../styles/index.css";
 import "../styles/App.css";
 import "../../public/assets/css/main.css";
+import "react-toastify/dist/ReactToastify.css";
 
-import { Provider } from "react-redux";
-import store from "@/redux/store";
+import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/context/AuthContext";
+import { Provider } from "react-redux";
 
-import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -46,6 +48,15 @@ export default function RootLayout({
         <Provider store={store}>
           <AuthProvider>{children}</AuthProvider>
         </Provider>
+        <ToastContainer
+    position="top-right"
+    autoClose={3000}
+    hideProgressBar={false}
+    newestOnTop
+    closeOnClick
+    pauseOnHover
+    draggable
+  />
       </body>
     </html>
   );
