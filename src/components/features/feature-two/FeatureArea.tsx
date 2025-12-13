@@ -12,6 +12,7 @@ import Loading from "@/components/loading/Loading";
 import Image from "next/image";
 import Location from "@/svg/home-one/Location";
 import Link from "next/link";
+import { apiRequest } from "@/api/axiosInstance";
 
 type FeatureAreaProps = {
   listing: any[];
@@ -40,6 +41,7 @@ const FeatureArea = ({
   const [isListView, setIsListView] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categoryData, setCategoryData] = useState<any[]>([]);
   const wishlist = useSelector((state: any) => state.wishlist.wishlist);
 
   const totalPages = pagination?.totalPage || 1;
@@ -74,8 +76,37 @@ const FeatureArea = ({
     }
   }, [listing]);
 
+  const getCategoryData = async () => {
+    try {
+      setLoading(true);
+      const response = await apiRequest({
+        method: "GET",
+        url: "GetAllProjectCategories",
+      });
+      setCategoryData(response?.data || []);
+    } catch (error) {
+      console.error("Error fetching location data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCategoryData();
+  }, []);
+
+  const showImageAccordingToCategory = (category: string) => {
+    const getImage = categoryData?.find((x) => x.name === category);
+    if (getImage?.card) {
+      return getImage?.card;
+    }
+  };
+
   const redirectUser = (item: any) => {
-    router.push(`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`);
+    let imageUrl = showImageAccordingToCategory(item?.category_name);
+    router.push(
+      `/detail?url=${item.url}&id=${item.project_id}&category=${imageUrl}`
+    );
   };
 
   const isInWishlist = (id: number) => {
@@ -157,7 +188,11 @@ const FeatureArea = ({
                               style={{ cursor: "pointer" }}
                             >
                               <Link
-                                href={`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`}
+                                href={`/detail?url=${item.url}&id=${
+                                  item.project_id
+                                }&category=${showImageAccordingToCategory(
+                                  item.category_name
+                                )}`}
                               >
                                 <span
                                   style={{
@@ -232,7 +267,7 @@ const FeatureArea = ({
                               </div>
                             </div>
                           </div>
-                        </div> 
+                        </div>
                       </div>
                     ))
                   )}

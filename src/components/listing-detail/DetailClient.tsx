@@ -16,7 +16,7 @@ const DetailClient: React.FC<DetailClientProps> = ({ url, id, category }) => {
     <>
       <HeaderOne />
       <main>
-        <BreadCrumb title="Listing Details" sub_title="" category={category}/>
+        <BreadCrumb title="Listing Details" sub_title="" category={category} isCallFrom={'listingDetail'}/>
         <div className="tg-chose-area p-relative z-index-9 pt-135 pb-140">
           <ListingDetail url={url} id={id}></ListingDetail>
         </div>

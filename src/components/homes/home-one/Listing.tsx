@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { apiRequest } from "@/api/axiosInstance";
 import Image from "next/image";
 import Link from "next/link";
 import Wishlist from "@/svg/home-one/Wishlist";
@@ -34,6 +35,7 @@ const Listing = ({
   const router = useRouter();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categoryData, setCategoryData] = useState<any[]>([]);
   const wishlist = useSelector((state: any) => state.wishlist.wishlist);
 
   const handleAddToWishlist = (item: any) => {
@@ -50,8 +52,39 @@ const Listing = ({
     }
   }, [listing]);
 
+  const getCategoryData = async () => {
+    try {
+      setLoading(true);
+      const response = await apiRequest({
+        method: "GET",
+        url: "GetAllProjectCategories",
+      });
+      console.log(response.data);
+
+      setCategoryData(response?.data || []);
+    } catch (error) {
+      console.error("Error fetching location data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCategoryData();
+  }, []);
+
+  const showImageAccordingToCategory = (category: string) => {
+    const getImage = categoryData?.find((x) => x.name === category);
+    if (getImage?.card) {
+      return getImage?.card;
+    }
+  };
+
   const redirectUser = (item: any) => {
-    router.push(`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`);
+    let imageUrl = showImageAccordingToCategory(item?.category_name);
+    router.push(
+      `/detail?url=${item.url}&id=${item.project_id}&category=${imageUrl}`
+    );
   };
 
   const totalPages = pagination?.totalPage || 1;
@@ -133,7 +166,11 @@ const Listing = ({
                       style={{ cursor: "pointer" }}
                     >
                       <Link
-                        href={`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`}
+                        href={`/detail?url=${item.url}&id=${
+                          item.project_id
+                        }&category=${showImageAccordingToCategory(
+                          item.category_name
+                        )}`}
                       >
                         <span
                           style={{

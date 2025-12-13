@@ -1,47 +1,20 @@
-"Use Client"
-import { apiRequest } from "@/api/axiosInstance";
-import { useEffect, useState } from "react";
-
 interface DataType {
   sub_title: string;
   title: string;
   image?: string;
   category?: string;
+  isCallFrom?: string;
 }
-const BreadCrumb = ({ sub_title, title, category }: DataType) => {
-  const [loading, setLoading] = useState(true);
-  const [categoryData, setCategoryData] = useState<any[]>([]);
-  const getLocationData = async () => {
-    try {
-      setLoading(true);
-      const response = await apiRequest({
-        method: "GET",
-        url: "GetAllProjectCategories",
-      });
-      setCategoryData(response?.data || []);
-    } catch (error) {
-      console.error("Error fetching location data", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getLocationData();
-  }, []);
-
-  const showImageAccordingToCategory = () => {
-    const getImage = categoryData?.find((x) => x.category_name === category);
-    if (getImage?.image) {
-      return `url(${getImage.image})`;
-    }
-    return `url(/assets/img/banner/banner.png)`;
-  };
-
+const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
   return (
     <div
       className="tg-breadcrumb-area tg-breadcrumb-spacing-5 fix p-relative z-index-1 include-bg"
-      style={{ backgroundImage: showImageAccordingToCategory() }}
+      style={{
+        backgroundImage:
+          isCallFrom === "listingDetail"
+            ? `url(https://dash.magnatehub.au/uploads/category/card/${category})`
+            : `url(/assets/img/banner/banner.png)`,
+      }}
     >
       <div className="tg-hero-top-shadow"></div>
       <div className="tg-breadcrumb-shadow"></div>
