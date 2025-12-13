@@ -3293,7 +3293,7 @@ textarea {
   background: var(--tg-theme-primary);
 }
 .header-sticky .tg-btn-header:hover {
-  color: var(--tg-theme-primary);
+  color: white;
   background: transparent;
 }
 .header-sticky .tgmenu-offcanvas-open-btn span {

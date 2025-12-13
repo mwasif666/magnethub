@@ -51,7 +51,7 @@ const Listing = ({
   }, [listing]);
 
   const redirectUser = (item: any) => {
-    router.push(`/detail?url=${item.url}&id=${item.project_id}`);
+    router.push(`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`);
   };
 
   const totalPages = pagination?.totalPage || 1;
@@ -133,7 +133,7 @@ const Listing = ({
                       style={{ cursor: "pointer" }}
                     >
                       <Link
-                        href={`/detail?url=${item.url}&id=${item.project_id}`}
+                        href={`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`}
                       >
                         <span
                           style={{

@@ -8,14 +8,15 @@ import ListingDetail from "./ListingDetail";
 interface DetailClientProps {
   url: string;
   id: string;
+  category?: string;
 }
 
-const DetailClient: React.FC<DetailClientProps> = ({ url, id }) => {
+const DetailClient: React.FC<DetailClientProps> = ({ url, id, category }) => {
   return (
     <>
       <HeaderOne />
       <main>
-        <BreadCrumb title="Listing Details" sub_title="" />
+        <BreadCrumb title="Listing Details" sub_title="" category={category}/>
         <div className="tg-chose-area p-relative z-index-9 pt-135 pb-140">
           <ListingDetail url={url} id={id}></ListingDetail>
         </div>

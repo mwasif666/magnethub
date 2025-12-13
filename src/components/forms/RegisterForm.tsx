@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { useAuth } from "@/context/AuthContext"; 
+import { useAuth } from "@/context/AuthContext";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
 
@@ -74,10 +74,10 @@ const RegisterForm = () => {
         });
         return;
       }
-      if(!response.error && response.code){
-        localStorage.setItem('code',response.code)
-        localStorage.setItem('otp',response.otp || '')
-        router.push('/verifiy-otp');
+      if (!response.error && response.code) {
+        localStorage.setItem("code", response.code);
+        localStorage.setItem("otp", response.otp || "");
+        router.push("/verifiy-otp");
       }
       reset();
     } catch (error: any) {
@@ -182,10 +182,10 @@ const RegisterForm = () => {
           <div className="col-lg-12">
             <div className="d-flex align-items-center justify-content-between">
               <div className="review-checkbox d-flex align-items-center mb-25">
-                <label className="tg-label">Already Have An Account?</label>
+                <label className="tg-label text-white">Already Have An Account?</label>
               </div>
-              <div className="tg-login-navigate mb-25">
-                <Link href="/login">Log In</Link>
+              <div className="tg-login-navigate mb-25 ">
+                <Link href="/login" className="text-white">Log In</Link>
               </div>
             </div>
 

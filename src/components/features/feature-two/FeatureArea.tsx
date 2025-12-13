@@ -75,7 +75,7 @@ const FeatureArea = ({
   }, [listing]);
 
   const redirectUser = (item: any) => {
-    router.push(`/detail?url=${item.url}&id=${item.project_id}`);
+    router.push(`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`);
   };
 
   const isInWishlist = (id: number) => {
@@ -157,7 +157,7 @@ const FeatureArea = ({
                               style={{ cursor: "pointer" }}
                             >
                               <Link
-                                href={`/detail?url=${item.url}&id=${item.project_id}`}
+                                href={`/detail?url=${item.url}&id=${item.project_id}&category=${item.category_name}`}
                               >
                                 <span
                                   style={{

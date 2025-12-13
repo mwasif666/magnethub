@@ -18,8 +18,8 @@ interface ListingDetailProps {
 const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
   const wishlist = useSelector((state: any) => state.wishlist.wishlist);
+  const { isAuthenticated } = useAuth();
   const [listing, setListing] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [similarListing, setSimilarListing] = useState<any>([]);
@@ -64,7 +64,6 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     if (Image) {
       return JSON.parse(Image);
     }
-
     return [];
   };
 
