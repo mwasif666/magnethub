@@ -257,6 +257,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           <input
                             type="email"
                             className={styles.input}
+                            style={{paddingLeft:'42px'}}
                             {...register("email")}
                             placeholder="john@example.com"
                           />
@@ -287,6 +288,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           <input
                             type="tel"
                             className={styles.input}
+                            style={{paddingLeft:'42px'}}
                             {...register("phone")}
                             placeholder="+61 400 000 000"
                           />
