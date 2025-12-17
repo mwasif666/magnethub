@@ -169,23 +169,6 @@ const Category = () => {
                             {item.total}
                           </span>
                         </div>
-                        <Link className="icons" href="/tour-grid-1">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M2 13.0969L13.0969 2M13.0969 2H2M13.0969 2V13.0969"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </Link>
                       </div>
                     </div>
                   </SwiperSlide>

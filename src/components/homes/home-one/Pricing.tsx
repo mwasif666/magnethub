@@ -57,11 +57,11 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
   const truncatedText =
     item.desc.length > 100 ? item.desc.slice(0, 100) + "..." : item.desc;
 
-  const buyNow = (slug: string) => {
+  const buyNow = (id: any, slug: string) => {
     if (isAuthenticated) {
-      router.push(`/plan/${slug}`);
+      id === 5 ? router.push(`https://dash.magnatehub.au/dashboard/professionals`) : router.push(`/plan/${slug}`);
     } else {
-      router.push("/login");
+      id === 5 ? router.push("/signup-free") : router.push("/login");
     }
   };
 
@@ -86,9 +86,9 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
           <span
             className="tg-btn text-center w-100"
             style={{ cursor: "pointer" }}
-            onClick={() => buyNow(item?.slug || "essentials")}
+            onClick={() => buyNow(item.id, item?.slug || "essentials")}
           >
-            Buy Now
+            {item.id === 5 ? 'Select Now' : 'Buy Now'}
           </span>
         </div>
 

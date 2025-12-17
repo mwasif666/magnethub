@@ -9,6 +9,22 @@ interface DataType {
 }
 
 const pricing_data: DataType[] = [
+    {
+    id: 5,
+    title: "Free Plan",
+    slug: "free_plan",
+    desc: "The ultimate solution to find investors looking to fund the next big thing. Whether you're a startup, an established business, or pre-revenue ideas, our platform connects you with a wide range of opportunities to grow your portfolio and get in front of the right people.",
+    price: 249,
+    list: [
+      "No commissions or other fees",
+      "Unlimited Edits",
+      "6-Month Listing",
+      "Free Non-Disclosure Document",
+      "Statistics Dashboard",
+      "Chat feature",
+    ],
+    suitable: "Startups, established businesses or pre revenue ideas.",
+  },
   {
     id: 1,
     title: "Essentials",
