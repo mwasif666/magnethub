@@ -3291,6 +3291,7 @@ textarea {
   color: var(--tg-common-white);
   border: 1px solid var(--tg-theme-primary);
   background: var(--tg-theme-primary);
+  display: contents;
 }
 .header-sticky .tg-btn-header:hover {
   color: white;

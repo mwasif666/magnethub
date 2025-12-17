@@ -27,7 +27,10 @@ const HeaderOne = () => {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setShowLogout(false);
       }
     }
@@ -48,8 +51,9 @@ const HeaderOne = () => {
 
       <header className="tg-header-height">
         <div
-          className={`tg-header__area tg-header-tu-menu tg-header-lg-space z-index-999 tg-transparent ${sticky ? "header-sticky" : ""
-            }`}
+          className={`tg-header__area tg-header-tu-menu tg-header-lg-space z-index-999 tg-transparent ${
+            sticky ? "header-sticky" : ""
+          }`}
           id="header-sticky"
         >
           <div className="container">
@@ -75,9 +79,7 @@ const HeaderOne = () => {
 
               <div className="col-xxl-2 col-xl-2 col-lg-3 col-6">
                 <div className="tg-menu-right-action d-flex align-items-center justify-content-end">
-
                   <div className="tg-header-btn ml-20 d-none d-sm-block">
-
                     {!isAuthenticated ? (
                       <Link className="tg-btn-header" href="/login">
                         <span>
@@ -101,10 +103,10 @@ const HeaderOne = () => {
                           {role === "1"
                             ? "Buyer"
                             : role === "2"
-                              ? "Seller"
-                              : role === "3"
-                                ? "Raiser/Broker"
-                                : "User"}
+                            ? "Seller"
+                            : role === "3"
+                            ? "Raiser/Broker"
+                            : "User"}
                         </div>
 
                         {showLogout && (
@@ -145,10 +147,8 @@ const HeaderOne = () => {
                       <span></span>
                     </button>
                   </div>
-
                 </div>
               </div>
-
             </div>
           </div>
         </div>

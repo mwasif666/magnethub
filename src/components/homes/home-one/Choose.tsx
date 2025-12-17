@@ -7,11 +7,6 @@ import Link from "next/link";
 const Choose = () => {
   return (
     <div className="tg-chose-area p-relative pt-135 pb-100">
-      <Image
-        className="tg-chose-shape p-absolute"
-        src={choose_shape}
-        alt="shape"
-      />
       <div className="container">
         <div className="row align-items-center">
           <div className="col-lg-5">

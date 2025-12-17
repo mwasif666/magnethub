@@ -3,12 +3,9 @@ import Image from "next/image";
 import { JSX } from "react";
 // import Link from "next/link";
 
-import shape from "@/assets/img/chose/chose-5/map.png";
 import choose_thumb1 from "@/assets/img/imgs/4.png";
 import choose_thumb2 from "@/assets/img/imgs/user.png";
 import choose_thumb3 from "@/assets/img/imgs/mission.webp";
-import circle from "@/assets/img/chose/chose-5/text.png";
-import circle2 from "@/assets/img/chose/chose-5/icon.png";
 // import Button from "@/components/common/Button";
 import Choose3 from "@/svg/home-one/Choose3";
 import Choose1 from "@/svg/home-one/Choose1";
@@ -53,11 +50,6 @@ const choose_data: DataType[] = [
 const ChooseArea = () => {
   return (
     <div className="tg-chose-area pt-140 pb-130 p-relative z-index-1">
-      <Image
-        className="tg-chose-5-map-shape d-none d-lg-block"
-        src={shape}
-        alt="Map Shape"
-      />
       <div className="container">
         {/* --- Heading and Intro --- */}
         <div className="row align-items-center">
