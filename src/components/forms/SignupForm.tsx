@@ -204,7 +204,7 @@ const SignupForm = () => {
         .form_error {
           color: red !important;
           font-size: 11px;
-          margin: 4px;
+          margin: 4px 4px;
         }
       `}</style>
     </>
