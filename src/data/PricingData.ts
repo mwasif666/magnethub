@@ -9,12 +9,16 @@ interface DataType {
 }
 
 const pricing_data: DataType[] = [
-    {
+  {
     id: 5,
     title: "Free Plan",
     slug: "free_plan",
-    desc: "The ultimate solution to find investors looking to fund the next big thing. Whether you're a startup, an established business, or pre-revenue ideas, our platform connects you with a wide range of opportunities to grow your portfolio and get in front of the right people.",
-    price: 249,
+    desc: `
+The "Essentials" pricing tier is designed for business owners who are comfortable managing the sale of their business on their own. This is the most affordable option, which provides you with exposure to potential buyers. 
+
+With this tier, you will be able to list your business on our platform and have access to our network of buyers. You will be responsible for all aspects of the sale, including the evaluation of your business, gathering the necessary documents, and communicating with potential buyers. 
+`,
+    price: 0,
     list: [
       "No commissions or other fees",
       "Unlimited Edits",
@@ -22,6 +26,11 @@ const pricing_data: DataType[] = [
       "Free Non-Disclosure Document",
       "Statistics Dashboard",
       "Chat feature",
+      "Sell A Business Checklist",
+      "Premium positioning when listed",
+      "Choice to refresh every 30 days so your seen",
+      "Alert buyers that are interested in your ‘Category’ or type of business",
+      "03 months listing",
     ],
     suitable: "Startups, established businesses or pre revenue ideas.",
   },

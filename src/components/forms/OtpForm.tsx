@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast, ToastContainer } from "react-toastify";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -21,9 +20,12 @@ const schema = yup.object({
     .min(4, "OTP must be at least 4 digits"),
 });
 
+type MessageType = "success" | "error" | "info";
+
 const OtpForm = () => {
   const router = useRouter();
   const { verifiyOtp } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -31,41 +33,49 @@ const OtpForm = () => {
   } = useForm<OtpData>({
     resolver: yupResolver(schema),
   });
+
   const [otpResendLoading, setOtpResendLoading] = useState(false);
   const [otpVerifyLoading, setOtpVerifyLoading] = useState(false);
+
+  const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<MessageType>("info");
 
   const getCode = () => {
     const code = localStorage.getItem("code");
     if (!code) {
-      toast.error("Some thing went wrong");
+      setMessageType("error");
+      setMessage("Something went wrong. Please try again.");
       return;
     }
-
     return code;
   };
 
   const onSubmit = async (data: OtpData) => {
-    const formData = new FormData();
     const code = getCode();
+    if (!code) return;
+
+    const formData = new FormData();
     formData.append("otp", data.otp);
-    if (typeof window !== "undefined") {
-      if (code) {
-        formData.append("code", code);
-      }
-    }
+    formData.append("code", code);
+
     try {
       setOtpVerifyLoading(true);
+      setMessage(null);
+
       const response = await verifiyOtp(formData);
+
       if ((response as any)?.error) {
-        toast.error(response.message || "Invalid OTP!", {
-          position: "top-center",
-        });
+        setMessageType("error");
+        setMessage(response.message || "Invalid OTP!");
         return;
       }
-      toast.success("OTP verified!", { position: "top-center" });
+
+      setMessageType("success");
+      setMessage("OTP verified successfully!");
       router.push("/login");
-    } catch (error: any) {
-      toast.error("Something went wrong!", { position: "top-center" });
+    } catch {
+      setMessageType("error");
+      setMessage("Something went wrong. Please try again.");
     } finally {
       setOtpVerifyLoading(false);
     }
@@ -73,36 +83,37 @@ const OtpForm = () => {
 
   const handleResend = async () => {
     const code = getCode();
+    if (!code) return;
+
     const formData = new FormData();
-    formData.append("code", code || "");
-    toast.info("Generating OTP", {
-      position: "top-right",
-    });
+    formData.append("code", code);
+
     try {
       setOtpResendLoading(true);
+      setMessageType("info");
+      setMessage("Generating OTP...");
+
       const response = await apiRequest({
         url: "Raising/Resend/Otp",
         method: "POST",
         data: formData,
       });
+
       if ((response as any)?.error) {
-        toast.error(response.message || "Some thing went wrong", {
-          position: "top-right",
-        });
+        setMessageType("error");
+        setMessage(response.message || "Failed to resend OTP");
         return;
       }
-      storeData(response);
-      toast.success("OTP resend sucessfully", { position: "top-right" });
+
+      localStorage.setItem("code", response.code);
+      setMessageType("success");
+      setMessage("OTP resent successfully. Please check your email.");
     } catch {
-      toast.error("Failed to resend OTP", { position: "top-right" });
+      setMessageType("error");
+      setMessage("Failed to resend OTP.");
     } finally {
       setOtpResendLoading(false);
     }
-  };
-
-  const storeData = (res: any) => {
-    localStorage.removeItem("code");
-    localStorage.setItem("code", res.code);
   };
 
   return (
@@ -118,15 +129,30 @@ const OtpForm = () => {
           <p className="form_error">{errors.otp?.message}</p>
         </div>
 
+        {message && (
+          <p className={`form_message ${messageType}`}>
+            {message}
+          </p>
+        )}
+
         <div className="d-flex align-items-center justify-content-between mb-3">
           <span>Didn’t receive the OTP?</span>
-          <button type="button" className="resend-btn" onClick={handleResend}>
-            Resend
+          <button
+            type="button"
+            className="resend-btn"
+            onClick={handleResend}
+            disabled={otpResendLoading}
+          >
+            {otpResendLoading ? "Resending..." : "Resend"}
           </button>
         </div>
 
-        <button type="submit" className="tg-btn w-100" disabled={otpResendLoading || otpVerifyLoading}>
-          {otpVerifyLoading ? 'Verify OTP...' : 'Verify OTP'}
+        <button
+          type="submit"
+          className="tg-btn w-100"
+          disabled={otpResendLoading || otpVerifyLoading}
+        >
+          {otpVerifyLoading ? "Verify OTP..." : "Verify OTP"}
         </button>
       </form>
 
@@ -136,6 +162,24 @@ const OtpForm = () => {
           font-size: 11px;
           margin: 4px 0;
         }
+
+        .form_message {
+          font-size: 13px;
+          margin-bottom: 12px;
+        }
+
+        .form_message.success {
+          color: #28a745;
+        }
+
+        .form_message.error {
+          color: #dc3545;
+        }
+
+        .form_message.info {
+          color: #ffc107;
+        }
+
         .resend-btn {
           background: none;
           border: none;
