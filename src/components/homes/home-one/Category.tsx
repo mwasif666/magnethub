@@ -140,8 +140,8 @@ const Category = () => {
                   }
                 }}
               >
-                {locationData.map((item: any) => (
-                  <SwiperSlide key={item.id} className="swiper-slide">
+                {locationData.map((item: any, index:any) => (
+                  <SwiperSlide  key={item.category_id || index} className="swiper-slide">
                     <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
                       <div className="tg-location-thumb tg-round-25">
                         <Image

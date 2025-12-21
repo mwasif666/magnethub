@@ -151,7 +151,7 @@ const OurLocation: React.FC = () => {
                 }}
               >
                 {locationData.map((item: any) => (
-                  <SwiperSlide key={item.id} className="swiper-slide">
+                  <SwiperSlide key={item.location_id} className="swiper-slide">
                     <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
                       <div className="tg-location-thumb tg-round-25">
                         <Image
