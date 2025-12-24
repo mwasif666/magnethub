@@ -71,6 +71,10 @@ const RecentPost = () => {
                   height={80}
                   alt={item.name}
                   className={styles.postThumbImage}
+                  onError={(e) => {
+                        e.currentTarget.src =
+                          "assets/img/notfound/image_notfound.png";
+                      }}
                 />
               </div>
 

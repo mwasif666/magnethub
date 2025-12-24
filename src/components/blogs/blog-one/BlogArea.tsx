@@ -121,6 +121,10 @@ const BlogArea = () => {
                               height={260}
                               src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
                               alt={item.name}
+                              onError={(e) => {
+                        e.currentTarget.src =
+                          "assets/img/notfound/image_notfound.png";
+                      }}
                             />
                           </div>
                           <div className={styles.thumbOverlay} />

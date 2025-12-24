@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { apiRequest } from "@/api/axiosInstance";
 import * as yup from "yup";
 import styles from "./BuyNow.module.css";
 import pricing_data from "@/data/PricingData";
 import Loading from "../loading/Loading";
+import "react-toastify/dist/ReactToastify.css";
 
 interface BuyNowProps {
   slug: string;
@@ -128,13 +129,18 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
       formData.append("stripeToken", token);
       formData.append("plan_id", item && item.id);
       
-      await apiRequest({
+      const response = await apiRequest({
         url: "/stripe",
         method: "POST",
         data: formData,
       });
-      toast.success("Message sent successfully!");
-      reset({ ...data, plan: selectedSlug });
+
+       window.open(
+          `https://dash.magnatehub.au${response.redirect}`,
+          "_blank"
+        );
+      toast.success("Plan Purchase Successfully!");
+      reset({plan: selectedSlug});
     } catch (error) {
       toast.error("Error submitting form");
     } finally {
@@ -153,6 +159,8 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
   }
 
   return (
+    <>
+    <ToastContainer  style={{ marginTop: "120px" }}/>
     <div className={styles.buyNowContainer}>
       <div className="container">
         <div className="row justify-content-center g-4">
@@ -581,6 +589,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

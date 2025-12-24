@@ -61,7 +61,6 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
     if (url) getBlogDetails();
   }, [url]);
 
-  // ✅ Safely compute blogId (number) to pass to BlogForm
   const rawBlogId = blogDetailData.blog_id ?? blogDetailData.id;
   const blogId =
     typeof rawBlogId === "string"
@@ -83,25 +82,23 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
           ) : (
             <div className="col-xl-9 col-lg-8">
               <div className={styles.detailsWrapper}>
-                {/* Main Blog Card */}
                 <article className={styles.detailsCard}>
-                  {/* Hero Image */}
-                  {blogDetailData.card && (
                     <div className={styles.thumbWrapper}>
                       <div className={styles.thumbInner}>
                         <Image
                           className={styles.heroImage}
                           width={1200}
                           height={550}
-                          src={`https://dash.magnatehub.au/uploads/blog/card/${blogDetailData.card}`}
+                          src={`https://dash.magnatehub.au/uploads/blog/card/${blogDetailData?.card}`}
                           alt={blogDetailData?.name || "blog"}
+                          onError={(e) => {
+                            e.currentTarget.src =
+                              "assets/img/notfound/image_notfound.png";
+                          }}
                         />
                         <div className={styles.thumbOverlay} />
                       </div>
                     </div>
-                  )}
-
-                  {/* Content */}
                   <div className={styles.contentWrapper}>
                     {(blogDetailData.writter_name ||
                       blogDetailData.date ||
@@ -188,38 +185,11 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
                       />
                     )}
                   </div>
-
-                  {/* Footer: Social share */}
-                  <div className={styles.detailsFooter}>
-                    <div className={styles.shareRow}>
-                      <span className={styles.shareLabel}>Share:</span>
-                      <div className={styles.shareIcons}>
-                        <Link href="#" className={styles.shareIcon}>
-                          <i className="fa-brands fa-facebook-f" />
-                        </Link>
-                        <Link href="#" className={styles.shareIcon}>
-                          <i className="fa-brands fa-twitter" />
-                        </Link>
-                        <Link href="#" className={styles.shareIcon}>
-                          <i className="fa-brands fa-instagram" />
-                        </Link>
-                        <Link href="#" className={styles.shareIcon}>
-                          <i className="fa-brands fa-pinterest-p" />
-                        </Link>
-                        <Link href="#" className={styles.shareIcon}>
-                          <i className="fa-brands fa-youtube" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
                 </article>
-
-                {/* Comments List */}
                 <div className={styles.commentSection}>
                   <Comment blogCommetData={blogCommetData} />
                 </div>
 
-                {/* Comment Form / Login */}
                 <div className={styles.commentFormSection}>
                   {isAuthenticated ? (
                     blogId !== null ? (
@@ -245,7 +215,6 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
             </div>
           )}
 
-          {/* Sidebar */}
           <div className="col-xl-3 col-lg-4">
             <div className={styles.sidebarWrapper}>
               <BlogSidebar />

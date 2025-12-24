@@ -140,8 +140,11 @@ const Category = () => {
                   }
                 }}
               >
-                {locationData.map((item: any, index:any) => (
-                  <SwiperSlide  key={item.category_id || index} className="swiper-slide">
+                {locationData.map((item: any, index: any) => (
+                  <SwiperSlide
+                    key={item.category_id || index}
+                    className="swiper-slide"
+                  >
                     <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
                       <div className="tg-location-thumb tg-round-25">
                         <Image
@@ -152,11 +155,8 @@ const Category = () => {
                           height={300}
                           unoptimized
                           onError={(e) => {
-                            // Next/Image ke liye thora alag handle hota hai,
-                            // lekin basic idea ye hi hai
-                            const target = e.target as HTMLImageElement;
-                            target.src =
-                              "https://dash.magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
+                            e.currentTarget.src =
+                              "assets/img/notfound/image_notfound.png";
                           }}
                         />
                       </div>

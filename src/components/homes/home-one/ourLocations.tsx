@@ -162,9 +162,9 @@ const OurLocation: React.FC = () => {
                           height={300}
                           unoptimized
                           onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src =
-                              "https://dash.magnatehub.au/uploads/project/card/67-1759918312-87531328.jpg";
-                          }}
+                        e.currentTarget.src =
+                          "assets/img/notfound/image_notfound.png";
+                      }}
                         />
                       </div>
 

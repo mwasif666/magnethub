@@ -115,6 +115,16 @@ const LoginForm = () => {
             <p className="form_error">{errors.password?.message}</p>
           </div>
 
+          <div className="col-lg-12 mb-20 text-end">
+            <Link
+              href="/forgot-password"
+              className="text-white"
+              style={{ textDecoration: "underline", fontSize: "0.9rem" }}
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
           <div className="col-lg-12">
             <div className="d-flex align-items-center justify-content-between">
               <div className="review-checkbox d-flex align-items-center mb-25">

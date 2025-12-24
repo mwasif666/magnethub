@@ -25,6 +25,10 @@ const HeaderOne = () => {
     router.push("/");
   };
 
+  const handleRedirect = () =>{
+    router.push("https://dash.magnatehub.au/dashboard/professionals");
+  }
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -125,8 +129,16 @@ const HeaderOne = () => {
                             }}
                           >
                             <button
+                              onClick={handleRedirect}
+                              className="w-100"
+                              style={{background:'#560ce3', color:'#fff', margin:'4px',padding:'8px', borderRadius:'6px', border:'none'}}
+                            >
+                              Dashboard
+                            </button>
+                            <button
                               onClick={handleLogout}
                               className="btn btn-danger w-100"
+                              style={{margin:'4px'}}
                             >
                               Logout
                             </button>

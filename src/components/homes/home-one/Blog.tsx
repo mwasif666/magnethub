@@ -109,6 +109,10 @@ const Blog = ({ style }: PropTypes) => {
                         height={300}
                         src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
                         alt={item?.name || "blog"}
+                        onError={(e) => {
+                        e.currentTarget.src =
+                          "assets/img/notfound/image_notfound.png";
+                      }}
                       />
                     </span>
                     {/* <span className="tg-blog-tag p-absolute">{item.tag}</span> */}
