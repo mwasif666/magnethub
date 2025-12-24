@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Button from "@/components/common/Button";
-import choose_shape from "@/assets/img/chose/chose-shape-2.png";
-import choose_thumb2 from "@/assets/img/about/bussines.png";
+import choose_thumb2 from "@/assets/img/imgs/about.png";
 import Link from "next/link";
 
 const Choose = () => {
@@ -65,43 +64,29 @@ const Choose = () => {
 
           <div className="col-lg-7">
             <div className="tg-chose-right mb-25">
-              <div className="row">
-                {/* <div className="col-lg-3 col-md-6">
-                  <div className="tg-chose-thumb">
-                    <Image
-                      className="tg-chose-shape-2 mb-30 ml-15 d-none d-lg-block"
-                      src={choose_shape2}
-                      alt="shape"
-                    />
-                    <Image
-                      className="w-100 wow fadeInRight"
-                      data-wow-delay=".4s"
-                      data-wow-duration=".9s"
-                      src={choose_thumb}
-                      alt="chose"
-                    />
-                  </div>
-                </div> */}
-                <div className="col-lg-10 col-md-6">
-                  <div className="tg-chose-thumb-inner p-relative">
-                    <div
-                      className="tg-chose-thumb-2 wow fadeInRight"
-                      data-wow-delay=".5s"
-                      data-wow-duration=".9s"
-                    >
-                      <Image
-                        className="w-100 tg-round-15"
-                        src={choose_thumb2}
-                        alt="chose"
-                      />
-                    </div>
-                  </div>
+              <div className="tg-chose-thumb-inner p-relative">
+                <div
+                  className="tg-chose-thumb-2 wow fadeInRight"
+                  data-wow-delay=".5s"
+                  data-wow-duration=".9s"
+                >
+                  <Image
+                    className=" tg-round-15"
+                    src={choose_thumb2}
+                    alt="chose"
+                    style={{
+                      width: "100%",
+                      height: "500px",
+                      objectFit: "cover",
+                    }}
+                  />
                 </div>
-                <div className="col-lg-2">
+
+                {/* <div className="col-lg-2">
                   <div className="tg-chose-big-text d-none d-xl-block">
                     <h2 data-text="ABOUT">ABOUT</h2>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

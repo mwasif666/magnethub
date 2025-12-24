@@ -16,7 +16,7 @@ type BannerFormProps = {
     }>
   >;
   currentPage?: number;
-  onPageChange?: (page: number) => void;  
+  onPageChange?: (page: number) => void;
 };
 
 const BannerFormOne = ({
@@ -129,7 +129,11 @@ const BannerFormOne = ({
       .finally(() => setLoading(false));
   }, []);
 
-  const constructUrl = (filters: any, page: number = 1, perPage: number = 12) => {
+  const constructUrl = (
+    filters: any,
+    page: number = 1,
+    perPage: number = 12
+  ) => {
     let params: any = {};
     if (activeTab === "businesses") {
       if (filters.postcode) params.postcode = filters.postcode;
@@ -261,13 +265,18 @@ const BannerFormOne = ({
       isInitialMount.current = false;
       return;
     }
-    
+
     // Only fetch if pagination is enabled and currentPage is valid
     if (setLocalPagination && currentPage && currentPage >= 1) {
-      console.log('Page changed, fetching data for page:', currentPage);
+      console.log("Page changed, fetching data for page:", currentPage);
       getListingData(currentPage);
     } else {
-      console.log('Skipping fetch - setLocalPagination:', !!setLocalPagination, 'currentPage:', currentPage);
+      console.log(
+        "Skipping fetch - setLocalPagination:",
+        !!setLocalPagination,
+        "currentPage:",
+        currentPage
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
@@ -290,8 +299,8 @@ const BannerFormOne = ({
                 {/* Header */}
                 <div className="text-center mb-4">
                   {/* <h1 className="display-5 fw-bold text-primary mb-2">SESES</h1> */}
-                  <h2 className="h4 text-white">
-                    FIND BUSINESSES & Investment
+                  <h2 className="h4 text-white text-capitalize">
+                    Find Business & Investments
                   </h2>
                 </div>
 
@@ -402,11 +411,13 @@ const BannerFormOne = ({
                             value={formData.region}
                             onChange={handleInputChange}
                           >
-                            {regionLoading ? (
+                            {regions.length === 0 ? (
+                              <option value="">Select regions</option>
+                            ) : regionLoading ? (
                               <option>Loading regions...</option>
                             ) : (
                               <>
-                                <option value="">Select regions</option>
+                                <option value="">Select Regions</option>
                                 {regions.map((state, index) => (
                                   <option key={index} value={state.value}>
                                     {state.label}
@@ -423,7 +434,7 @@ const BannerFormOne = ({
                             value={formData.minPrice}
                             onChange={handleInputChange}
                           >
-                            <option value="">min price</option>
+                            <option value="">Min price</option>
                             {minPriceRanges.map((price, index) => (
                               <option key={index} value={price.value}>
                                 {price.label}
@@ -438,7 +449,7 @@ const BannerFormOne = ({
                             value={formData.maxPrice}
                             onChange={handleInputChange}
                           >
-                            <option value="">max price</option>
+                            <option value="">Max price</option>
                             {maxPriceRanges.map((price, index) => (
                               <option key={index} value={price.value}>
                                 {price.label}

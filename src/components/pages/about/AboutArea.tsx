@@ -1,10 +1,7 @@
 import Image from "next/image";
 import Button from "@/components/common/Button";
 import Link from "next/link";
-
-import shape_1 from "@/assets/img/about/details/shape.png";
-import shape_2 from "@/assets/img/about/details/shape-2.png";
-import thumb_1 from "@/assets/img/imgs/5.jpg";
+import thumb_1 from "@/assets/img/imgs/aboutus.png";
 
 const AboutArea = () => {
   return (
@@ -18,11 +15,7 @@ const AboutArea = () => {
         <div className="row align-items-center">
           <div className="col-lg-6">
             <div className="tg-about-details-left p-relative mb-15">
-              <Image
-                className="tg-about-details-map p-absolute"
-                src={shape_2}
-                alt="map"
-              />
+           
 
               <div className="tg-about-details-thumb p-relative z-index-9">
                 <Image
@@ -31,6 +24,7 @@ const AboutArea = () => {
                   alt="thumb"
                   style={{
                     objectFit: "cover",
+                    height: "100%",
                   }}
                 />
               </div>

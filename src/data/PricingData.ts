@@ -13,16 +13,13 @@ const pricing_data: DataType[] = [
     id: 5,
     title: "Free Plan",
     slug: "free_plan",
-    desc: `
-The "Essentials" pricing tier is designed for business owners who are comfortable managing the sale of their business on their own. This is the most affordable option, which provides you with exposure to potential buyers. 
-
-With this tier, you will be able to list your business on our platform and have access to our network of buyers. You will be responsible for all aspects of the sale, including the evaluation of your business, gathering the necessary documents, and communicating with potential buyers. 
+    desc: `The "Free Plan" pricing tier is designed for business owners who are comfortable managing the sale of their business on their own. This is the most affordable option, which provides you with exposure to potential buyers. With this tier, you will be able to list your business on our platform and have access to our network of buyers. You will be responsible for all aspects of the sale, including the evaluation of your business, gathering the necessary documents, and communicating with potential buyers. 
 `,
     price: 0,
     list: [
       "No commissions or other fees",
       "Unlimited Edits",
-      "6-Month Listing",
+      "03-Month Listing",
       "Free Non-Disclosure Document",
       "Statistics Dashboard",
       "Chat feature",
@@ -30,7 +27,6 @@ With this tier, you will be able to list your business on our platform and have 
       "Premium positioning when listed",
       "Choice to refresh every 30 days so your seen",
       "Alert buyers that are interested in your ‘Category’ or type of business",
-      "03 months listing",
     ],
     suitable: "Startups, established businesses or pre revenue ideas.",
   },
@@ -47,7 +43,7 @@ With this tier, you will be able to list your business on our platform and have 
     list: [
       "No commissions or other fees",
       "Unlimited Edits",
-      "6-Month Listing",
+      "06-Month Listing",
       "Free Non-Disclosure Document",
       "Statistics Dashboard",
       "Chat feature",
@@ -55,10 +51,45 @@ With this tier, you will be able to list your business on our platform and have 
       "Premium positioning when listed",
       "Choice to refresh every 30 days so your seen",
       "Alert buyers that are interested in your ‘Category’ or type of business",
-      "03 months listing",
     ],
     suitable:
       "This tier is a great option for those who have the time and expertise to handle the sale process themselves and are looking for an affordable way to gain exposure for their business.",
+  },
+  {
+    id: 4,
+    title: "Capital Raise",
+    slug: "capitai_rise",
+    desc: "The ultimate solution to find investors looking to fund the next big thing. Whether you're a startup, an established business, or pre-revenue ideas, our platform connects you with a wide range of opportunities to grow your portfolio and get in front of the right people.",
+    price: 249,
+    list: [
+      "No commissions or other fees",
+      "Unlimited Edits",
+      "6-Month Listing",
+      "Free Non-Disclosure Document",
+      "Statistics Dashboard",
+      "Chat feature",
+    ],
+    suitable: "Startups, established businesses or pre revenue ideas.",
+  },
+  {
+    id: 3,
+    title: "Enterprise",
+    slug: "enterprise",
+    desc: `The "Enterprise" pricing tier is the ultimate package for brokers, agents, and franchisers. This premium offering allows access to unlimited listings Australia-wide, providing maximum exposure and easily list, change, edit your listings all in one flat fee`,
+    price: 1500,
+    list: [
+      "No commissions or other fees",
+      "Unlimited Listings",
+      "Listed until sold",
+      "Unlimited Edits",
+      "Unlimited Listings Australia wide",
+      "Great backlinks for more robust SEO",
+      "Chat feature",
+      "Analytics Dashboard",
+      "listed until sold",
+    ],
+    suitable:
+      "This is for business brokers who have many businesses, they have unlimited adverts they can post and they don’t expire, they will add and delete as they want to.",
   },
   {
     id: 2,
@@ -85,42 +116,6 @@ You will also be guided through the whole process to make sure that the sale goe
     ],
     suitable:
       "Business owners who need a little help determining the price of the business as well as the sale process etc",
-  },
-  {
-    id: 3,
-    title: "Enterprise",
-    slug: "enterprise",
-    desc: `The "Enterprise" pricing tier is the ultimate package for brokers, agents, and franchisers. This premium offering allows access to unlimited listings Australia-wide, providing maximum exposure and easily list, change, edit your listings all in one flat fee`,
-    price: 1500,
-    list: [
-      "No commissions or other fees",
-      "Unlimited Listings",
-      "Listed until sold",
-      "Unlimited Edits",
-      "Unlimited Listings Australia wide",
-      "Great backlinks for more robust SEO",
-      "Chat feature",
-      "Analytics Dashboard",
-      "listed until sold",
-    ],
-    suitable:
-      "This is for business brokers who have many businesses, they have unlimited adverts they can post and they don’t expire, they will add and delete as they want to.",
-  },
-  {
-    id: 4,
-    title: "Capital Raise",
-    slug: "capitai_rise",
-    desc: "The ultimate solution to find investors looking to fund the next big thing. Whether you're a startup, an established business, or pre-revenue ideas, our platform connects you with a wide range of opportunities to grow your portfolio and get in front of the right people.",
-    price: 249,
-    list: [
-      "No commissions or other fees",
-      "Unlimited Edits",
-      "6-Month Listing",
-      "Free Non-Disclosure Document",
-      "Statistics Dashboard",
-      "Chat feature",
-    ],
-    suitable: "Startups, established businesses or pre revenue ideas.",
   },
 ];
 

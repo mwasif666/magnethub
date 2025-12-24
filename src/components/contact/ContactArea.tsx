@@ -20,13 +20,13 @@ const ContactArea = () => {
               <div className="tg-team-details-contact-info mb-35">
                 <div className="tg-team-details-contact">
                   <div className="item">
-                    <span>Phone :</span>
-                    <Link href="tel:+61300000000">+61 3 0000 0000</Link>
-                  </div>
-
-                  <div className="item">
                     <span>E-mail :</span>
-                    <Link href="mailto:info@magnatehub.au">
+                    <Link
+                      style={{
+                        textTransform: "lowercase",
+                      }}
+                      href="mailto:info@magnatehub.au"
+                    >
                       info@magnatehub.au
                     </Link>
                   </div>
@@ -35,17 +35,6 @@ const ContactArea = () => {
                     <Link href="#">Melbourne, Australia</Link>
                   </div>
                 </div>
-              </div>
-
-              <div className="tg-contact-map h-100">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31513469.254011944!2d113.33895365032925!3d-25.73496854357832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d43f27b8b15%3A0x5045675218ceed30!2sMelbourne%20VIC%2C%20Australia!5e0!3m2!1sen!2sau!4v1730945742000!5m2!1sen!2sau"
-                  width="600"
-                  height="450"
-                  style={{ border: "0" }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
               </div>
             </div>
           </div>

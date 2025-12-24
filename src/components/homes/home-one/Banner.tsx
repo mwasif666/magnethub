@@ -36,7 +36,7 @@ const Banner = ({
             <div className="tg-hero-content text-center">
               <div className="tg-hero-title-box mb-30">
                 <h2
-                  className="tg-hero-title wow fadeInUp"
+                  className="tg-hero-title wow fadeInUp text-uppercase"
                   data-wow-delay=".4s"
                   data-wow-duration=".5s"
                 >

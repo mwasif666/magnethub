@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import about_thumb1 from "@/assets/img/imgs/mission.webp";
+import about_thumb1 from "@/assets/img/imgs/missions.png";
 
 const About = () => {
   return (
@@ -15,6 +15,7 @@ const About = () => {
                 data-wow-duration=".7s"
                 src={about_thumb1}
                 alt="about"
+                style={{ objectFit: "cover", height: "100%" }}
               />
             </div>
           </div>

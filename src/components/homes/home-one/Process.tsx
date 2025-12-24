@@ -3,9 +3,9 @@ import { JSX } from "react";
 import Link from "next/link";
 import { FaStore, FaUserCheck, FaMoneyBillTrendUp } from "react-icons/fa6";
 
-import process_1 from "@/assets/img/imgs/market.jpg";
-import process_2 from "@/assets/img/imgs/user.png";
-import process_3 from "@/assets/img/imgs/increase.jpg";
+import process_1 from "@/assets/img/imgs/marketplace.png";
+import process_2 from "@/assets/img/imgs/friendly.png";
+import process_3 from "@/assets/img/imgs/capital.png";
 interface DataType {
   id: number;
   thumb?: StaticImageData;
@@ -102,7 +102,10 @@ const Process = () => {
                   data-wow-delay=".4s"
                   data-wow-duration=".6s"
                 >
-                  <div className="tg-chose-2-icon mb-20 fs-1" style={{color:"#560CE3"}}>
+                  <div
+                    className="tg-chose-2-icon mb-20 fs-1"
+                    style={{ color: "#560CE3" }}
+                  >
                     {item.icon}
                   </div>
                   <h4 className="tg-chose-2-title mb-15">
