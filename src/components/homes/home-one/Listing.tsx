@@ -59,8 +59,6 @@ const Listing = ({
         method: "GET",
         url: "GetAllProjectCategories",
       });
-      console.log(response.data);
-
       setCategoryData(response?.data || []);
     } catch (error) {
       console.error("Error fetching location data", error);
@@ -83,7 +81,7 @@ const Listing = ({
   const redirectUser = (item: any) => {
     let imageUrl = showImageAccordingToCategory(item?.category_name);
     router.push(
-      `/detail?url=${item.url}&id=${item.project_id}&category=${imageUrl}`
+      `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`
     );
   };
 

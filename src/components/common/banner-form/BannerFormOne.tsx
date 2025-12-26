@@ -49,8 +49,12 @@ const BannerFormOne = ({
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<DropDown>([]);
   const [locations, setLocations] = useState<DropDown>([]);
-  const [regions, setRegions] = useState<DropDown>([]);
-  const [regionLoading, setRegionLoading] = useState<boolean>(true);
+  const [businessRegions, setBusinessRegions] = useState<DropDown>([]);
+  const [agencyRegions, setAgencyRegions] = useState<DropDown>([]);
+
+  const [businessRegionLoading, setBusinessRegionLoading] = useState(false);
+  const [agencyRegionLoading, setAgencyRegionLoading] = useState(false);
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -66,7 +70,11 @@ const BannerFormOne = ({
     setFormData(newForm);
 
     if (name === "state") {
-      getRegionsById(value);
+      getBusinessRegionsById(value);
+    }
+
+    if (name === "state2") {
+      getAgencyRegionsById(value);
     }
   };
 
@@ -87,23 +95,41 @@ const BannerFormOne = ({
     return apiRequest({ url: "GetAllProjectLocations", method: "GET" });
   };
 
-  const getRegionsById = async (id: string) => {
+  const getBusinessRegionsById = async (id: string) => {
     try {
-      setRegionLoading(true);
+      setBusinessRegionLoading(true);
       const response = await apiRequest({
         url: `GetAllRegions?locationId=${id}`,
         method: "GET",
       });
-      setRegions(
-        response?.data?.map((c: any) => ({
-          label: c.name,
-          value: c.id,
+
+      setBusinessRegions(
+        response?.data?.map((r: any) => ({
+          label: r.name,
+          value: r.id,
         })) || []
       );
-    } catch (error) {
-      throw error;
     } finally {
-      setRegionLoading(false);
+      setBusinessRegionLoading(false);
+    }
+  };
+
+  const getAgencyRegionsById = async (id: string) => {
+    try {
+      setAgencyRegionLoading(true);
+      const response = await apiRequest({
+        url: `GetAllRegions?locationId=${id}`,
+        method: "GET",
+      });
+
+      setAgencyRegions(
+        response?.data?.map((r: any) => ({
+          label: r.name,
+          value: r.id,
+        })) || []
+      );
+    } finally {
+      setAgencyRegionLoading(false);
     }
   };
 
@@ -308,9 +334,8 @@ const BannerFormOne = ({
                 <ul className="nav nav-tabs nav-justified mb-4" role="tablist">
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${
-                        activeTab === "businesses" ? "active" : ""
-                      } ${isListing ? "tab-listing-color" : ""}`}
+                      className={`nav-link ${activeTab === "businesses" ? "active" : ""
+                        } ${isListing ? "tab-listing-color" : ""}`}
                       onClick={() => setActiveTab("businesses")}
                       type="button"
                       role="tab"
@@ -320,9 +345,8 @@ const BannerFormOne = ({
                   </li>
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${
-                        activeTab === "agencies" ? "active" : ""
-                      } ${isListing ? "tab-listing-color" : ""}`}
+                      className={`nav-link ${activeTab === "agencies" ? "active" : ""
+                        } ${isListing ? "tab-listing-color" : ""}`}
                       onClick={() => setActiveTab("agencies")}
                       type="button"
                       role="tab"
@@ -411,21 +435,22 @@ const BannerFormOne = ({
                             value={formData.region}
                             onChange={handleInputChange}
                           >
-                            {regions.length === 0 ? (
-                              <option value="">Select regions</option>
-                            ) : regionLoading ? (
+                            {businessRegionLoading ? (
                               <option>Loading regions...</option>
+                            ) : businessRegions.length === 0 ? (
+                              <option value="">Select Region</option>
                             ) : (
                               <>
                                 <option value="">Select Regions</option>
-                                {regions.map((state, index) => (
-                                  <option key={index} value={state.value}>
-                                    {state.label}
+                                {businessRegions.map((r, index) => (
+                                  <option key={index} value={r.value}>
+                                    {r.label}
                                   </option>
                                 ))}
                               </>
                             )}
                           </select>
+
                         </div>
                         <div className="col-md-3">
                           <select
@@ -472,9 +497,8 @@ const BannerFormOne = ({
                               id="franchiseCheck"
                             />
                             <label
-                              className={`form-check-label ${
-                                isListing ? "tab-listing-color" : ""
-                              }`}
+                              className={`form-check-label ${isListing ? "tab-listing-color" : ""
+                                }`}
                               htmlFor="franchiseCheck"
                             >
                               Franchise
@@ -490,9 +514,8 @@ const BannerFormOne = ({
                               id="premiumCheck"
                             />
                             <label
-                              className={`form-check-label ${
-                                isListing ? "tab-listing-color" : ""
-                              }`}
+                              className={`form-check-label ${isListing ? "tab-listing-color" : ""
+                                }`}
                               htmlFor="premiumCheck"
                             >
                               Premium Listing
@@ -508,9 +531,8 @@ const BannerFormOne = ({
                               id="allCheck"
                             />
                             <label
-                              className={`form-check-label ${
-                                isListing ? "tab-listing-color" : ""
-                              }`}
+                              className={`form-check-label ${isListing ? "tab-listing-color" : ""
+                                }`}
                               htmlFor="allCheck"
                             >
                               All
@@ -564,7 +586,7 @@ const BannerFormOne = ({
                               name="sPostcode"
                               value={formData.sPostcode}
                               onChange={handleInputChange}
-                              placeholder="Search suburb or postcode"
+                              placeholder="Search by name"
                             />
                           </div>
                         </div>
@@ -612,19 +634,22 @@ const BannerFormOne = ({
                             value={formData.region2}
                             onChange={handleInputChange}
                           >
-                            {regionLoading ? (
+                             {agencyRegionLoading ? (
                               <option>Loading regions...</option>
+                            ) : agencyRegions.length === 0 ? (
+                              <option value="">Select Region</option>
                             ) : (
                               <>
-                                <option value="">Select regions</option>
-                                {regions.map((state, index) => (
-                                  <option key={index} value={state.value}>
-                                    {state.label}
+                                <option value="">Select Regions</option>
+                                {agencyRegions.map((r, index) => (
+                                  <option key={index} value={r.value}>
+                                    {r.label}
                                   </option>
                                 ))}
                               </>
                             )}
                           </select>
+
                         </div>
                       </div>
                       <div className="row justify-content-end mt-4">
