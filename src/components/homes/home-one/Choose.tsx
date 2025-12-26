@@ -23,7 +23,7 @@ const Choose = () => {
                   data-wow-delay=".4s"
                   data-wow-duration=".9s"
                 >
-                  The hub Of all hubs
+                  The hub of all hubs
                 </h2>
                 <p
                   className="wow fadeInUp"
