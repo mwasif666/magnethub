@@ -76,8 +76,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   };
 
   const openChatWithSeller = (userId: string, projectId: string) => {
-    // const url = `/chat?user_id=${userId}&project_id=${projectId}`;
-    const url = "https://dash.magnatehub.au/dashboard/professionals/chat";
+    const url = `https://dash.magnatehub.au/dashboard/professionals/chat?project_id=${projectId}&user_id=${userId}`;
     window.open(url, "_blank");
   };
 
@@ -121,7 +120,6 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         >
                           MGH-{new Date().getFullYear()}-{listing.project_id}
                         </p>
-
                       </div>
 
                       <div
@@ -130,10 +128,11 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                       >
                         <p className={styles.wishlistText}>
                           <i
-                            className={`fa-heart me-1 ${isInWishlist(listing.id)
-                              ? "fa-solid text-danger"
-                              : "fa-regular"
-                              }`}
+                            className={`fa-heart me-1 ${
+                              isInWishlist(listing.id)
+                                ? "fa-solid text-danger"
+                                : "fa-regular"
+                            }`}
                             style={{ cursor: "pointer" }}
                           ></i>
                           {isInWishlist(listing.id)
@@ -199,6 +198,12 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                     <div className="row g-4">
                       {[
                         {
+                          label: "Price",
+                          value: listing?.price ? `$${listing.price}` : "N/A",
+                          icon: "fa-solid fa-dollar-sign",
+                          color: "#10b981",
+                        },
+                        {
                           label: "Location",
                           value: listing?.location_name || "N/A",
                           icon: "fa-solid fa-location-dot",
@@ -209,12 +214,6 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                           value: listing?.category_name || "N/A",
                           icon: "fa-solid fa-tags",
                           color: "#3b82f6",
-                        },
-                        {
-                          label: "Price",
-                          value: listing?.price ? `$${listing.price}` : "N/A",
-                          icon: "fa-solid fa-dollar-sign",
-                          color: "#10b981",
                         },
                         {
                           label: "Yearly Trading",
