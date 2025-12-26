@@ -78,7 +78,7 @@ const Location = () => {
                 Categories
               </h5>
               <h2
-                className="tg-section-su-title text-capitalize wow fadeInUp"
+                className="tg-section-su-title wow fadeInUp"
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >

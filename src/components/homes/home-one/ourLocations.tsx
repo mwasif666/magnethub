@@ -95,7 +95,7 @@ const OurLocation: React.FC = () => {
                 Our Locations
               </h5>
               <h2
-                className="tg-section-su-title text-capitalize wow fadeInUp"
+                className="tg-section-su-title wow fadeInUp"
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >
@@ -162,9 +162,9 @@ const OurLocation: React.FC = () => {
                           height={300}
                           unoptimized
                           onError={(e) => {
-                        e.currentTarget.src =
-                          "assets/img/notfound/image_notfound.png";
-                      }}
+                            e.currentTarget.src =
+                              "assets/img/notfound/image_notfound.png";
+                          }}
                         />
                       </div>
 

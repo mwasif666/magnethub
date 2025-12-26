@@ -15,8 +15,6 @@ const AboutArea = () => {
         <div className="row align-items-center">
           <div className="col-lg-6">
             <div className="tg-about-details-left p-relative mb-15">
-           
-
               <div className="tg-about-details-thumb p-relative z-index-9">
                 <Image
                   className="main-thumb tg-round-15 w-100 mb-20"
@@ -41,7 +39,7 @@ const AboutArea = () => {
                   About Us
                 </h5>
                 <h2
-                  className="mb-15 text-capitalize wow fadeInUp"
+                  className="mb-15 wow fadeInUp"
                   data-wow-delay=".4s"
                   data-wow-duration=".9s"
                 >
@@ -49,7 +47,7 @@ const AboutArea = () => {
                   it
                 </h2>
                 <p
-                  className="text-capitalize wow fadeInUp mb-35"
+                  className="wow fadeInUp mb-35"
                   data-wow-delay=".5s"
                   data-wow-duration=".9s"
                 >

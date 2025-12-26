@@ -325,7 +325,7 @@ const BannerFormOne = ({
                 {/* Header */}
                 <div className="text-center mb-4">
                   {/* <h1 className="display-5 fw-bold text-primary mb-2">SESES</h1> */}
-                  <h2 className="h4 text-white text-capitalize">
+                  <h2 className="h4 text-white ">
                     Find Business & Investments
                   </h2>
                 </div>

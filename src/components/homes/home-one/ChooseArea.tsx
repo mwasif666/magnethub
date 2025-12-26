@@ -57,7 +57,7 @@ const ChooseArea = () => {
           <div className="col-lg-7">
             <div className="tg-chose-section-title">
               <h5 className="tg-section-subtitle mb-15">Our Achievement</h5>
-              <h2 className="mb-0 text-capitalize">
+              <h2 className="mb-0 ">
                 Building connections that create opportunities
               </h2>
             </div>

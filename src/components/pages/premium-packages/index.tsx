@@ -123,7 +123,7 @@ const ProcessPage = () => {
 
               <div className="col-lg-6">
                 <div className="tg-chose-section-title">
-                  <h2 className="mb-15 text-capitalize">
+                  <h2 className="mb-15 ">
                     Introducing Magnate Hub&apos;s Premium Package
                   </h2>
                   <p style={{ lineHeight: 1.9, color: "#555" }}>
@@ -149,7 +149,7 @@ const ProcessPage = () => {
             <div className="row justify-content-center">
               <div className="col-xl-10 col-lg-11">
                 <div className="text-center mb-35">
-                  <h2 className="mb-0 text-capitalize">
+                  <h2 className="mb-0 ">
                     4 Great Reasons Why You Should Purchase the Premium Package
                   </h2>
                 </div>
@@ -172,7 +172,7 @@ const ProcessPage = () => {
             <div className="row justify-content-center">
               <div className="col-xl-10 col-lg-11">
                 <div className="text-center mb-35">
-                  <h2 className="mb-0 text-capitalize">Premium Benefits</h2>
+                  <h2 className="mb-0 ">Premium Benefits</h2>
                 </div>
               </div>
             </div>

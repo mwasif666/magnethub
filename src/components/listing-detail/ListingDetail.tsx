@@ -94,7 +94,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
               {!loading ? (
                 <>
                   <div className={`card p-4 mb-3 ${styles.headerCard}`}>
-                    <div className="d-flex justify-content-between align-items-start">
+                    <div className="d-lg-flex justify-content-between align-items-start">
                       <div>
                         <h2 className={styles.title}>
                           {listing?.name

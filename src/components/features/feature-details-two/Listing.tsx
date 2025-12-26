@@ -57,7 +57,7 @@ const Listing = () => {
                 Most Popular Tour Packages{" "}
               </h5>
               <h2
-                className="mb-15 text-capitalize wow fadeInUp"
+                className="mb-15 wow fadeInUp"
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >

@@ -19,14 +19,14 @@ const Choose = () => {
                   About us
                 </h5>
                 <h2
-                  className="mb-15 text-capitalize wow fadeInUp"
+                  className="mb-15 wow fadeInUp"
                   data-wow-delay=".4s"
                   data-wow-duration=".9s"
                 >
-                  The Hub Of All Hubs
+                  The hub Of all hubs
                 </h2>
                 <p
-                  className="text-capitalize wow fadeInUp"
+                  className="wow fadeInUp"
                   data-wow-delay=".5s"
                   data-wow-duration=".9s"
                 >
@@ -36,7 +36,7 @@ const Choose = () => {
                   covered.
                 </p>
                 <p
-                  className="text-capitalize wow fadeInUp"
+                  className="wow fadeInUp"
                   data-wow-delay=".5s"
                   data-wow-duration=".9s"
                 >

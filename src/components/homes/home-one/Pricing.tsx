@@ -57,7 +57,7 @@ const Pricing = () => {
         <div className="row justify-content-center mb-40">
           <div className="col-lg-8 text-center">
             <div className="tg-pricing-section-title-wrap">
-              <h2 className="tg-section-su-title text-capitalize mb-0">
+              <h2 className="tg-section-su-title mb-0">
                 Magnate Hub
                 <br />
                 Pricing

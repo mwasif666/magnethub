@@ -52,7 +52,7 @@ const Features = () => {
                 Our Features
               </h5>
               <h2
-                className="mb-15 text-capitalize wow fadeInUp"
+                className="mb-15 wow fadeInUp"
                 data-wow-delay=".4s"
                 data-wow-duration=".9s"
               >
@@ -66,8 +66,8 @@ const Features = () => {
         {/* Feature Cards */}
         <div className="row">
           {choose_data.map((item) => (
-            <div key={item.id} className="col-lg-3 col-md-6">
-              <div className="tg-chose-6-wrap h-100 mb-30 text-center">
+            <div key={item.id} className="col-lg-3 mb-30 col-md-6">
+              <div className="tg-chose-6-wrap h-100 text-center">
                 <span className="icon mb-20 d-inline-block">{item.icon}</span>
                 <h4 className="tg-chose-6-title mb-15">{item.title}</h4>
                 <p>{item.desc}</p>

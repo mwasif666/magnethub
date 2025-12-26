@@ -84,9 +84,7 @@ const Process = () => {
                 <div className="tg-chose-section-title text-center mb-50">
                   <h5 className="tg-section-subtitle mb-15">Investor</h5>
 
-                  <h2 className="mb-15 text-capitalize">
-                    Investment Opportunities
-                  </h2>
+                  <h2 className="mb-15 ">Investment Opportunities</h2>
 
                   <p style={{ maxWidth: 880, margin: "0 auto" }}>
                     Welcome to Magnate Hub, the premier platform for connecting

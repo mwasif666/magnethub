@@ -102,7 +102,7 @@ const Listing = ({
               <h5 className="tg-section-su-subtitle su-subtitle-2 mb-15">
                 Premium Listings
               </h5>
-              <h2 className="tg-section-su-title text-capitalize mb-15">
+              <h2 className="tg-section-su-title mb-15">
                 Explore our exclusive portfolio of premium listings at Magnate
                 Hub
               </h2>

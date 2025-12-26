@@ -62,7 +62,7 @@ const Process = () => {
                 Discover Our Features
               </h5>
               <h2
-                className="tg-section-su-title text-capitalize wow fadeInUp mb-15"
+                className="tg-section-su-title wow fadeInUp mb-15"
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >

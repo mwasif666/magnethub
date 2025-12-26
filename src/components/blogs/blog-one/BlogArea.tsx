@@ -107,7 +107,7 @@ const BlogArea = () => {
                   {blogData.map((item) => (
                     <div
                       key={item.id}
-                      className={`col-xl-6 col-lg-12 col-md-6 ${styles.cardCol}`}
+                      className={`col-xl-6 mb-30 col-lg-12 col-md-6 ${styles.cardCol}`}
                     >
                       <article className={styles.blogCard}>
                         <div
@@ -122,9 +122,9 @@ const BlogArea = () => {
                               src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
                               alt={item.name}
                               onError={(e) => {
-                        e.currentTarget.src =
-                          "assets/img/notfound/image_notfound.png";
-                      }}
+                                e.currentTarget.src =
+                                  "assets/img/notfound/image_notfound.png";
+                              }}
                             />
                           </div>
                           <div className={styles.thumbOverlay} />

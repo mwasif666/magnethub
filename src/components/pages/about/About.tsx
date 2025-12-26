@@ -37,7 +37,7 @@ const About = () => {
                   Our Mission
                 </h2>
                 <p
-                  className="text-capitalize wow fadeInUp"
+                  className="wow fadeInUp"
                   data-wow-delay=".6s"
                   data-wow-duration=".8s"
                 >
@@ -50,7 +50,7 @@ const About = () => {
                   individuals seeking capital raisers.
                 </p>
                 <p
-                  className="text-capitalize wow fadeInUp"
+                  className="wow fadeInUp"
                   data-wow-delay=".6s"
                   data-wow-duration=".8s"
                 >
@@ -64,7 +64,7 @@ const About = () => {
                   financial backing they need to turn their dreams into reality.
                 </p>
                 <p
-                  className="text-capitalize wow fadeInUp"
+                  className="wow fadeInUp"
                   data-wow-delay=".6s"
                   data-wow-duration=".8s"
                 >

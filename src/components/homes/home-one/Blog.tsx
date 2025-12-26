@@ -73,7 +73,7 @@ const Blog = ({ style }: PropTypes) => {
                 Tips and Inspiration
               </h5>
               <h2
-                className="tg-section-su-title text-capitalize wow fadeInUp mb-15"
+                className="tg-section-su-title wow fadeInUp mb-15"
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >
@@ -102,7 +102,10 @@ const Blog = ({ style }: PropTypes) => {
               >
                 <div className="tg-blog-item tg-blog-2-item mb-25">
                   <div className="tg-blog-thumb p-relative fix mb-25">
-                    <span onClick={() => redirectToBlogDetail(item)} style={{cursor: 'pointer'}}>
+                    <span
+                      onClick={() => redirectToBlogDetail(item)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <Image
                         className="w-100"
                         width={150}
@@ -110,9 +113,9 @@ const Blog = ({ style }: PropTypes) => {
                         src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
                         alt={item?.name || "blog"}
                         onError={(e) => {
-                        e.currentTarget.src =
-                          "assets/img/notfound/image_notfound.png";
-                      }}
+                          e.currentTarget.src =
+                            "assets/img/notfound/image_notfound.png";
+                        }}
                       />
                     </span>
                     {/* <span className="tg-blog-tag p-absolute">{item.tag}</span> */}
@@ -120,7 +123,10 @@ const Blog = ({ style }: PropTypes) => {
 
                   <div className="tg-blog-content p-relative">
                     <h3 className="tg-blog-title mb-15">
-                      <span onClick={() => redirectToBlogDetail(item)} style={{cursor: 'pointer'}}>
+                      <span
+                        onClick={() => redirectToBlogDetail(item)}
+                        style={{ cursor: "pointer" }}
+                      >
                         {item.name.length > 30
                           ? `${item.name.slice(0, 30)}...`
                           : item.name}
@@ -129,10 +135,18 @@ const Blog = ({ style }: PropTypes) => {
 
                     <div className="tg-blog-date">
                       <span className="mr-20">
-                        <i className="fa-light fa-calendar" style={{color: '#560ce3'}}></i> {item.date}
+                        <i
+                          className="fa-light fa-calendar"
+                          style={{ color: "#560ce3" }}
+                        ></i>{" "}
+                        {item.date}
                       </span>
                       <span>
-                        <i className="fa-regular fa-clock" style={{color: '#560ce3'}}></i> {item.time}
+                        <i
+                          className="fa-regular fa-clock"
+                          style={{ color: "#560ce3" }}
+                        ></i>{" "}
+                        {item.time}
                       </span>
                     </div>
                   </div>

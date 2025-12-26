@@ -31,8 +31,8 @@ const About = () => {
             >
               <div className="tg-location-section-title mb-30">
                 <h5 className="tg-section-su-subtitle mb-15">Who we are</h5>
-                <h2 className="tg-section-su-title text-capitalize mb-15">
-                  The Hub Of All Hubs
+                <h2 className="tg-section-su-title mb-15">
+                  The hub Of all hubs
                 </h2>
                 <p className="tg-section-su-para mb-10">
                   Magnate Hub is the ultimate platform for entrepreneurs and

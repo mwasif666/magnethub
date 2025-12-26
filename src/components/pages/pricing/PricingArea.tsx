@@ -6,7 +6,7 @@ const PricingArea = () => {
           <div className="col-lg-12">
             <div className="tg-location-section-title text-center mb-40">
               <h2
-                className="tg-section-su-title text-capitalize wow fadeInUp mb-15"
+                className="tg-section-su-title wow fadeInUp mb-15"
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >

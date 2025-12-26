@@ -681,7 +681,7 @@ textarea {
 .tg-btn-header {
   font-weight: 600;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   border: 1px solid var(--tg-common-white);
   border-radius: 100px;
@@ -1037,7 +1037,7 @@ textarea {
 .tg-breadcrumb-title {
   font-weight: 700;
   font-size: 60px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 @media only screen and (min-width: 576px) and (max-width: 767px),
@@ -1068,7 +1068,7 @@ textarea {
 .tg-breadcrumb-list span {
   font-weight: 500;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   display: inline-block;
 }
@@ -1087,7 +1087,6 @@ textarea {
   flex-wrap: wrap;
 }
 .tg-breadcrumb-list-2 ul li {
-  text-transform: capitalize;
   color: var(--tg-grey-1);
   margin-right: 8px;
   padding: 5px 0px;
@@ -1099,7 +1098,6 @@ textarea {
   color: var(--tg-theme-primary);
 }
 .tg-breadcrumb-list-3 ul li {
-  text-transform: capitalize;
   color: #898989;
   margin-right: 8px;
   padding: 5px 0px;
@@ -1116,7 +1114,6 @@ textarea {
   flex-wrap: wrap;
 }
 .tg-breadcrumb-list-4 ul li {
-  text-transform: capitalize;
   color: var(--tg-common-white);
   margin-right: 8px;
   font-weight: 500;
@@ -1206,14 +1203,14 @@ textarea {
 .tg-section-subtitle {
   font-family: var(--tg-ff-segoepr);
   font-weight: 700;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
 }
 .tg-section-su-subtitle {
   font-family: var(--tg-ff-outfit);
   font-weight: 500;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
   background: #f5efff;
   display: inline-block;
@@ -1232,7 +1229,6 @@ textarea {
   font-weight: 400;
   color: var(--tg-common-black);
   line-height: 28px;
-  text-transform: capitalize;
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px),
   only screen and (min-width: 992px) and (max-width: 1199px),
@@ -1467,7 +1463,6 @@ textarea {
 .tgmobile__menu .navigation ul li ul li > a {
   font-size: 16px;
   margin-left: 20px;
-  text-transform: capitalize;
 }
 .tgmobile__menu .navigation:last-child {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -2639,7 +2634,7 @@ textarea {
   font-family: var(--tg-ff-outfit);
   font-weight: 500;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   margin-right: 9px;
 }
@@ -2684,7 +2679,7 @@ textarea {
   height: 18px;
   display: inline-block;
   font-size: 12px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   background: var(--tg-theme-secondary);
   text-align: center;
@@ -2712,14 +2707,13 @@ textarea {
 }
 .tg-header-contact-number span {
   font-size: 12px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   display: block;
   line-height: 1;
   font-weight: 500;
 }
 .tg-header-contact-number a {
-  text-transform: capitalize;
   color: var(--tg-common-white);
   font-weight: 600;
 }
@@ -2783,7 +2777,7 @@ textarea {
 .tgmenu__navbar-wrap ul li a {
   font-weight: 500;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   padding: 35px 12px;
   display: -webkit-box;
@@ -3461,7 +3455,6 @@ textarea {
 .tg-hero-subtitle {
   font-weight: 400;
   color: var(--tg-common-white);
-  text-transform: capitalize;
 }
 .tg-hero-title {
   font-weight: 700;
@@ -3477,7 +3470,6 @@ textarea {
 }
 .tg-hero-para {
   color: var(--tg-common-white);
-  text-transform: capitalize;
 }
 @media (max-width: 575px) {
   .tg-hero-para br {
@@ -3530,7 +3522,7 @@ textarea {
   font-family: var(--tg-ff-quentin);
   font-weight: 400;
   font-size: 80px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 @media (max-width: 575px) {
@@ -3546,7 +3538,7 @@ textarea {
   font-family: var(--tg-ff-quentin);
   font-weight: 400;
   font-size: 60px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   position: relative;
   z-index: 1;
@@ -3579,7 +3571,7 @@ textarea {
 .tg-hero-3-title {
   font-weight: 600;
   font-size: 54px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 @media (max-width: 575px) {
@@ -3656,7 +3648,7 @@ textarea {
 .tg-hero-tu-title {
   font-weight: 700;
   font-size: 50px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 @media only screen and (min-width: 576px) and (max-width: 767px),
@@ -3710,7 +3702,7 @@ textarea {
   font-weight: 600;
   font-size: 18px;
   line-height: 22px;
-  text-transform: capitalize;
+
   text-decoration: underline;
   text-decoration-skip-ink: none;
   color: var(--tg-common-white);
@@ -3837,7 +3829,7 @@ textarea {
 .tg-booking-form-title {
   font-weight: 500;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-2);
   display: block;
 }
@@ -3950,7 +3942,7 @@ textarea {
 .tg-booking-form-tabs .nav-links {
   font-weight: 500;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-4);
   display: flex;
   align-items: center;
@@ -4624,12 +4616,11 @@ textarea {
   font-family: var(--tg-ff-outfit);
   font-weight: 700;
   font-size: 30px;
-  text-transform: capitalize;
 }
 .tg-about-su-funfact-text span {
   font-family: var(--tg-ff-outfit);
   font-size: 17px;
-  text-transform: capitalize;
+
   color: #353844;
 }
 .tg-about-su-author-avatar img {
@@ -4639,14 +4630,14 @@ textarea {
   font-family: var(--tg-ff-outfit);
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
+
   margin-bottom: 0;
 }
 .tg-about-su-author-info span {
   font-family: var(--tg-ff-outfit);
   font-weight: 400;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-about-su-author-wrap {
@@ -4745,7 +4736,7 @@ textarea {
 .tg-listing-card-duration-tour span {
   font-size: 14px;
   line-height: 24px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
   display: flex;
   align-items: center;
@@ -4756,7 +4747,6 @@ textarea {
 .tg-listing-card-title {
   font-weight: 600;
   line-height: 133%;
-  text-transform: capitalize;
 }
 .tg-listing-card-title:hover a {
   color: var(--tg-theme-primary);
@@ -4778,21 +4768,21 @@ textarea {
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 .tg-listing-card-currency-old {
   font-weight: 500;
   font-size: 14px;
   line-height: 1;
-  text-transform: capitalize;
+
   color: #dbe6f7;
   display: block;
 }
 .tg-listing-card-activity-person {
   font-weight: 500;
   font-size: 12px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   line-height: 22px;
 }
@@ -4820,7 +4810,7 @@ textarea {
 .tg-listing-rating-percent {
   font-size: 13px;
   line-height: 24px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 .tg-listing-item-price-discount {
@@ -4829,7 +4819,7 @@ textarea {
   left: 0;
   font-weight: 600;
   font-size: 12px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   padding: 6px 20px 6px 14px;
   line-height: 1;
@@ -4869,7 +4859,7 @@ textarea {
 .tg-listing-menu-nav button {
   font-weight: 500;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
   padding: 0 17px;
   border-bottom: 4px solid #e1e1e1;
@@ -5012,7 +5002,7 @@ textarea {
 }
 .tg-listing-2-price {
   font-weight: 600;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   border: 1px solid var(--tg-common-white);
   border-radius: 100px;
@@ -5181,18 +5171,17 @@ textarea {
   font-weight: 500;
   font-size: 12px;
   line-height: 200%;
-  text-transform: capitalize;
 }
 .tg-listing-5-card-item .tg-listing-card-price .form {
   font-weight: 500;
   font-size: 13px;
-  text-transform: capitalize;
+
   color: #767676;
 }
 .tg-listing-5-card-item .tg-listing-card-price .price {
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
 }
 .tg-listing-5-card-item .tg-listing-card-duration-map {
@@ -5230,7 +5219,6 @@ textarea {
   font-weight: 400;
   font-size: 14px;
   padding: 0px 15px;
-  text-transform: capitalize;
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px),
   only screen and (min-width: 768px) and (max-width: 991px),
@@ -5253,7 +5241,6 @@ textarea {
   }
 }
 .tg-listing-box-number-found span {
-  text-transform: capitalize;
   color: var(--tg-common-black);
 }
 .tg-listing-box-view button {
@@ -5348,7 +5335,7 @@ textarea {
   font-size: 14px;
   padding: 0px 10px;
   padding-right: 37px;
-  text-transform: capitalize;
+
   border: 1px solid #e1e1e1;
   border-radius: 5px;
   margin-right: 8px;
@@ -5435,7 +5422,7 @@ textarea {
   font-size: 15px;
   line-height: 20px;
   letter-spacing: 0;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-listing-map-list-item .destination {
@@ -5445,7 +5432,7 @@ textarea {
 }
 .tg-listing-map-list-item .destination span {
   font-size: 14px;
-  text-transform: capitalize;
+
   margin-right: 18px;
   margin-bottom: 5px;
 }
@@ -5559,7 +5546,7 @@ textarea {
   font-family: var(--tg-ff-outfit);
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-listing-su-card-item .tg-listing-rating-icon {
@@ -5850,7 +5837,6 @@ textarea {
   }
 }
 .tg-chose-2-content p {
-  text-transform: capitalize;
   color: var(--tg-common-white);
   line-height: 26px;
 }
@@ -5870,7 +5856,7 @@ textarea {
 .tg-chose-2-title {
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 .tg-chose-2-title a:hover {
@@ -6032,7 +6018,6 @@ textarea {
 .tg-chose-6-totle {
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
 }
 .tg-chose-6-shape {
   position: absolute;
@@ -6091,7 +6076,6 @@ textarea {
 }
 .tg-chose-su-2-wrap .tg-chose-list-content p {
   font-family: var(--tg-ff-outfit);
-  text-transform: capitalize;
 }
 .tg-chose-su-2-wrap .tg-chose-list-icon.mr-20 {
   width: 60px;
@@ -6208,7 +6192,6 @@ textarea {
   color: #353844;
   font-size: 16px;
   line-height: 25px;
-  text-transform: capitalize;
 }
 .tg-process-list .tg-chose-list-icon {
   width: 80px;
@@ -6386,7 +6369,7 @@ textarea {
   font-family: var(--tg-ff-quentin);
   font-size: 60px;
   line-height: 100%;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   margin: 0;
 }
@@ -6506,7 +6489,7 @@ textarea {
   font-weight: 400;
   font-size: 90px;
   line-height: 100%;
-  text-transform: capitalize;
+
   text-align: center;
   color: var(--tg-common-white);
 }
@@ -6608,7 +6591,7 @@ textarea {
 .tg-location-time {
   font-weight: 500;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   background: var(--tg-theme-primary);
   border-radius: 4px;
@@ -6625,7 +6608,6 @@ textarea {
 .tg-location-title {
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
 }
 .tg-location-title:hover a {
   color: var(--tg-theme-primary);
@@ -6751,7 +6733,7 @@ textarea {
 .tg-location-5-content h4 {
   font-weight: 500;
   font-size: 18px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 .tg-location-5-content h4 a:hover {
@@ -6760,7 +6742,7 @@ textarea {
 .tg-location-5-content span {
   font-weight: 500;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px),
@@ -6916,21 +6898,20 @@ textarea {
 .tg-testimonial-avatar-content h5 {
   font-weight: 600;
   font-size: 18px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black-2);
   margin-bottom: 0;
 }
 .tg-testimonial-avatar-content span {
   font-weight: 400;
   font-size: 14px;
-  text-transform: capitalize;
 }
 .tg-testimonial-avatar-para {
   font-style: italic;
   font-weight: 400;
   font-size: 16px;
   line-height: 150%;
-  text-transform: capitalize;
+
   color: var(--tg-grey-6);
 }
 .tg-testimonial-2-shape {
@@ -6994,14 +6975,13 @@ textarea {
   }
 }
 .tg-testimonial-4-content-wrap span {
-  text-transform: capitalize;
   color: #4c4c5b;
 }
 .tg-testimonial-4-content-wrap p {
   font-style: italic;
   font-size: 18px;
   line-height: 36px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 @media only screen and (min-width: 768px) and (max-width: 991px),
@@ -7014,7 +6994,7 @@ textarea {
 .tg-testimonial-4-name {
   font-size: 22px;
   line-height: 136%;
-  text-transform: capitalize;
+
   color: var(--tg-common-black-2);
 }
 .tg-testimonial-4-ratings i {
@@ -7144,7 +7124,7 @@ textarea {
 .tg-blog-tag {
   font-weight: 600;
   font-size: 12px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   border-radius: 4px;
   background: var(--tg-theme-primary);
@@ -7181,14 +7161,13 @@ textarea {
 .tg-blog-date span {
   font-size: 14px;
   line-height: 1.71;
-  text-transform: capitalize;
+
   display: inline-block;
 }
 .tg-blog-title {
   font-weight: 600;
   font-size: 24px;
   line-height: 1.25;
-  text-transform: capitalize;
 }
 .tg-blog-title.title-2 {
   font-size: 22px;
@@ -7211,7 +7190,6 @@ textarea {
 }
 .tg-blog-bottom p {
   font-weight: 500;
-  text-transform: capitalize;
 }
 .tg-blog-bottom p a {
   color: var(--tg-theme-primary);
@@ -7256,7 +7234,6 @@ textarea {
 }
 .tg-blog-2-item .tg-blog-text {
   line-height: 26px;
-  text-transform: capitalize;
 }
 .tg-blog-2-item .tg-blog-content {
   padding: 0;
@@ -7271,7 +7248,7 @@ textarea {
 }
 .tg-blog-standard-date span {
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   margin-right: 25px;
 }
@@ -7293,13 +7270,11 @@ textarea {
   font-weight: 600;
   font-size: 30px;
   line-height: 1.2;
-  text-transform: capitalize;
 }
 .tg-blog-standard-title a:hover {
   color: var(--tg-theme-primary);
 }
 .tg-blog-standard-item p {
-  text-transform: capitalize;
   color: var(--tg-grey-1);
   line-height: 28px;
 }
@@ -7360,7 +7335,7 @@ textarea {
 .tg-blog-sidebar-tag-list ul li a {
   font-weight: 400;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
   background: #f0e9ff;
   border-radius: 5px;
@@ -7399,7 +7374,7 @@ textarea {
 }
 .tg-blog-post-date {
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-blog-post-date svg {
@@ -7447,7 +7422,6 @@ textarea {
   background: transparent;
 }
 .tg-blog-para {
-  text-transform: capitalize;
   font-size: 16px;
 }
 .tg-blog-blockquote {
@@ -7480,7 +7454,7 @@ textarea {
   font-weight: 500;
   font-size: 18px;
   line-height: 30px;
-  text-transform: capitalize;
+
   color: #0b0b14;
   margin-bottom: 0;
 }
@@ -7498,7 +7472,6 @@ textarea {
 .tg-blog-details-video-content h3 {
   font-weight: 600;
   font-size: 26px;
-  text-transform: capitalize;
 }
 .tg-blog-details-video-list ul {
   margin-bottom: 14px;
@@ -7525,7 +7498,7 @@ textarea {
 .tg-blog-details-video-list ul li p {
   font-weight: 500;
   font-size: 17px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
   margin-bottom: 0;
 }
@@ -7590,7 +7563,6 @@ textarea {
   font-size: 24px;
 }
 .tg-blog-details-review-form p {
-  text-transform: capitalize;
   color: var(--tg-grey-1);
 }
 .tg-blog-details-review-form form .input,
@@ -7717,7 +7689,6 @@ textarea {
   font-weight: 600;
   font-size: 32px;
   line-height: 1.25;
-  text-transform: capitalize;
 }
 @media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .tg-cta-title {
@@ -7825,7 +7796,6 @@ textarea {
   }
 }
 .tg-cta-4-content p {
-  text-transform: capitalize;
 }
 .tg-cta-price-shape {
   position: absolute;
@@ -7908,13 +7878,13 @@ textarea {
 }
 .tg-footer-widget p {
   line-height: 24px;
-  text-transform: capitalize;
+
   color: #acadb5;
   font-size: 15px;
 }
 .tg-footer-widget-title {
   font-size: 20px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
@@ -7928,7 +7898,6 @@ textarea {
   }
 }
 .tg-footer-link ul li a {
-  text-transform: capitalize;
   color: #acadb5;
   display: inline-block;
   padding: 6px 0px;
@@ -7947,7 +7916,6 @@ textarea {
   }
 }
 .tg-footer-info ul li {
-  text-transform: capitalize;
   color: #acadb5;
   display: inline-block;
   font-weight: 500;
@@ -8025,7 +7993,7 @@ textarea {
 .tg-footer-copyright span {
   font-weight: 500;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: #7b7e88;
   display: inline-block;
 }
@@ -8156,7 +8124,7 @@ textarea {
 }
 .tg-destination-meta a {
   font-weight: 500;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   border: 1px solid var(--tg-common-white);
   border-radius: 100px;
@@ -8168,7 +8136,7 @@ textarea {
 .tg-destination-tag span {
   font-weight: 500;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   border: 1px solid var(--tg-border-3);
   border-radius: 6px;
@@ -8183,7 +8151,7 @@ textarea {
 ===============================*/
 .tg-counter-title {
   font-size: 90px;
-  text-transform: capitalize;
+
   color: #f5f5f5;
   margin-bottom: 0;
 }
@@ -8201,7 +8169,7 @@ textarea {
 .tg-counter-subtitle {
   font-weight: 600;
   font-size: 18px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
   position: absolute;
   top: 50%;
@@ -8265,14 +8233,14 @@ textarea {
 .tg-ads-upto h2 {
   font-size: 45px;
   line-height: 1;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
 }
 .tg-ads-upto .saving {
   font-weight: 600;
   font-size: 16px;
   letter-spacing: 0.06em;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   display: inline-block;
   transform: translateY(-8px);
@@ -8280,7 +8248,7 @@ textarea {
 .tg-ads-upto .upto {
   font-weight: 700;
   font-size: 9px;
-  text-transform: capitalize;
+
   color: var(--tg-common-white);
   transform: rotate(-90deg);
   position: absolute;
@@ -8405,7 +8373,7 @@ textarea {
 .tg-foods-title {
   font-weight: 500;
   font-size: 22px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 .tg-foods-title a:hover {
@@ -8460,7 +8428,7 @@ textarea {
 }
 .tg-filter-seemore .more {
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
 }
 .tg-filter-border {
@@ -8553,7 +8521,7 @@ textarea {
 .tg-filter-reset {
   font-weight: 400;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
 }
 .tg-filter-search-form .buttons {
@@ -8651,7 +8619,7 @@ textarea {
 
 .tg-label {
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 
@@ -8685,10 +8653,8 @@ textarea {
 ===============================*/
 .tg-tour-details-video-title {
   font-size: 36px;
-  text-transform: capitalize;
 }
 .tg-tour-details-video-location span {
-  text-transform: capitalize;
   color: var(--tg-common-black);
 }
 .tg-tour-details-video-ratings span {
@@ -8708,7 +8674,6 @@ textarea {
 }
 .tg-tour-details-video-share a {
   color: var(--tg-common-black);
-  text-transform: capitalize;
 }
 .tg-tour-details-video-share a:hover {
   color: var(--tg-theme-primary);
@@ -8753,19 +8718,19 @@ textarea {
 .tg-tour-details-video-feature-list ul li .title {
   font-weight: 500;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   display: block;
   line-height: 1;
 }
 .tg-tour-details-video-feature-list ul li .duration {
   font-weight: 500;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 .tg-tour-details-video-feature-price p {
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   display: flex;
   align-items: center;
@@ -8782,7 +8747,7 @@ textarea {
   font-weight: 600;
   margin-left: 5px;
   font-size: 30px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
 }
 .tg-tour-details-video-feature-2-list ul li {
@@ -8885,7 +8850,6 @@ textarea {
 .tg-tour-about-title {
   font-weight: 600;
   font-size: 22px;
-  text-transform: capitalize;
 }
 .tg-tour-about-title.title-2 {
   font-size: 20px;
@@ -8912,7 +8876,7 @@ textarea {
 .tg-tour-about-list ul li .text {
   font-weight: 500;
   font-size: 17px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 .tg-tour-about-list-2 ul li .text {
@@ -8934,7 +8898,7 @@ textarea {
 .tg-tour-about-faq .accordion-button {
   font-weight: 500;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
   position: relative;
   transition: all 0.4s ease;
@@ -8952,7 +8916,7 @@ textarea {
   font-family: var(--font-family);
   font-weight: 600;
   font-size: 12px;
-  text-transform: capitalize;
+
   display: inline-block;
   margin-right: 12px;
   background: var(--tg-theme-primary);
@@ -8995,7 +8959,6 @@ textarea {
   font-weight: 400;
   line-height: 28px;
   font-size: 16px;
-  text-transform: capitalize;
 }
 .tg-tour-about-faq .accordion-header {
   padding: 12px 80px 12px 12px;
@@ -9052,20 +9015,19 @@ textarea {
 .tg-tour-about-review .review-left .review-info-inner h2 {
   font-weight: 700;
   font-size: 64px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
   margin-bottom: 3px;
 }
 .tg-tour-about-review .review-left .review-info-inner span {
   font-weight: 500;
   font-size: 20px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   display: inline-block;
   margin-bottom: 4px;
 }
 .tg-tour-about-review .review-left .review-info-inner p {
-  text-transform: capitalize;
   margin-bottom: 0;
 }
 .tg-tour-about-review .review-right {
@@ -9090,7 +9052,6 @@ textarea {
   margin-bottom: 0;
   font-weight: 500;
   line-height: 1;
-  text-transform: capitalize;
 }
 .tg-tour-about-review .bar-rv-progress {
   display: inline-block;
@@ -9111,7 +9072,6 @@ textarea {
   margin-bottom: 0;
   font-weight: 600;
   line-height: 1;
-  text-transform: capitalize;
 }
 .tg-tour-about-review .bar-rv-progress .progress {
   background-color: #e4e4e4;
@@ -9174,12 +9134,11 @@ textarea {
 .tg-tour-about-cus-name h6 {
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
 }
 .tg-tour-about-cus-name h6 span {
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
   margin-left: 15px;
 }
@@ -9238,7 +9197,7 @@ textarea {
   font-weight: 500;
   font-size: 16px;
   line-height: 150%;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-tour-about-rating-category ul li .rating-icon i {
@@ -9401,7 +9360,7 @@ textarea {
 .tg-tour-about-extra ul li .adult {
   font-size: 14px;
   color: var(--tg-grey-1);
-  text-transform: capitalize;
+
   font-weight: 400;
   padding-left: 30px;
 }
@@ -9412,7 +9371,7 @@ textarea {
 .tg-tour-about-coast .total-price {
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
+
   color: var(--tg-theme-primary);
   margin-bottom: 0;
 }
@@ -9495,7 +9454,7 @@ textarea {
   padding: 0;
   font-weight: 500;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   width: 147px;
 }
@@ -9521,7 +9480,7 @@ textarea {
 .tg-shop-product-title {
   font-weight: 500;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 .tg-shop-product-title a:hover {
@@ -9652,7 +9611,6 @@ textarea {
 .tg-product-details-title {
   font-weight: 500;
   font-size: 30px;
-  text-transform: capitalize;
 }
 .tg-product-details-rating-count {
   margin-left: 8px;
@@ -9681,7 +9639,7 @@ textarea {
 .tg-product-details-para {
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-product-details-quantity .quantity {
@@ -9711,7 +9669,7 @@ textarea {
 }
 .tg-product-details-button .tg-btn {
   font-weight: 600;
-  text-transform: capitalize;
+
   font-size: 16px;
 }
 .tg-product-details-button .tg-btn span {
@@ -9754,7 +9712,7 @@ textarea {
 .tg-product-details-tab-nav-inner button {
   font-weight: 600;
   font-size: 20px;
-  text-transform: capitalize;
+
   color: #9d9fa8;
   margin-right: 20px;
   padding: 20px 20px;
@@ -9791,18 +9749,17 @@ textarea {
 }
 .tg-product-details-description-content p {
   line-height: 28px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-product-details-description-content h3 {
   font-weight: 600;
   font-size: 24px;
-  text-transform: capitalize;
 }
 .tg-product-details-description-content ul li {
   font-weight: 500;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
   position: relative;
   padding-left: 17px;
@@ -9992,7 +9949,7 @@ textarea {
   height: 45px;
   background: var(--tg-common-white);
   padding-left: 17px;
-  text-transform: capitalize;
+
   line-height: 45px;
 }
 .tg-checkout-form-input .input::-webkit-input-placeholder {
@@ -10097,7 +10054,7 @@ textarea {
 .tg-checkout-para {
   font-weight: 400;
   font-size: 14px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 .tg-checkout-payment {
@@ -10106,7 +10063,7 @@ textarea {
 .tg-checkout-payment label {
   font-weight: 500;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   margin-left: 7px;
 }
@@ -10164,7 +10121,7 @@ textarea {
 .tg-pricing-list ul li {
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
   display: flex;
 }
@@ -10268,7 +10225,7 @@ textarea {
 .tg-faq-content .accordion-item .accordion-header button {
   font-weight: 600;
   font-size: 18px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
   border: none;
   padding: 26px 30px;
@@ -10315,7 +10272,7 @@ textarea {
   font-weight: 600;
   font-size: 22px;
   line-height: 100%;
-  text-transform: capitalize;
+
   margin-bottom: 4px;
 }
 .tg-team-content h5 a:hover {
@@ -10324,7 +10281,7 @@ textarea {
 .tg-team-content span {
   font-weight: 400;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   margin-bottom: 10px;
   display: inline-block;
@@ -10396,14 +10353,13 @@ textarea {
 .tg-team-details-contant h6 {
   font-weight: 600;
   font-size: 24px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 .tg-team-details-contant p {
   line-height: 22px;
 }
 .tg-team-details-contact {
-  text-transform: capitalize;
   color: var(--tg-grey-1);
   display: flex;
   margin-bottom: 5px;
@@ -10430,7 +10386,7 @@ textarea {
 .tg-team-progress-title {
   font-weight: 500;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
   margin-bottom: 12px;
 }
@@ -10447,7 +10403,7 @@ textarea {
   top: -32px;
   font-weight: 500;
   font-size: 16px;
-  text-transform: capitalize;
+
   color: var(--tg-grey-1);
 }
 
@@ -10481,7 +10437,7 @@ textarea {
 .tg-contact-title {
   font-weight: 600;
   font-size: 36px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px),
@@ -10502,7 +10458,6 @@ textarea {
 }
 .tg-contact-content-wrap p {
   line-height: 26px;
-  text-transform: capitalize;
 }
 .tg-contact-form .input,
 .tg-contact-form .textarea {
@@ -10529,7 +10484,6 @@ textarea {
 .tg-error-btn .tg-btn {
   font-weight: 600;
   font-size: 15px;
-  text-transform: capitalize;
 }
 .tg-error-spacing {
   padding-top: 237px;
@@ -10570,7 +10524,7 @@ textarea {
 .tg-login-navigate a {
   text-decoration: underline;
   font-size: 15px;
-  text-transform: capitalize;
+
   color: var(--tg-common-black);
 }
 
