@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { apiRequest } from "@/api/axiosInstance";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 interface OtpData {
   otp: string;
@@ -118,6 +119,7 @@ const OtpForm = () => {
 
   return (
     <>
+    <ToastContainer/>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="col-lg-12 mb-25">
           <input

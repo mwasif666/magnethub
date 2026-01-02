@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
@@ -51,7 +51,6 @@ const SignupForm = () => {
   const onSubmit = async (data: RegisterData) => {
     try {
       setLoading(true);
-
       // Prepare form data
       const formData = new FormData();
       formData.append("first_name", data.firstName);
@@ -94,14 +93,15 @@ const SignupForm = () => {
   };
 
   const tabs = [
-    { id: 1, label: "Seller" },
-    { id: 2, label: "Buyer" },
+    { id: 1, label: "Buyer" },
+    { id: 2, label: "Seller" },
     { id: 3, label: "Capital Raiser" },
     { id: 4, label: "Brokers + Franchisers" },
   ];
 
   return (
     <>
+     <ToastContainer/>
       <div className="d-flex gap-2 justify-content-center mb-4 flex-wrap">
         {tabs.map((tab) => (
           <button

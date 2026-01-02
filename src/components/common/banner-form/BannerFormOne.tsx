@@ -609,7 +609,7 @@ const BannerFormOne = ({
                             name="agency"
                             value={formData.agency}
                             onChange={handleInputChange}
-                            placeholder="Agency's Name"
+                            placeholder="Find Investment"
                           />
                         </div>
                         <div className="col-md-4">
