@@ -295,18 +295,22 @@ h6 a {
 
 h1 {
   font-size: 48px;
+  text-transform: capitalize !important;
 }
 
 h2 {
   font-size: 36px;
+  text-transform: capitalize !important;
 }
 
 h3 {
   font-size: 24px;
+  text-transform: capitalize !important;
 }
 
 h4 {
   font-size: 18px;
+  text-transform: capitalize !important;
 }
 
 h5 {
