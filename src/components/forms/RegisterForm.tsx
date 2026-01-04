@@ -94,8 +94,8 @@ const RegisterForm = () => {
   };
 
   const tabs = [
-    { id: 1, label: "Seller" },
-    { id: 2, label: "Buyer" },
+    { id: 1, label: "Buyer" },
+    { id: 2, label: "Seller" },
     { id: 3, label: "Capital Raiser" },
     { id: 4, label: "Brokers + Franchisers" },
   ];
