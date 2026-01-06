@@ -25,7 +25,7 @@ const HeaderOne = () => {
     router.push("/");
   };
 
-  const handleRedirect = () =>{
+  const handleRedirect = () => {
     router.push("https://dash.magnatehub.au/dashboard/professionals");
   }
 
@@ -55,9 +55,8 @@ const HeaderOne = () => {
 
       <header className="tg-header-height">
         <div
-          className={`tg-header__area tg-header-tu-menu tg-header-lg-space z-index-999 tg-transparent ${
-            sticky ? "header-sticky" : ""
-          }`}
+          className={`tg-header__area tg-header-tu-menu tg-header-lg-space z-index-999 tg-transparent ${sticky ? "header-sticky" : ""
+            }`}
           id="header-sticky"
         >
           <div className="container">
@@ -107,10 +106,11 @@ const HeaderOne = () => {
                           {role === "1"
                             ? "Buyer"
                             : role === "2"
-                            ? "Seller"
-                            : role === "3"
-                            ? "Raiser/Broker"
-                            : "User"}
+                              ? "Seller"
+                              : role === "3" ? "Capital Raiser" :
+                                role === "4"
+                                  ? "Broker/Franchisers"
+                                  : "User"}
                         </div>
 
                         {showLogout && (
@@ -131,14 +131,14 @@ const HeaderOne = () => {
                             <button
                               onClick={handleRedirect}
                               className="w-100"
-                              style={{background:'#560ce3', color:'#fff', margin:'4px',padding:'8px', borderRadius:'6px', border:'none'}}
+                              style={{ background: '#560ce3', color: '#fff', margin: '4px', padding: '8px', borderRadius: '6px', border: 'none' }}
                             >
                               Dashboard
                             </button>
                             <button
                               onClick={handleLogout}
                               className="btn btn-danger w-100"
-                              style={{margin:'4px'}}
+                              style={{ margin: '4px' }}
                             >
                               Logout
                             </button>
