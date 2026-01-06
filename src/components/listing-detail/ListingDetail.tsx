@@ -346,7 +346,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                   <button
                     className={styles.chatButton}
                     onClick={() =>
-                      openChatWithSeller(listing.user_id, listing.project_id)
+                      openChatWithSeller(listing.raising_id, listing.project_id)
                     }
                   >
                     <i className="fa-solid fa-message me-2"></i>
