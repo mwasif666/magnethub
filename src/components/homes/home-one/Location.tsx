@@ -178,6 +178,7 @@ const Location = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
+                            
                             <path
                               d="M2 13.0969L13.0969 2M13.0969 2H2M13.0969 2V13.0969"
                               stroke="currentColor"
