@@ -24,6 +24,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [similarListing, setSimilarListing] = useState<any>([]);
   const [similarLoading, setSimilarLoading] = useState<boolean>(true);
+  const [categoryData, setCategoryData] = useState<any[]>([]);
 
   const getProductDetails = async () => {
     try {
@@ -71,8 +72,37 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     dispatch(addToWishlist(item));
   };
 
+   const getCategoryData = async () => {
+    try {
+      setLoading(true);
+      const response = await apiRequest({
+        method: "GET",
+        url: "GetAllProjectCategories",
+      });
+      setCategoryData(response?.data || []);
+    } catch (error) {
+      console.error("Error fetching location data", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCategoryData();
+  }, []);
+
+  const showImageAccordingToCategory = (category: string) => {
+   const getImage = categoryData?.find((x) => x.name === category);
+   if (getImage?.card) {
+     return getImage?.card;
+   }
+ };
+
   const redirectUser = (item: any) => {
-    router.push(`/detail/${item.url}/${item.project_id}`);
+    let imageUrl = showImageAccordingToCategory(item?.category_name);
+    router.push(
+      `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`
+    );
   };
 
   const openChatWithSeller = (userId: string, projectId: string) => {
@@ -96,13 +126,13 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                   <div className={`card p-4 mb-3 ${styles.headerCard}`}>
                     <div className="d-lg-flex justify-content-between align-items-start">
                       <div>
-                        <h2 className={styles.title}>
+                        <h4 className={styles.title}>
                           {listing?.name
-                            ? listing.name.length > 30
-                              ? listing.name.slice(0, 30) + "..."
+                            ? listing.name.length > 80
+                              ? listing.name.slice(0, 80) + "..."
                               : listing.name
                             : ""}
-                        </h2>
+                        </h4>
                         <h5 className={styles.host}>
                           <i className="fa-solid fa-user me-2"></i>
                           <span>Hosted By:</span>{" "}

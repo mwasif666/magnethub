@@ -17,7 +17,7 @@ interface DataType {
 const process_data: DataType[] = [
   {
     id: 1,
-    thumb: process_1,
+    thumb: process_2,
   },
   {
     id: 2,
@@ -27,7 +27,7 @@ const process_data: DataType[] = [
   },
   {
     id: 3,
-    thumb: process_2,
+    thumb: process_3,
   },
   {
     id: 4,
@@ -37,7 +37,7 @@ const process_data: DataType[] = [
   },
   {
     id: 5,
-    thumb: process_3,
+    thumb: process_1,
   },
   {
     id: 6,
