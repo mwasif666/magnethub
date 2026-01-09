@@ -1,5 +1,5 @@
 import { apiRequest } from "@/api/axiosInstance";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { FaRedo, FaSearch } from "react-icons/fa";
 
@@ -26,7 +26,11 @@ const BannerFormOne = ({
   onPageChange,
 }: BannerFormProps) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const isInitialMount = useRef(true);
+  const hasLoadedFromUrl = useRef(false);
+  const lastFetchUrl = useRef<string>("");
   type DropDown = { label: string; value: string }[];
   const [activeTab, setActiveTab] = useState("businesses");
   const [formData, setFormData] = useState({
@@ -55,7 +59,6 @@ const BannerFormOne = ({
   const [businessRegionLoading, setBusinessRegionLoading] = useState(false);
   const [agencyRegionLoading, setAgencyRegionLoading] = useState(false);
 
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -81,9 +84,36 @@ const BannerFormOne = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onPageChange) onPageChange(1);
-    const url = constructUrl(formData, 1);
-    if (url) {
-      fetchProductDataAsPerFilter(url);
+
+    if (pathname === "/") {
+      const queryParams = new URLSearchParams();
+
+      if (activeTab === "businesses") {
+        if (formData.postcode) queryParams.append("postcode", formData.postcode);
+        if (formData.businessId) queryParams.append("businessId", formData.businessId);
+        if (formData.category) queryParams.append("category", formData.category);
+        if (formData.state) queryParams.append("state", formData.state);
+        if (formData.region) queryParams.append("region", formData.region);
+        if (formData.minPrice) queryParams.append("minPrice", formData.minPrice);
+        if (formData.maxPrice) queryParams.append("maxPrice", formData.maxPrice);
+        if (formData.franchise) queryParams.append("franchise", "true");
+        if (formData.premium) queryParams.append("premium", "true");
+        if (formData.all) queryParams.append("all", "true");
+      } else if (activeTab === "agencies") {
+        if (formData.sPostcode) queryParams.append("postcode", formData.sPostcode);
+        if (formData.agency) queryParams.append("agency", formData.agency);
+        if (formData.state2) queryParams.append("state", formData.state2);
+        if (formData.region2) queryParams.append("region", formData.region2);
+      }
+
+      queryParams.append("tab", activeTab);
+      router.push(`/listings?${queryParams.toString()}`);
+    } else {
+      // If already on listings page, fetch data normally
+      const url = constructUrl(formData, 1);
+      if (url) {
+        fetchProductDataAsPerFilter(url);
+      }
     }
   };
 
@@ -255,7 +285,7 @@ const BannerFormOne = ({
 
     setListing([]);
     if (onPageChange) onPageChange(1);
-    getListingData(1);
+    lastFetchUrl.current = "";
   };
 
   const getListingData = (page: number = 1) => {
@@ -266,6 +296,12 @@ const BannerFormOne = ({
   };
 
   const fetchProductDataAsPerFilter = async (finalUrl: string) => {
+    // Prevent duplicate API calls with the same URL
+    if (lastFetchUrl.current === finalUrl) {
+      return;
+    }
+    lastFetchUrl.current = finalUrl;
+
     try {
       const response = await apiRequest({ url: finalUrl, method: "GET" });
       setListing(response?.data?.data || []);
@@ -284,34 +320,121 @@ const BannerFormOne = ({
     }
   };
 
-  // Fetch data when currentPage changes (only if pagination is enabled)
   useEffect(() => {
-    // Skip on initial mount to avoid double fetching with the initial useEffect
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
 
-    // Only fetch if pagination is enabled and currentPage is valid
     if (setLocalPagination && currentPage && currentPage >= 1) {
-      console.log("Page changed, fetching data for page:", currentPage);
       getListingData(currentPage);
-    } else {
-      console.log(
-        "Skipping fetch - setLocalPagination:",
-        !!setLocalPagination,
-        "currentPage:",
-        currentPage
-      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  // Initial data fetch on mount
+
   useEffect(() => {
+    // Only load initial data if NOT on listings page with URL params
+    if (pathname === "/listings" && searchParams && Array.from(searchParams.keys()).length > 0) {
+      return; // Skip initial load, URL param effect will handle it
+    }
     getListingData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (pathname !== "/listings" || !searchParams) return;
+    
+    // Prevent loading twice if already loaded from URL
+    if (hasLoadedFromUrl.current) return;
+    hasLoadedFromUrl.current = true;
+
+    const tab = searchParams.get("tab") || "businesses";
+    setActiveTab(tab);
+
+    const newFormData = {
+      postcode: "",
+      businessId: "",
+      category: "",
+      state: "",
+      region: "",
+      minPrice: "",
+      maxPrice: "",
+      franchise: false,
+      premium: false,
+      all: false,
+      sPostcode: "",
+      agency: "",
+      state2: "",
+      region2: "",
+    };
+
+    if (tab === "businesses") {
+      newFormData.postcode = searchParams.get("postcode") || "";
+      newFormData.businessId = searchParams.get("businessId") || "";
+      newFormData.category = searchParams.get("category") || "";
+      newFormData.state = searchParams.get("state") || "";
+      newFormData.region = searchParams.get("region") || "";
+      newFormData.minPrice = searchParams.get("minPrice") || "";
+      newFormData.maxPrice = searchParams.get("maxPrice") || "";
+      newFormData.franchise = searchParams.get("franchise") === "true";
+      newFormData.premium = searchParams.get("premium") === "true";
+      newFormData.all = searchParams.get("all") === "true";
+
+      if (newFormData.state) {
+        getBusinessRegionsById(newFormData.state);
+      }
+    }
+
+    if (tab === "agencies") {
+      newFormData.sPostcode = searchParams.get("postcode") || "";
+      newFormData.agency = searchParams.get("agency") || "";
+      newFormData.state2 = searchParams.get("state") || "";
+      newFormData.region2 = searchParams.get("region") || "";
+
+      if (newFormData.state2) {
+        getAgencyRegionsById(newFormData.state2);
+      }
+    }
+
+    setFormData(newFormData);
+    
+    // Fetch data immediately with the new form data and tab
+    setTimeout(() => {
+      const params: any = {};
+      if (tab === "businesses") {
+        if (newFormData.postcode) params.postcode = newFormData.postcode;
+        if (newFormData.businessId) params.businessId = newFormData.businessId;
+        if (newFormData.category) params.category = newFormData.category;
+        if (newFormData.region) params.region = newFormData.region;
+        if (newFormData.state) params.state = newFormData.state;
+        if (newFormData.minPrice) params.minPrice = newFormData.minPrice;
+        if (newFormData.maxPrice) params.maxPrice = newFormData.maxPrice;
+
+        if (!newFormData.all) {
+          if (newFormData.franchise) params.franchise = "";
+          if (newFormData.premium) params.premium = "";
+        }
+        params.per_page = 12;
+        params.page = 1;
+        const url = `GetAllProjects?${Object.keys(params)
+          .map((key) => (params[key] === "" ? key : `${key}=${params[key]}`))}`;
+        fetchProductDataAsPerFilter(url);
+      } else if (tab === "agencies") {
+        if (newFormData.sPostcode) params.postcode = newFormData.sPostcode;
+        if (newFormData.agency) params.agency = newFormData.agency;
+        if (newFormData.state2) params.state = newFormData.state2;
+        if (newFormData.region2) params.region = newFormData.region2;
+        params.per_page = 12;
+        params.page = 1;
+        const url = `GetAllAgencies?${Object.keys(params)
+          .map((key) => `${key}=${params[key]}`)
+          .join("&")}`;
+        fetchProductDataAsPerFilter(url);
+      }
+    }, 50);
+  }, [pathname, searchParams]);
+
 
   const isListing = pathname.includes("listing");
 
@@ -560,12 +683,12 @@ const BannerFormOne = ({
 
                       {/* Bottom Link */}
                       <div className="text-center mt-4">
-                        <a href="#" className="text-decoration-none text-white">
+                        <span className="text-decoration-none text-white">
                           <u>
                             Sell your business or advertise your business for
                             sale
                           </u>
-                        </a>
+                        </span>
                       </div>
                     </div>
                   )}
@@ -634,7 +757,7 @@ const BannerFormOne = ({
                             value={formData.region2}
                             onChange={handleInputChange}
                           >
-                             {agencyRegionLoading ? (
+                            {agencyRegionLoading ? (
                               <option>Loading regions...</option>
                             ) : agencyRegions.length === 0 ? (
                               <option value="">Select Region</option>
