@@ -9,6 +9,9 @@ export interface Product {
    thumb: string;
    price: number;
    name:string;
+   location_name:string;
+   card:String;
+   category_name:string;
 }
 
 interface WishlistState {

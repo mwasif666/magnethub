@@ -1,17 +1,17 @@
 import BreadCrumb from "@/components/common/BreadCrumb"
-import HeaderThree from "@/layouts/headers/HeaderThree"
 import WishlistArea from "./WishlistArea"
-import FooterSix from "@/layouts/footers/FooterSix"
+import HeaderOne from "@/layouts/headers/HeaderOne"
+import FooterOne from "@/layouts/footers/FooterOne"
 
 const Wishlist = () => {
   return (
     <>
-      <HeaderThree />
+      <HeaderOne/>
       <main>
-        <BreadCrumb title="Wishlist Page" sub_title="Wishlist" />
+        <BreadCrumb title="Wishlist" sub_title="Wishlist" />
         <WishlistArea />
       </main>
-      <FooterSix />
+      <FooterOne />
     </>
   )
 }

@@ -85,6 +85,47 @@ const BannerFormOne = ({
     e.preventDefault();
     if (onPageChange) onPageChange(1);
 
+    const isEmptySearch = () => {
+      if (activeTab === "businesses") {
+        const {
+          postcode,
+          businessId,
+          category,
+          state,
+          region,
+          minPrice,
+          maxPrice,
+          franchise,
+          premium,
+          all,
+        } = formData;
+
+        return !(
+          postcode ||
+          businessId ||
+          category ||
+          state ||
+          region ||
+          minPrice ||
+          maxPrice ||
+          franchise ||
+          premium ||
+          all
+        );
+      }
+
+      if (activeTab === "agencies") {
+        const { sPostcode, agency, state2, region2 } = formData;
+        return !(sPostcode || agency || state2 || region2);
+      }
+
+      return true;
+    };
+
+    if (isEmptySearch()) {
+      return;
+    }
+
     if (pathname === "/") {
       const queryParams = new URLSearchParams();
 
@@ -109,7 +150,6 @@ const BannerFormOne = ({
       queryParams.append("tab", activeTab);
       router.push(`/listings?${queryParams.toString()}`);
     } else {
-      // If already on listings page, fetch data normally
       const url = constructUrl(formData, 1);
       if (url) {
         fetchProductDataAsPerFilter(url);
@@ -265,38 +305,42 @@ const BannerFormOne = ({
     { value: "5000000", label: "$5,000,000+" },
   ];
 
-  const handleClear = () => {
-    setFormData({
-      postcode: "",
-      businessId: "",
-      category: "",
-      state: "",
-      region: "",
-      minPrice: "",
-      maxPrice: "",
-      franchise: false,
-      premium: false,
-      all: false,
-      sPostcode: "",
-      agency: "",
-      state2: "",
-      region2: "",
-    });
-
-    setListing([]);
-    if (onPageChange) onPageChange(1);
-    lastFetchUrl.current = "";
+ const handleClear = () => {
+  const clearedData = {
+    postcode: "",
+    businessId: "",
+    category: "",
+    state: "",
+    region: "",
+    minPrice: "",
+    maxPrice: "",
+    franchise: false,
+    premium: false,
+    all: false,
+    sPostcode: "",
+    agency: "",
+    state2: "",
+    region2: "",
   };
 
-  const getListingData = (page: number = 1) => {
-    const initialUrl = constructUrl(formData, page);
+  setFormData(clearedData);
+
+  if (onPageChange){
+    onPageChange(1)
+  };
+  lastFetchUrl.current = "";
+  setListing([]);
+  getListingData(1, clearedData); 
+};
+
+  const getListingData = (page: number = 1, filters?: typeof formData) => {
+    const initialUrl = constructUrl(filters || formData, page);
     if (initialUrl) {
       fetchProductDataAsPerFilter(initialUrl);
     }
   };
 
   const fetchProductDataAsPerFilter = async (finalUrl: string) => {
-    // Prevent duplicate API calls with the same URL
     if (lastFetchUrl.current === finalUrl) {
       return;
     }
@@ -334,9 +378,8 @@ const BannerFormOne = ({
 
 
   useEffect(() => {
-    // Only load initial data if NOT on listings page with URL params
     if (pathname === "/listings" && searchParams && Array.from(searchParams.keys()).length > 0) {
-      return; // Skip initial load, URL param effect will handle it
+      return; 
     }
     getListingData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -344,8 +387,6 @@ const BannerFormOne = ({
 
   useEffect(() => {
     if (pathname !== "/listings" || !searchParams) return;
-    
-    // Prevent loading twice if already loaded from URL
     if (hasLoadedFromUrl.current) return;
     hasLoadedFromUrl.current = true;
 
@@ -398,8 +439,6 @@ const BannerFormOne = ({
     }
 
     setFormData(newFormData);
-    
-    // Fetch data immediately with the new form data and tab
     setTimeout(() => {
       const params: any = {};
       if (tab === "businesses") {
