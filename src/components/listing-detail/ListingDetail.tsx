@@ -9,6 +9,7 @@ import Image from "next/image";
 import styles from "./ListingDetail.module.css";
 import Loading from "../loading/Loading";
 import { useRouter } from "next/navigation";
+import { FaTag } from "react-icons/fa";
 
 interface ListingDetailProps {
   url: string;
@@ -72,7 +73,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     dispatch(addToWishlist(item));
   };
 
-   const getCategoryData = async () => {
+  const getCategoryData = async () => {
     try {
       setLoading(true);
       const response = await apiRequest({
@@ -92,16 +93,18 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   }, []);
 
   const showImageAccordingToCategory = (category: string) => {
-   const getImage = categoryData?.find((x) => x.name === category);
-   if (getImage?.card) {
-     return getImage?.card;
-   }
- };
+    const getImage = categoryData?.find((x) => x.name === category);
+    if (getImage?.card) {
+      return getImage?.card;
+    }
+  };
 
   const redirectUser = (item: any) => {
     let imageUrl = showImageAccordingToCategory(item?.category_name);
     router.push(
-      `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`
+      `/detail?url=${item.url}&id=${
+        item.project_id
+      }&category=${encodeURIComponent(imageUrl)}`
     );
   };
 
@@ -140,6 +143,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             " " +
                             listing.user_last_name || "N/A"}
                         </h5>
+                        {listing?.category_name && <p className={styles.categoryDesign} >
+                          <FaTag size={12} style={{ color: '#560ce3'}}/>
+                          {listing?.category_name}
+                        </p>}
                         <p
                           style={{
                             fontSize: "13px",
@@ -151,7 +158,6 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                           MGH-{new Date().getFullYear()}-{listing.project_id}
                         </p>
                       </div>
-
                       <div
                         className={styles.wishlistContainer}
                         onClick={() => handleAddToWishlist(listing)}

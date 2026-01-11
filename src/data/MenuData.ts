@@ -116,7 +116,7 @@ const menu_data: MenuItem[] = [
    {
     id: 9,
     has_dropdown: false,
-    title: "Whislist",
+    title: "Wishlist",
     link: "/wishlist",
   },
 ];

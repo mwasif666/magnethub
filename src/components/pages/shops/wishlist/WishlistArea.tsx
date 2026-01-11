@@ -38,9 +38,9 @@ const WishlistArea = () => {
               {wishlist.length === 0 ? (
                 <div className="empty">
                   <h4>Your Wishlist is Empty</h4>
-                  <p>Save your favorite projects to see them here.</p>
-                  <Link href="/shop" className="tg-btn">
-                    Browse Projects
+                  <p>Save your favorite listings to see them here.</p>
+                  <Link href="/listings" className="tg-btn">
+                    Browse Listings
                   </Link>
                 </div>
               ) : (
