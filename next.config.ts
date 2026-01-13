@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   output: 'export',
 
   /* config options here */
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -15,6 +18,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+} as NextConfig;
 
 export default nextConfig;

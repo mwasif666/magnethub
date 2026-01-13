@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import FooterOne from "@/layouts/footers/FooterOne";
 import Features from "@/components/pages/about/Features";
@@ -13,6 +13,7 @@ import ChooseArea from "./ChooseArea";
 import OurLocation from "./ourLocations";
 import Pricing from "./Pricing";
 import Category from "./Category";
+import Loading from "@/components/loading/Loading";
 
 const HomeOne = () => {
   const [listing, setListing] = useState<any[]>([]);
@@ -45,12 +46,14 @@ const HomeOne = () => {
     <>
       <HeaderOne />
       <main>
-        <Banner 
-         setListing={setListing} 
-          setLocalPagination={setLocalPagination}
-          onPageChange={handlePageChange}
-          currentPage={currentPage}
-        />
+        <Suspense fallback={<Loading loadingText="Loading..." />}>
+          <Banner 
+           setListing={setListing} 
+            setLocalPagination={setLocalPagination}
+            onPageChange={handlePageChange}
+            currentPage={currentPage}
+          />
+        </Suspense>
         <Listing
           listing={listing} 
           pagination={localPagination}

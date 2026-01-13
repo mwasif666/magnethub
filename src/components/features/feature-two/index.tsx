@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import FeatureArea from "./FeatureArea";
 import BreadCrumb from "@/components/common/BreadCrumb";
 import BannerForm from "./BannerForm";
 import HeaderOne from "@/layouts/headers/HeaderOne";
 import FooterOne from "@/layouts/footers/FooterOne";
+import Loading from "@/components/loading/Loading";
 
 const FeatureTwo = () => {
   const [listing, setListing] = useState<any[]>([]);
@@ -40,12 +41,14 @@ const FeatureTwo = () => {
       <HeaderOne />
       <main>
         <BreadCrumb title="Listings" sub_title="" />
-        <BannerForm 
-          setListing={setListing} 
-          setLocalPagination={setLocalPagination}
-          onPageChange={handlePageChange}
-          currentPage={currentPage}
-        />
+        <Suspense fallback={<Loading loadingText="Loading..." />}>
+          <BannerForm 
+            setListing={setListing} 
+            setLocalPagination={setLocalPagination}
+            onPageChange={handlePageChange}
+            currentPage={currentPage}
+          />
+        </Suspense>
         <FeatureArea 
           listing={listing} 
           pagination={localPagination}
