@@ -18,8 +18,6 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: MobileSidebarProps) => {
   const { logout, isAuthenticated } = useAuth();
   const router = useRouter();
 
-
-
   // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setSearchValue(event.target.value);
   // };
@@ -50,16 +48,28 @@ const Offcanvas = ({ offCanvas, setOffCanvas }: MobileSidebarProps) => {
             }}
           >
             <MobileMenu />
-            {!isAuthenticated ? <Link href="/login" className="btn btn-primary d-flex align-items-center gap-2 mt-2 mx-4" style={{ justifyContent: "center" }} >
-              <UserIcon />
-              Login
-            </Link> : <button
-              onClick={handleLogout}
-              className="btn btn-danger mt-2"
-              style={{marginLeft:"20px",marginRight :"20px", width:"85%"}}
-            >
-              Logout
-            </button>}
+            {!isAuthenticated ? (
+              <Link
+                href="/login"
+                className="btn btn-primary d-flex align-items-center gap-2 mt-2 mx-4"
+                style={{ justifyContent: "center" }}
+              >
+                <UserIcon />
+                Login
+              </Link>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="btn btn-danger mt-2"
+                style={{
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                  width: "85%",
+                }}
+              >
+                Logout
+              </button>
+            )}
           </div>
         </nav>
       </div>

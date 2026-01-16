@@ -7,24 +7,25 @@ interface MenuItem {
     link: string;
     title: string;
   }[];
+  mobileOnly?: boolean;
 }
 
 const menu_data: MenuItem[] = [
-  {
-    id: 1,
-    title: "Home",
-    link: "/",
-    has_dropdown: false,
-    // sub_menus: [
-    //     { link: "/", title: "Home One" },
-    //     { link: "/home-two", title: "Home Two" },
-    //     { link: "/home-three", title: "Home Three" },
-    //     { link: "/home-four", title: "Home Four" },
-    //     { link: "/home-five", title: "Home Five" },
-    //     { link: "/home-six", title: "Home Six" },
-    //     { link: "/home-seven", title: "Home Seven" },
-    // ],
-  },
+  // {
+  //   id: 1,
+  //   title: "Home",
+  //   link: "/",
+  //   has_dropdown: false,
+  //   // sub_menus: [
+  //   //     { link: "/", title: "Home One" },
+  //   //     { link: "/home-two", title: "Home Two" },
+  //   //     { link: "/home-three", title: "Home Three" },
+  //   //     { link: "/home-four", title: "Home Four" },
+  //   //     { link: "/home-five", title: "Home Five" },
+  //   //     { link: "/home-six", title: "Home Six" },
+  //   //     { link: "/home-seven", title: "Home Seven" },
+  //   // ],
+  // },
   {
     id: 2,
     title: "About",
@@ -113,11 +114,12 @@ const menu_data: MenuItem[] = [
     title: "Contact",
     link: "/contact",
   },
-   {
+  {
     id: 9,
     has_dropdown: false,
     title: "Wishlist",
     link: "/wishlist",
+    mobileOnly: true, // ✅ only mobile
   },
 ];
 
