@@ -98,31 +98,26 @@ const HeaderOne = () => {
               <div className="col-xxl-3 col-xl-3 col-lg-3 col-6">
                 <div className="tg-menu-right-action d-flex align-items-center justify-content-end">
                   <div className="tg-header-btn ml-20 d-none  d-sm-block">
-                    {/* ✅ same container (glass morphism effect wala) */}
                     <div className="d-flex gap-4 align-items-center">
                       {!isAuthenticated ? (
                         <>
-                          {/* ✅ Login button (unchanged class) */}
                           <Link className="tg-btn-header" href="/login">
                             <span>
                               <UserIcon />
                             </span>
                             Login / SignUp
                           </Link>
-
-                          {/* ✅ Wishlist icon next to login */}
                           <Link
                             href="/wishlist"
                             className="tg-btn-header"
                             aria-label="Wishlist"
                             title="Wishlist"
                           >
-                            <TbShoppingBagHeart />
+                            <TbShoppingBagHeart style={{fontSize:"20px"}}/>
                           </Link>
                         </>
                       ) : (
                         <>
-                          {/* ✅ Logged-in dropdown (same class) */}
                           <div
                             ref={dropdownRef}
                             className="tg-btn-header position-relative"

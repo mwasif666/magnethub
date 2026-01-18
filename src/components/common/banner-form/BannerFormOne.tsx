@@ -748,23 +748,13 @@ const BannerFormOne = ({
                               name="sPostcode"
                               value={formData.sPostcode}
                               onChange={handleInputChange}
-                              placeholder="Search by name"
+                              placeholder="Search by keywords"
                             />
                           </div>
                         </div>
-                        {/* <div className="col-md-2">
-                          <button
-                            type="submit"
-                            className="btn btn-primary w-100 h-100"
-                          >
-                            SEARCH
-                          </button>
-                        </div> */}
                       </div>
-
-                      {/* Filters Row */}
                       <div className="row g-3">
-                        <div className="col-md-4">
+                        {/* <div className="col-md-4">
                           <input
                             type="text"
                             className="form-control"
@@ -773,7 +763,7 @@ const BannerFormOne = ({
                             onChange={handleInputChange}
                             placeholder="Find Investment"
                           />
-                        </div>
+                        </div> */}
                         <div className="col-md-4">
                           <select
                             className="form-select"
