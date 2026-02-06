@@ -32,7 +32,7 @@ const BannerFormOne = ({
   const hasLoadedFromUrl = useRef(false);
   const lastFetchUrl = useRef<string>("");
   type DropDown = { label: string; value: string }[];
-  const [activeTab, setActiveTab] = useState("businesses");
+  const [activeTab, setActiveTab] = useState<"businesses" | "agencies">("businesses");
   const [formData, setFormData] = useState({
     postcode: "",
     businessId: "",
@@ -228,10 +228,12 @@ const BannerFormOne = ({
   const constructUrl = (
     filters: any,
     page: number = 1,
-    perPage: number = 12
+    perPage: number = 12,
+    tabOverride?: "businesses" | "agencies"
   ) => {
+    const tabToUse = tabOverride ?? activeTab;
     let params: any = {};
-    if (activeTab === "businesses") {
+    if (tabToUse === "businesses") {
       if (filters.postcode) params.postcode = filters.postcode;
       if (filters.businessId) params.businessId = filters.businessId;
       if (filters.category) params.category = filters.category;
@@ -251,14 +253,15 @@ const BannerFormOne = ({
         .join("&")}`;
     }
 
-    if (activeTab === "agencies") {
+    if (tabToUse === "agencies") {
       if (filters.sPostcode) params.postcode = filters.sPostcode;
       if (filters.agency) params.agency = filters.agency;
       if (filters.state2) params.state = filters.state2;
       if (filters.region2) params.region = filters.region2;
+      params.type = 3
       params.per_page = perPage;
       params.page = page;
-      return `GetAllAgencies?${Object.keys(params)
+      return `GetAllProjects?${Object.keys(params)
         .map((key) => `${key}=${params[key]}`)
         .join("&")}`;
     }
@@ -305,36 +308,40 @@ const BannerFormOne = ({
     { value: "5000000", label: "$5,000,000+" },
   ];
 
- const handleClear = () => {
-  const clearedData = {
-    postcode: "",
-    businessId: "",
-    category: "",
-    state: "",
-    region: "",
-    minPrice: "",
-    maxPrice: "",
-    franchise: false,
-    premium: false,
-    all: false,
-    sPostcode: "",
-    agency: "",
-    state2: "",
-    region2: "",
+  const handleClear = () => {
+    const clearedData = {
+      postcode: "",
+      businessId: "",
+      category: "",
+      state: "",
+      region: "",
+      minPrice: "",
+      maxPrice: "",
+      franchise: false,
+      premium: false,
+      all: false,
+      sPostcode: "",
+      agency: "",
+      state2: "",
+      region2: "",
+    };
+
+    setFormData(clearedData);
+
+    if (onPageChange) {
+      onPageChange(1);
+    }
+    lastFetchUrl.current = "";
+    setListing([]);
+    getListingData(1, clearedData, activeTab);
   };
 
-  setFormData(clearedData);
-
-  if (onPageChange){
-    onPageChange(1)
-  };
-  lastFetchUrl.current = "";
-  setListing([]);
-  getListingData(1, clearedData); 
-};
-
-  const getListingData = (page: number = 1, filters?: typeof formData) => {
-    const initialUrl = constructUrl(filters || formData, page);
+  const getListingData = (
+    page: number = 1,
+    filters?: typeof formData,
+    tabOverride?: "businesses" | "agencies"
+  ) => {
+    const initialUrl = constructUrl(filters || formData, page, 12, tabOverride);
     if (initialUrl) {
       fetchProductDataAsPerFilter(initialUrl);
     }
@@ -379,7 +386,7 @@ const BannerFormOne = ({
 
   useEffect(() => {
     if (pathname === "/listings" && searchParams && Array.from(searchParams.keys()).length > 0) {
-      return; 
+      return;
     }
     getListingData(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -466,7 +473,8 @@ const BannerFormOne = ({
         if (newFormData.region2) params.region = newFormData.region2;
         params.per_page = 12;
         params.page = 1;
-        const url = `GetAllAgencies?${Object.keys(params)
+        params.type = 3;
+        const url = `GetAllProjects?${Object.keys(params)
           .map((key) => `${key}=${params[key]}`)
           .join("&")}`;
         fetchProductDataAsPerFilter(url);
@@ -498,7 +506,10 @@ const BannerFormOne = ({
                     <button
                       className={`nav-link ${activeTab === "businesses" ? "active" : ""
                         } ${isListing ? "tab-listing-color" : ""}`}
-                      onClick={() => setActiveTab("businesses")}
+                      onClick={() => {
+                        setActiveTab("businesses");
+                        getListingData(1, undefined, "businesses");
+                      }}
                       type="button"
                       role="tab"
                     >
@@ -509,7 +520,10 @@ const BannerFormOne = ({
                     <button
                       className={`nav-link ${activeTab === "agencies" ? "active" : ""
                         } ${isListing ? "tab-listing-color" : ""}`}
-                      onClick={() => setActiveTab("agencies")}
+                      onClick={() => {
+                        setActiveTab("agencies");
+                        getListingData(1, undefined, "agencies");
+                      }}
                       type="button"
                       role="tab"
                     >
@@ -809,6 +823,7 @@ const BannerFormOne = ({
                           <button
                             type="reset"
                             className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
+                            onClick={handleClear}
                           >
                             <FaRedo /> Clear
                           </button>
