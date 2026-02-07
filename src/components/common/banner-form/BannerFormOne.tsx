@@ -527,7 +527,7 @@ const BannerFormOne = ({
                       type="button"
                       role="tab"
                     >
-                      FIND INVESTEMENTS
+                      FIND INVESTMENTS
                     </button>
                   </li>
                 </ul>
