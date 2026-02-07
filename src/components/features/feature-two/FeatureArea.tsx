@@ -114,7 +114,7 @@ const FeatureArea = ({
   };
 
   return (
-    <div className="tg-listing-grid-area mb-85">
+    <div id="listing-results" className="tg-listing-grid-area mb-85">
       <div className="container">
         <div className="row">
           {/* <FeatureSidebar setProducts={setProducts} /> */}
@@ -143,6 +143,7 @@ const FeatureArea = ({
                         <div
                           className="tg-listing-card-item tg-listing-su-card-item mb-25"
                           style={{ cursor: "pointer" }}
+                          onClick={() => redirectUser(item)}
                         >
                           <div className="tg-listing-card-thumb fix mb-25 p-relative">
                             <Image
@@ -166,7 +167,10 @@ const FeatureArea = ({
 
                             <div className="tg-listing-item-wishlist">
                               <a
-                                onClick={() => handleAddToWishlist(item)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAddToWishlist(item);
+                                }}
                                 style={{ cursor: "pointer" }}
                               >
                                 <Wishlist

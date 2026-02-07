@@ -360,8 +360,9 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                 <Loading loadingText={"Loading Detail Page"} />
               )}
             </div>
-            <div className="col-lg-4 col-md-12">
-              <div className={`card p-4 mb-3 ${styles.chatCard}`}>
+            <div className={`col-lg-4 col-md-12 ${styles.sidebarColumn}`}>
+              <div className={styles.sidebarSticky}>
+                <div className={`card p-4 mb-3 ${styles.chatCard}`}>
                 <div className={styles.chatHeader}>
                   <i className="fa-solid fa-comments me-2"></i>
                   <h4 className="mb-0">Chat with Seller</h4>
@@ -389,8 +390,8 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                     Start Chat
                   </button>
                 )}
-              </div>
-              <div className={`card p-4 ${styles.similarCard}`}>
+                </div>
+                <div className={`card p-4 ${styles.similarCard}`}>
                 <h3 className={styles.similarTitle}>
                   <i className="fa-solid fa-list me-2"></i>
                   Similar Listings
@@ -447,6 +448,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                     ))}
                   </div>
                 )}
+                </div>
               </div>
             </div>
           </div>

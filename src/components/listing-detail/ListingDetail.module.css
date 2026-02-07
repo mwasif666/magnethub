@@ -4,6 +4,25 @@
   padding: 20px 15px;
 }
 
+.sidebarColumn {
+  position: relative;
+}
+
+.sidebarSticky {
+  position: sticky;
+  top: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 991px) {
+  .sidebarSticky {
+    position: static;
+    top: auto;
+  }
+}
+
 /* Header Card */
 .headerCard {
   border-radius: 16px;
@@ -780,4 +799,3 @@
   align-items: center;
   gap: 15px;
 }
-

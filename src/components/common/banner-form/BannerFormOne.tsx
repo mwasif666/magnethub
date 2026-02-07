@@ -2,6 +2,7 @@ import { apiRequest } from "@/api/axiosInstance";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { FaRedo, FaSearch } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 type BannerFormProps = {
   setListing: React.Dispatch<React.SetStateAction<any[]>>;
@@ -31,6 +32,8 @@ const BannerFormOne = ({
   const isInitialMount = useRef(true);
   const hasLoadedFromUrl = useRef(false);
   const lastFetchUrl = useRef<string>("");
+  const shouldNotifyRef = useRef(false);
+  const shouldScrollRef = useRef(false);
   type DropDown = { label: string; value: string }[];
   const [activeTab, setActiveTab] = useState<"businesses" | "agencies">("businesses");
   const [formData, setFormData] = useState({
@@ -85,48 +88,20 @@ const BannerFormOne = ({
     e.preventDefault();
     if (onPageChange) onPageChange(1);
 
-    const isEmptySearch = () => {
-      if (activeTab === "businesses") {
-        const {
-          postcode,
-          businessId,
-          category,
-          state,
-          region,
-          minPrice,
-          maxPrice,
-          franchise,
-          premium,
-          all,
-        } = formData;
-
-        return !(
-          postcode ||
-          businessId ||
-          category ||
-          state ||
-          region ||
-          minPrice ||
-          maxPrice ||
-          franchise ||
-          premium ||
-          all
-        );
-      }
-
-      if (activeTab === "agencies") {
-        const { sPostcode, agency, state2, region2 } = formData;
-        return !(sPostcode || agency || state2 || region2);
-      }
-
-      return true;
-    };
-
-    if (isEmptySearch()) {
+    const isMissingRequired =
+      activeTab === "businesses" && !formData.postcode?.trim();
+    if (isMissingRequired) {
+      toast.error("Please fill required field: Search by name.", {
+        position: "top-center",
+      });
       return;
     }
 
+    shouldNotifyRef.current = true;
+    shouldScrollRef.current = true;
+
     if (pathname === "/") {
+      sessionStorage.setItem("mh-listing-search", "1");
       const queryParams = new URLSearchParams();
 
       if (activeTab === "businesses") {
@@ -249,7 +224,9 @@ const BannerFormOne = ({
       params.per_page = perPage;
       params.page = page;
       return `GetAllProjects?${Object.keys(params)
-        .map((key) => (params[key] === "" ? key : `${key}=${params[key]}`))
+        .map((key) =>
+          params[key] === "" ? key : `${key}=${encodeURIComponent(params[key])}`
+        )
         .join("&")}`;
     }
 
@@ -262,7 +239,7 @@ const BannerFormOne = ({
       params.per_page = perPage;
       params.page = page;
       return `GetAllProjects?${Object.keys(params)
-        .map((key) => `${key}=${params[key]}`)
+        .map((key) => `${key}=${encodeURIComponent(params[key])}`)
         .join("&")}`;
     }
   };
@@ -327,6 +304,8 @@ const BannerFormOne = ({
     };
 
     setFormData(clearedData);
+    shouldNotifyRef.current = false;
+    shouldScrollRef.current = false;
 
     if (onPageChange) {
       onPageChange(1);
@@ -355,7 +334,8 @@ const BannerFormOne = ({
 
     try {
       const response = await apiRequest({ url: finalUrl, method: "GET" });
-      setListing(response?.data?.data || []);
+      const results = response?.data?.data || [];
+      setListing(results);
       if (setLocalPagination) {
         setLocalPagination({
           totalPage: response?.data?.last_page || 1,
@@ -366,8 +346,27 @@ const BannerFormOne = ({
           prevPageUrl: response?.data?.prev_page_url,
         });
       }
+      if (shouldNotifyRef.current) {
+        if (results.length > 0) {
+          toast.success("Results loaded successfully.", { position: "top-center" });
+        } else {
+          toast.error("No results found for your search.", { position: "top-center" });
+        }
+        shouldNotifyRef.current = false;
+      }
+      if (shouldScrollRef.current) {
+        requestAnimationFrame(() => {
+          const target = document.getElementById("listing-results");
+          target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        shouldScrollRef.current = false;
+      }
     } catch (error) {
       console.error(error);
+      if (shouldNotifyRef.current) {
+        toast.error("Search failed. Please try again.", { position: "top-center" });
+        shouldNotifyRef.current = false;
+      }
     }
   };
 
@@ -396,8 +395,16 @@ const BannerFormOne = ({
     if (pathname !== "/listings" || !searchParams) return;
     if (hasLoadedFromUrl.current) return;
     hasLoadedFromUrl.current = true;
+    const shouldNotify = sessionStorage.getItem("mh-listing-search") === "1";
+    if (shouldNotify) {
+      sessionStorage.removeItem("mh-listing-search");
+      shouldNotifyRef.current = true;
+      shouldScrollRef.current = true;
+    }
 
-    const tab = searchParams.get("tab") || "businesses";
+    const tabParam = searchParams.get("tab");
+    const tab: "businesses" | "agencies" =
+      tabParam === "agencies" ? "agencies" : "businesses";
     setActiveTab(tab);
 
     const newFormData = {
@@ -464,7 +471,10 @@ const BannerFormOne = ({
         params.per_page = 12;
         params.page = 1;
         const url = `GetAllProjects?${Object.keys(params)
-          .map((key) => (params[key] === "" ? key : `${key}=${params[key]}`))}`;
+          .map((key) =>
+            params[key] === "" ? key : `${key}=${encodeURIComponent(params[key])}`
+          )
+          .join("&")}`;
         fetchProductDataAsPerFilter(url);
       } else if (tab === "agencies") {
         if (newFormData.sPostcode) params.postcode = newFormData.sPostcode;
@@ -475,7 +485,7 @@ const BannerFormOne = ({
         params.page = 1;
         params.type = 3;
         const url = `GetAllProjects?${Object.keys(params)
-          .map((key) => `${key}=${params[key]}`)
+          .map((key) => `${key}=${encodeURIComponent(params[key])}`)
           .join("&")}`;
         fetchProductDataAsPerFilter(url);
       }
@@ -527,7 +537,7 @@ const BannerFormOne = ({
                       type="button"
                       role="tab"
                     >
-                      FIND INVESTEMENTS
+                      FIND INVESTMENTS
                     </button>
                   </li>
                 </ul>
@@ -549,6 +559,7 @@ const BannerFormOne = ({
                               value={formData.postcode}
                               onChange={handleInputChange}
                               placeholder="Search by name"
+                              required={activeTab === "businesses"}
                             />
                           </div>
                         </div>
@@ -571,7 +582,7 @@ const BannerFormOne = ({
                             name="businessId"
                             value={formData.businessId}
                             onChange={handleInputChange}
-                            placeholder="Keywords or business Id"
+                            placeholder="Keywords or Business ID"
                           />
                         </div>
                         <div className="col-md-6">
@@ -580,8 +591,9 @@ const BannerFormOne = ({
                             name="category"
                             value={formData.category}
                             onChange={handleInputChange}
+                            required={false}
                           >
-                            <option value="">Select categories</option>
+                            <option value="">Select category</option>
                             {categories.map((category, index) => (
                               <option key={index} value={category.value}>
                                 {category.label}
@@ -595,6 +607,7 @@ const BannerFormOne = ({
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
+                            required={false}
                           >
                             <option value="">Select state</option>
                             {locations.map((state, index) => (
@@ -610,6 +623,7 @@ const BannerFormOne = ({
                             name="region"
                             value={formData.region}
                             onChange={handleInputChange}
+                            required={false}
                           >
                             {businessRegionLoading ? (
                               <option>Loading regions...</option>
@@ -617,7 +631,7 @@ const BannerFormOne = ({
                               <option value="">Select Region</option>
                             ) : (
                               <>
-                                <option value="">Select Regions</option>
+                                <option value="">Select Region</option>
                                 {businessRegions.map((r, index) => (
                                   <option key={index} value={r.value}>
                                     {r.label}
@@ -763,6 +777,7 @@ const BannerFormOne = ({
                               value={formData.sPostcode}
                               onChange={handleInputChange}
                               placeholder="Search by keywords"
+                              required={false}
                             />
                           </div>
                         </div>
@@ -784,6 +799,7 @@ const BannerFormOne = ({
                             name="state2"
                             value={formData.state2}
                             onChange={handleInputChange}
+                            required={false}
                           >
                             <option value="">Select state</option>
                             {locations.map((state, index) => (
@@ -799,6 +815,7 @@ const BannerFormOne = ({
                             name="region2"
                             value={formData.region2}
                             onChange={handleInputChange}
+                            required={false}
                           >
                             {agencyRegionLoading ? (
                               <option>Loading regions...</option>
