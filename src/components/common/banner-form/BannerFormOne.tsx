@@ -112,8 +112,8 @@ const BannerFormOne = ({
         if (formData.region) queryParams.append("region", formData.region);
         if (formData.minPrice) queryParams.append("minPrice", formData.minPrice);
         if (formData.maxPrice) queryParams.append("maxPrice", formData.maxPrice);
-        if (formData.franchise) queryParams.append("franchise", "true");
-        if (formData.premium) queryParams.append("premium", "true");
+        if (formData.franchise) queryParams.append("franchise", "1");
+        if (formData.premium) queryParams.append("premium", "1");
         if (formData.all) queryParams.append("all", "true");
       } else if (activeTab === "agencies") {
         if (formData.sPostcode) queryParams.append("postcode", formData.sPostcode);
@@ -218,15 +218,13 @@ const BannerFormOne = ({
       if (filters.maxPrice) params.maxPrice = filters.maxPrice;
 
       if (!filters.all) {
-        if (filters.franchise) params.franchise = "";
-        if (filters.premium) params.premium = "";
+        if (filters.franchise) params.franchise = 1;
+        if (filters.premium) params.premium = 1;
       }
       params.per_page = perPage;
       params.page = page;
       return `GetAllProjects?${Object.keys(params)
-        .map((key) =>
-          params[key] === "" ? key : `${key}=${encodeURIComponent(params[key])}`
-        )
+        .map((key) => `${key}=${encodeURIComponent(params[key])}`)
         .join("&")}`;
     }
 
@@ -348,7 +346,7 @@ const BannerFormOne = ({
       }
       if (shouldNotifyRef.current) {
         if (results.length > 0) {
-          toast.success("Results loaded successfully.", { position: "top-center" });
+          // toast.success("Results loaded successfully.", { position: "top-center" });
         } else {
           toast.error("No results found for your search.", { position: "top-center" });
         }
@@ -432,8 +430,12 @@ const BannerFormOne = ({
       newFormData.region = searchParams.get("region") || "";
       newFormData.minPrice = searchParams.get("minPrice") || "";
       newFormData.maxPrice = searchParams.get("maxPrice") || "";
-      newFormData.franchise = searchParams.get("franchise") === "true";
-      newFormData.premium = searchParams.get("premium") === "true";
+      newFormData.franchise =
+        searchParams.get("franchise") === "1" ||
+        searchParams.get("franchise") === "true";
+      newFormData.premium =
+        searchParams.get("premium") === "1" ||
+        searchParams.get("premium") === "true";
       newFormData.all = searchParams.get("all") === "true";
 
       if (newFormData.state) {
@@ -465,15 +467,13 @@ const BannerFormOne = ({
         if (newFormData.maxPrice) params.maxPrice = newFormData.maxPrice;
 
         if (!newFormData.all) {
-          if (newFormData.franchise) params.franchise = "";
-          if (newFormData.premium) params.premium = "";
+          if (newFormData.franchise) params.franchise = 1;
+          if (newFormData.premium) params.premium = 1;
         }
         params.per_page = 12;
         params.page = 1;
         const url = `GetAllProjects?${Object.keys(params)
-          .map((key) =>
-            params[key] === "" ? key : `${key}=${encodeURIComponent(params[key])}`
-          )
+          .map((key) => `${key}=${encodeURIComponent(params[key])}`)
           .join("&")}`;
         fetchProductDataAsPerFilter(url);
       } else if (tab === "agencies") {

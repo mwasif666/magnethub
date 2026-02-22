@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 interface DataType {
   sub_title: string;
   title: string;
@@ -6,6 +10,15 @@ interface DataType {
   isCallFrom?: string;
 }
 const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
+  const [catName, setCatName] = useState("default-category");
+
+  useEffect(() => {
+    const storedCategoryName = window.localStorage.getItem("categoryName");
+    if (storedCategoryName) {
+      setCatName(storedCategoryName);
+    }
+  }, []);
+
   return (
     <div
       className="tg-breadcrumb-area tg-breadcrumb-spacing-5 fix p-relative z-index-1 include-bg"
@@ -23,6 +36,9 @@ const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
           <div className="col-12">
             <div className="tg-breadcrumb-content text-center">
               <h2 className="tg-breadcrumb-title mb-5 fs-40">{title}</h2>
+              {isCallFrom === "listingDetail" && (
+                <h2 className="tg-breadcrumb-subtitle mb-5">{catName}</h2>
+              )}
               <div className="tg-breadcrumb-list-4">
                 {/* <ul>
                            <li><Link href="/">Home</Link></li>

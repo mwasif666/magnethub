@@ -56,7 +56,7 @@ const FeatureArea = ({
     (item: any) => {
       dispatch(addToWishlist(item));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const handleListViewClick = () => {
@@ -103,9 +103,13 @@ const FeatureArea = ({
   };
 
   const redirectUser = (item: any) => {
+    if (typeof window !== "undefined" && item?.category_name) {
+      window.localStorage.removeItem("categoryName");
+      window.localStorage.setItem("categoryName", item.category_name);
+    }
     let imageUrl = showImageAccordingToCategory(item?.category_name);
     router.push(
-      `/detail?url=${item.url}&id=${item.project_id}&category=${imageUrl}`
+      `/detail?url=${item.url}&id=${item.project_id}&category=${imageUrl}`,
     );
   };
 
@@ -195,7 +199,7 @@ const FeatureArea = ({
                                 href={`/detail?url=${item.url}&id=${
                                   item.project_id
                                 }&category=${showImageAccordingToCategory(
-                                  item.category_name
+                                  item.category_name,
                                 )}`}
                               >
                                 <span

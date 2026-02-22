@@ -7,7 +7,8 @@ export const metadata = {
 const page = () => {
   return (
     <Wrapper>
-      <Checkout />
+      <div>Not Found</div>
+      {/* <Checkout /> */}
     </Wrapper>
   );
 };

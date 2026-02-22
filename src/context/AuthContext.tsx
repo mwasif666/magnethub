@@ -144,6 +144,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       url: "Raising/Register",
       method: "POST",
       data: registerData,
+      withCredentials: false,
     });
     return res;
   };
@@ -160,8 +161,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = (): Promise<void> => {
     return new Promise((resolve) => {
       localStorage.removeItem("user");
+      localStorage.removeItem("user_id");
       localStorage.removeItem("token");
       localStorage.removeItem("role");
+      sessionStorage.removeItem("raising_id");
+      sessionStorage.removeItem("name");
+      sessionStorage.removeItem("email");
+      sessionStorage.removeItem("profile");
+      sessionStorage.removeItem("type");
+      sessionStorage.removeItem("plan_type");
+      sessionStorage.removeItem("plan_expiry");
       setUserId("");
       setToken(null);
       setRole(null);

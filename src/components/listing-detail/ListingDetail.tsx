@@ -100,6 +100,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   };
 
   const redirectUser = (item: any) => {
+     if (typeof window !== "undefined" && item?.category_name) {
+      window.localStorage.removeItem("categoryName");
+      window.localStorage.setItem("categoryName", item.category_name);
+    }
     let imageUrl = showImageAccordingToCategory(item?.category_name);
     router.push(
       `/detail?url=${item.url}&id=${
@@ -131,17 +135,17 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                       <div>
                         <h4 className={styles.title}>
                           {listing?.name
-                            ? listing.name.length > 80
-                              ? listing.name.slice(0, 80) + "..."
-                              : listing.name
+                            ? listing?.name.length > 80
+                              ? listing?.name.slice(0, 80) + "..."
+                              : listing?.name
                             : ""}
                         </h4>
                         <h5 className={styles.host}>
                           <i className="fa-solid fa-user me-2"></i>
                           <span>Hosted By:</span>{" "}
-                          {listing.user_first_name +
+                          {listing?.user_first_name +
                             " " +
-                            listing.user_last_name || "N/A"}
+                            listing?.user_last_name || "N/A"}
                         </h5>
                         {listing?.category_name && <p className={styles.categoryDesign} >
                           <FaTag size={12} style={{ color: '#560ce3'}}/>
@@ -155,7 +159,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             marginBottom: "-6px",
                           }}
                         >
-                          MGH-{new Date().getFullYear()}-{listing.project_id}
+                          MGH-{new Date().getFullYear()}-{listing?.project_id}
                         </p>
                       </div>
                       <div
@@ -165,13 +169,13 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         <p className={styles.wishlistText}>
                           <i
                             className={`fa-heart me-1 ${
-                              isInWishlist(listing.id)
+                              isInWishlist(listing?.id)
                                 ? "fa-solid text-danger"
                                 : "fa-regular"
                             }`}
                             style={{ cursor: "pointer" }}
                           ></i>
-                          {isInWishlist(listing.id)
+                          {isInWishlist(listing?.id)
                             ? "Added to Favorite"
                             : "Add To Favorite"}
                         </p>
@@ -207,7 +211,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             }}
                           >
                             <Image
-                              src={`https://dash.magnatehub.au/uploads/project/card/${img}`}
+                              src={`https://dash.magnatehub.au/uploads/project/images/${img}`}
                               alt="Sub Image"
                               width={150}
                               height={120}
@@ -292,52 +296,52 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                   {[
                     {
                       label: "Summary",
-                      value: listing.summary,
+                      value: listing?.summary,
                       icon: "fa-solid fa-file-lines",
                     },
                     {
                       label: "Skills",
-                      value: listing.skills,
+                      value: listing?.skills,
                       icon: "fa-solid fa-lightbulb",
                     },
                     {
                       label: "Potential",
-                      value: listing.potential,
+                      value: listing?.potential,
                       icon: "fa-solid fa-rocket",
                     },
                     {
                       label: "Hours",
-                      value: listing.hours,
+                      value: listing?.hours,
                       icon: "fa-solid fa-clock",
                     },
                     {
                       label: "Staff",
-                      value: listing.staff,
+                      value: listing?.staff,
                       icon: "fa-solid fa-users",
                     },
                     {
                       label: "Lease",
-                      value: listing.lease,
+                      value: listing?.lease,
                       icon: "fa-solid fa-file-contract",
                     },
                     {
                       label: "Business",
-                      value: listing.business_established,
+                      value: listing?.business_established,
                       icon: "fa-solid fa-building",
                     },
                     {
                       label: "Training",
-                      value: listing.training,
+                      value: listing?.training,
                       icon: "fa-solid fa-graduation-cap",
                     },
                     {
                       label: "Awards",
-                      value: listing.awards,
+                      value: listing?.awards,
                       icon: "fa-solid fa-trophy",
                     },
                     {
                       label: "Selling Reason",
-                      value: listing.reason_for_sale,
+                      value: listing?.reason_for_sale,
                       icon: "fa-solid fa-info-circle",
                     },
                   ].map(

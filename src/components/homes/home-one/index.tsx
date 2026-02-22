@@ -66,7 +66,7 @@ const HomeOne = () => {
         <OurLocation />
         <Pricing />
         <Process />
-        <Testimonial />
+        {/* <Testimonial /> */}
         <Blog style={false} />
       </main>
       <FooterOne />

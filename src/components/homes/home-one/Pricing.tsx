@@ -29,6 +29,7 @@ const swiperOptions = {
   autoplay: {
     delay: 3500,
     disableOnInteraction: false,
+    pauseOnMouseEnter: true,
   },
   pagination: false,
   breakpoints: {

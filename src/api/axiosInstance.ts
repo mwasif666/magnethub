@@ -28,6 +28,7 @@ interface ApiRequestProps {
   data?: any;
   baseURL?: string | null;
   headers?: Record<string, string>;
+  withCredentials?: boolean;
 }
 
 export const apiRequest = async ({
@@ -36,12 +37,14 @@ export const apiRequest = async ({
   data = null,
   baseURL = null,
   headers = {},
+  withCredentials,
 }: ApiRequestProps) => {
   try {
     const config: AxiosRequestConfig = {
       url,
       method,
       baseURL: baseURL || api.defaults.baseURL,
+      withCredentials: withCredentials ?? api.defaults.withCredentials,
       headers: {
         ...headers,
       },

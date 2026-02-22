@@ -35,6 +35,10 @@ export const useCategoryNavigation = () => {
   };
 
   const redirectUser = (item: any) => {
+     if (typeof window !== "undefined" && item?.category_name) {
+      window.localStorage.removeItem("categoryName");
+      window.localStorage.setItem("categoryName", item.category_name);
+    }
     const imageUrl = showImageAccordingToCategory(item?.category_name);
     router.push(
       `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`

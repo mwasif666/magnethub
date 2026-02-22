@@ -79,7 +79,14 @@ const Listing = ({
   };
 
   const redirectUser = (item: any) => {
+     if (typeof window !== "undefined" && item?.category_name) {
+      window.localStorage.removeItem("categoryName");
+      window.localStorage.setItem("categoryName", item.category_name);
+    }
     let imageUrl = showImageAccordingToCategory(item?.category_name);
+    if (typeof window !== "undefined" && item?.category_name) {
+      window.localStorage.setItem("categoryName", item.category_name);
+    }
     router.push(
       `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`
     );
