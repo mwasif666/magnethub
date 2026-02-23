@@ -418,7 +418,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         <div className={styles.similarImageWrapper}>
                           <Image
                             className={styles.similarImage}
-                            src={`https://dash.magnatehub.au/uploads/project/card/${item?.title_images}`}
+                            src={`https://dash.magnatehub.au/uploads/project/images/${JSON.parse(item.images)[0]}`}
                             alt="Project Image"
                             width={120}
                             height={100}
