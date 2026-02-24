@@ -144,32 +144,35 @@ const Listing = ({
                       width: "100%",
                       display: "flex",
                       flexDirection: "column",
-                      borderRadius: "10px",
+                      borderRadius: "16px",
+                      overflow: "hidden",
+                      position: "relative",
+                      background: "#fff",
+                      border: "1px solid rgba(0,0,0,0.06)",
+                      boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+                      transition: "transform .18s ease, box-shadow .18s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-3px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 14px 40px rgba(0,0,0,0.10)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 10px 30px rgba(0,0,0,0.06)";
                     }}
                     onClick={() => redirectUser(item)}
                   >
-                    <div className="tg-listing-card-thumb fix mb-25 p-relative">
-                      {isFranchiseBooker && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "12px",
-                            left: "12px",
-                            background:
-                              "linear-gradient(135deg,#ffb703,#fb8500)",
-                            color: "#fff",
-                            padding: "6px 12px",
-                            fontSize: "12px",
-                            fontWeight: 700,
-                            borderRadius: "20px",
-                            zIndex: 5,
-                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                          }}
-                        >
-                          Verified Partner
-                        </div>
-                      )}
-
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        height: "230px",
+                        overflow: "hidden",
+                        background: "#f6f6f6",
+                      }}
+                    >
                       <Image
                         className="tg-card-border w-100"
                         src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
@@ -180,6 +183,7 @@ const Listing = ({
                           objectFit: "cover",
                           width: "100%",
                           height: "230px",
+                          transform: "scale(1.02)",
                         }}
                         unoptimized
                         onError={(e) => {
@@ -187,71 +191,146 @@ const Listing = ({
                             "assets/img/notfound/image_notfound.png";
                         }}
                       />
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background:
+                            "linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0) 55%, rgba(0,0,0,0.18))",
+                          pointerEvents: "none",
+                        }}
+                      />
                       {item.tag && (
-                        <span className="tg-listing-item-price-discount">
+                        <span
+                          className="tg-listing-item-price-discount"
+                          style={{
+                            position: "absolute",
+                            left: "12px",
+                            top: "12px",
+                            zIndex: 6,
+                            background: "rgba(255,255,255,0.92)",
+                            border: "1px solid rgba(0,0,0,0.08)",
+                            color: "#111",
+                            padding: "6px 10px",
+                            borderRadius: "999px",
+                            fontSize: "12px",
+                            fontWeight: 700,
+                            backdropFilter: "blur(6px)",
+                          }}
+                        >
                           {item.tag}
                         </span>
                       )}
-
-                      <div className="tg-listing-item-wishlist">
+                      <div
+                        className="tg-listing-item-wishlist"
+                        style={{
+                          top: "3px",
+                          right: "2px",
+                          position: "absolute",
+                          zIndex: 7,
+                        }}
+                      >
                         <a
                           onClick={(e) => {
                             e.stopPropagation();
                             handleAddToWishlist(item);
                           }}
-                          style={{ cursor: "pointer" }}
+                          style={{
+                            cursor: "pointer",
+                            width: "40px",
+                            height: "40px",
+                            display: "grid",
+                            placeItems: "center",
+                            borderRadius: "999px",
+                            background: "rgba(255,255,255,0.92)",
+                            border: "1px solid rgba(0,0,0,0.10)",
+                            boxShadow: "0 10px 22px rgba(0,0,0,0.12)",
+                            backdropFilter: "blur(8px)",
+                          }}
+                          aria-label="Add to wishlist"
                         >
                           <Wishlist
                             filled={isInWishlist(item.id)}
                             style={{
-                              color: isInWishlist(item.id) ? "red" : "#444",
+                              color: isInWishlist(item.id) ? "#e11d48" : "#444",
                             }}
                           />
                         </a>
                       </div>
                     </div>
-
                     {isFranchiseBooker && (
                       <div
                         style={{
-                          marginTop: "6px",
-                          marginBottom: "10px",
-                          padding: "8px 10px",
-                          background: "#fff8e1",
-                          borderRadius: "6px",
+                          width: "100%",
                           display: "flex",
                           alignItems: "center",
+                          justifyContent: "space-between",
+                          padding: "10px 14px",
+                          background:
+                            "linear-gradient(90deg, rgba(86,12,227,0.10), rgba(255,255,255,1))",
                           gap: "10px",
+                          borderBottom: "1px solid rgba(0,0,0,0.06)",
                         }}
                       >
-                        {/* Company Logo */}
-                        {item?.user_company_logo && (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            minWidth: 0,
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: 800,
+                              color: "#560CE3",
+                              background: "rgba(86,12,227,0.12)",
+                              padding: "5px 10px",
+                              borderRadius: "999px",
+                              border: "1px solid rgba(86,12,227,0.22)",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            Verified Partner
+                          </span>
+
+                          <span
+                            style={{
+                              fontSize: "13px",
+                              fontWeight: 700,
+                              color: "#560CE3",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {item?.user_company_name ||
+                              "Verified Franchise Partner"}
+                          </span>
+                        </div>
+
+                        {item?.user_company_logo ? (
                           <Image
                             src={getCompanyLogoUrl(item.user_company_logo)}
                             alt={item?.user_company_name || "Company Logo"}
-                            width={32}
-                            height={32}
+                            width={34}
+                            height={34}
                             unoptimized
                             style={{
-                              borderRadius: "50%",
+                              borderRadius: "999px",
                               objectFit: "cover",
-                              border: "1px solid #eee",
+                              border: "1px solid rgba(86,12,227,0.25)",
+                              boxShadow: "0 8px 16px rgba(86,12,227,0.16)",
+                              flex: "0 0 auto",
                             }}
                             onError={(e) => {
                               e.currentTarget.style.display = "none";
                             }}
                           />
+                        ) : (
+                          <div style={{ width: 34, height: 34 }} />
                         )}
-                        <span
-                          style={{
-                            fontSize: "13px",
-                            fontWeight: 600,
-                            color: "#b45309",
-                          }}
-                        >
-                          {item?.user_company_name ||
-                            "Verified Franchise Partner"}
-                        </span>
                       </div>
                     )}
                     <div
@@ -260,25 +339,28 @@ const Listing = ({
                         display: "flex",
                         flexDirection: "column",
                         flex: 1,
-                        padding: "0 15px 15px 15px",
+                        padding: "14px 15px 16px 15px",
                       }}
                     >
                       <h4
                         className="tg-listing-card-title mb-10"
-                        style={{ cursor: "pointer" }}
+                        style={{ margin: 0 }}
                       >
                         <Link
                           href={`/detail?url=${item.url}&id=${item.project_id}`}
                         >
                           <span
                             style={{
-                              fontWeight: 600,
+                              fontWeight: 800,
                               fontSize: "18px",
-                              color: "#1a1a1a",
+                              color: "#111",
+                              letterSpacing: "-0.2px",
+                              lineHeight: 1.25,
+                              display: "block",
                             }}
                           >
                             {item.name.length > 30
-                              ? item.name.slice(0, 25) + "..."
+                              ? item.name.slice(0, 28) + "..."
                               : item.name}
                           </span>
                         </Link>
@@ -286,22 +368,28 @@ const Listing = ({
 
                       <p
                         style={{
-                          fontSize: "13px",
-                          color: "#777",
-                          marginTop: "10px",
+                          fontSize: "12.5px",
+                          color: "#6b7280",
+                          marginTop: "8px",
+                          marginBottom: "10px",
                         }}
                       >
                         MGH-{new Date().getFullYear()}-{item.project_id}
                       </p>
-                      <div className="mb-15">
+
+                      <div className="mb-15" style={{ marginBottom: 12 }}>
                         <span
                           style={{
-                            padding: "4px 10px",
-                            background: "#eef4ff",
-                            borderRadius: "6px",
+                            padding: "6px 10px",
+                            background: "rgba(37,99,235,0.08)",
+                            border: "1px solid rgba(37,99,235,0.14)",
+                            borderRadius: "10px",
                             fontSize: "13px",
-                            color: "#2a5bd7",
-                            fontWeight: 500,
+                            color: "#1d4ed8",
+                            fontWeight: 700,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "6px",
                           }}
                         >
                           {item.category_name}
@@ -310,36 +398,61 @@ const Listing = ({
 
                       <div
                         className="mb-20 d-flex align-items-center"
-                        style={{ color: "#666" }}
+                        style={{
+                          color: "#6b7280",
+                          marginBottom: 14,
+                          fontSize: "13px",
+                        }}
                       >
                         <Location />
-                        <span style={{ marginLeft: "6px" }}>
+                        <span
+                          style={{
+                            marginLeft: "6px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
                           {item.location_name}
                         </span>
                       </div>
 
                       <div style={{ marginTop: "auto" }}>
-                        <div className="d-flex align-items-end justify-content-between mt-10 pt-20 border-top">
+                        <div
+                          className="d-flex align-items-end justify-content-between mt-10 pt-20 border-top"
+                          style={{
+                            paddingTop: 14,
+                            borderTop: "1px solid rgba(0,0,0,0.06)",
+                          }}
+                        >
                           <div>
                             <span
                               className="d-flex align-items-center"
                               style={{
                                 fontSize: "20px",
-                                fontWeight: 700,
-                                color: "#111",
+                                fontWeight: 600,
+                                color: "#0f172a",
                               }}
                             >
-                              <span className="mr-5">$</span>
+                              <span className="mr-5" style={{ marginRight: 6 }}>
+                                $
+                              </span>
                               {item.price}
                             </span>
                           </div>
 
-                          <div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                          >
                             {item?.premium === "1" && (
                               <i
                                 className="fa-sharp fa-solid fa-crown"
                                 style={{ color: "#d7263d", fontSize: "20px" }}
-                              ></i>
+                              />
                             )}
                           </div>
                         </div>

@@ -161,19 +161,18 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             {listing?.category_name}
                           </p>
                         )}
-
-                        {/* ✅ Verified Company Info */}
                         {isFranchiseBooker && (
                           <div
                             style={{
                               marginTop: "10px",
                               padding: "10px 12px",
-                              background: "#fff8e1",
-                              borderRadius: "8px",
+                              background: "rgba(86,12,227,0.06)",
+                              borderRadius: "10px",
                               display: "flex",
                               alignItems: "center",
                               gap: "12px",
-                              border: "1px solid #fde68a",
+                              border: "1px solid rgba(86,12,227,0.18)",
+                              boxShadow: "0 10px 18px rgba(86,12,227,0.08)",
                             }}
                           >
                             {listing?.user_company_logo && (
@@ -190,7 +189,10 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                                 style={{
                                   borderRadius: "50%",
                                   objectFit: "cover",
-                                  border: "2px solid #fff",
+                                  border: "2px solid rgba(86,12,227,0.25)",
+                                  background: "#fff",
+                                  boxShadow: "0 8px 14px rgba(0,0,0,0.10)",
+                                  flex: "0 0 auto",
                                 }}
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
@@ -202,31 +204,40 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                               style={{
                                 display: "flex",
                                 flexDirection: "column",
+                                minWidth: 0,
                               }}
                             >
                               <span
                                 style={{
-                                  fontWeight: 700,
+                                  fontWeight: 800,
                                   fontSize: "14px",
-                                  color: "#92400e",
+                                  color: "#560CE3",
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "6px",
                                 }}
                               >
                                 {listing?.user_company_name ||
                                   "Verified Franchise Partner"}
+
                                 <i
                                   className="fa-solid fa-circle-check"
                                   style={{
-                                    color: "#16a34a",
-                                    marginLeft: "6px",
-                                    fontSize: "13px",
+                                    color: "#560CE3", 
+                                    fontSize: "14px",
+                                    flex: "0 0 auto",
                                   }}
-                                ></i>
+                                />
                               </span>
 
                               <span
                                 style={{
                                   fontSize: "12px",
-                                  color: "#b45309",
+                                  fontWeight: 700,
+                                  color: "rgba(86,12,227,0.75)", 
                                 }}
                               >
                                 Verified Partner
