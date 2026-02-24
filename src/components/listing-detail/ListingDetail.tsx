@@ -100,7 +100,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   };
 
   const redirectUser = (item: any) => {
-     if (typeof window !== "undefined" && item?.category_name) {
+    if (typeof window !== "undefined" && item?.category_name) {
       window.localStorage.removeItem("categoryName");
       window.localStorage.setItem("categoryName", item.category_name);
     }
@@ -108,7 +108,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     router.push(
       `/detail?url=${item.url}&id=${
         item.project_id
-      }&category=${encodeURIComponent(imageUrl)}`
+      }&category=${encodeURIComponent(imageUrl)}`,
     );
   };
 
@@ -119,6 +119,14 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
 
   const isInWishlist = (id: number) => {
     return wishlist.some((item: any) => item.id === id);
+  };
+
+  const isFranchiseBooker = String(listing?.user_type) === "4";
+
+  const getCompanyLogoUrl = (logo: string) => {
+    if (!logo) return "";
+    if (logo.startsWith("http://") || logo.startsWith("https://")) return logo;
+    return `https://dash.magnatehub.au/uploads/raising/company_logo/${logo}`;
   };
 
   return (
@@ -147,10 +155,85 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             " " +
                             listing?.user_last_name || "N/A"}
                         </h5>
-                        {listing?.category_name && <p className={styles.categoryDesign} >
-                          <FaTag size={12} style={{ color: '#560ce3'}}/>
-                          {listing?.category_name}
-                        </p>}
+                        {listing?.category_name && (
+                          <p className={styles.categoryDesign}>
+                            <FaTag size={12} style={{ color: "#560ce3" }} />
+                            {listing?.category_name}
+                          </p>
+                        )}
+
+                        {/* ✅ Verified Company Info */}
+                        {isFranchiseBooker && (
+                          <div
+                            style={{
+                              marginTop: "10px",
+                              padding: "10px 12px",
+                              background: "#fff8e1",
+                              borderRadius: "8px",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "12px",
+                              border: "1px solid #fde68a",
+                            }}
+                          >
+                            {listing?.user_company_logo && (
+                              <Image
+                                src={getCompanyLogoUrl(
+                                  listing.user_company_logo,
+                                )}
+                                alt={
+                                  listing?.user_company_name || "Company Logo"
+                                }
+                                width={40}
+                                height={40}
+                                unoptimized
+                                style={{
+                                  borderRadius: "50%",
+                                  objectFit: "cover",
+                                  border: "2px solid #fff",
+                                }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
+
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  fontWeight: 700,
+                                  fontSize: "14px",
+                                  color: "#92400e",
+                                }}
+                              >
+                                {listing?.user_company_name ||
+                                  "Verified Franchise Partner"}
+                                <i
+                                  className="fa-solid fa-circle-check"
+                                  style={{
+                                    color: "#16a34a",
+                                    marginLeft: "6px",
+                                    fontSize: "13px",
+                                  }}
+                                ></i>
+                              </span>
+
+                              <span
+                                style={{
+                                  fontSize: "12px",
+                                  color: "#b45309",
+                                }}
+                              >
+                                Verified Partner
+                              </span>
+                            </div>
+                          </div>
+                        )}
                         <p
                           style={{
                             fontSize: "13px",
@@ -224,7 +307,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                               }}
                             />
                           </div>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -357,7 +440,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                           </h3>
                           <p className={styles.sectionText}>{section.value}</p>
                         </div>
-                      )
+                      ),
                   )}
                 </>
               ) : (
@@ -367,91 +450,94 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
             <div className={`col-lg-4 col-md-12 ${styles.sidebarColumn}`}>
               <div className={styles.sidebarSticky}>
                 <div className={`card p-4 mb-3 ${styles.chatCard}`}>
-                <div className={styles.chatHeader}>
-                  <i className="fa-solid fa-comments me-2"></i>
-                  <h4 className="mb-0">Chat with Seller</h4>
-                </div>
-                <p className={styles.chatDescription}>
-                  Have questions about this listing? Start a conversation with
-                  the seller.
-                </p>
-                {!isAuthenticated ? (
-                  <button
-                    className={styles.chatButton}
-                    onClick={() => router.push(`/login`)}
-                  >
-                    <i className="fa-solid fa-right-to-bracket me-2"></i>
-                    Login to Chat
-                  </button>
-                ) : (
-                  <button
-                    className={styles.chatButton}
-                    onClick={() =>
-                      openChatWithSeller(listing.raising_id, listing.project_id)
-                    }
-                  >
-                    <i className="fa-solid fa-message me-2"></i>
-                    Start Chat
-                  </button>
-                )}
+                  <div className={styles.chatHeader}>
+                    <i className="fa-solid fa-comments me-2"></i>
+                    <h4 className="mb-0">Chat with Seller</h4>
+                  </div>
+                  <p className={styles.chatDescription}>
+                    Have questions about this listing? Start a conversation with
+                    the seller.
+                  </p>
+                  {!isAuthenticated ? (
+                    <button
+                      className={styles.chatButton}
+                      onClick={() => router.push(`/login`)}
+                    >
+                      <i className="fa-solid fa-right-to-bracket me-2"></i>
+                      Login to Chat
+                    </button>
+                  ) : (
+                    <button
+                      className={styles.chatButton}
+                      onClick={() =>
+                        openChatWithSeller(
+                          listing.raising_id,
+                          listing.project_id,
+                        )
+                      }
+                    >
+                      <i className="fa-solid fa-message me-2"></i>
+                      Start Chat
+                    </button>
+                  )}
                 </div>
                 <div className={`card p-4 ${styles.similarCard}`}>
-                <h3 className={styles.similarTitle}>
-                  <i className="fa-solid fa-list me-2"></i>
-                  Similar Listings
-                </h3>
-                {similarLoading ? (
-                  <Loading loadingText={"Loading..."} />
-                ) : similarListing && similarListing.length === 0 ? (
-                  <div className={styles.noSimilar}>
-                    <i className="fa-solid fa-inbox mb-3"></i>
-                    <p>No Similar Listings Found</p>
-                  </div>
-                ) : (
-                  <div className={styles.similarList}>
-                    {similarListing.map((item: any, index: number) => (
-                      <div
-                        key={item.id || index}
-                        className={styles.similarItem}
-                        onClick={() => redirectUser(item)}
-                      >
-                        <div className={styles.similarImageWrapper}>
-                          <Image
-                            className={styles.similarImage}
-                            src={`https://dash.magnatehub.au/uploads/project/images/${JSON.parse(item.images)[0]}`}
-                            alt="Project Image"
-                            width={120}
-                            height={100}
-                            unoptimized
-                            onError={(e) => {
-                              e.currentTarget.src =
-                                "assets/img/notfound/image_notfound.png";
-                            }}
-                          />
+                  <h3 className={styles.similarTitle}>
+                    <i className="fa-solid fa-list me-2"></i>
+                    Similar Listings
+                  </h3>
+                  {similarLoading ? (
+                    <Loading loadingText={"Loading..."} />
+                  ) : similarListing && similarListing.length === 0 ? (
+                    <div className={styles.noSimilar}>
+                      <i className="fa-solid fa-inbox mb-3"></i>
+                      <p>No Similar Listings Found</p>
+                    </div>
+                  ) : (
+                    <div className={styles.similarList}>
+                      {similarListing.map((item: any, index: number) => (
+                        <div
+                          key={item.id || index}
+                          className={styles.similarItem}
+                          onClick={() => redirectUser(item)}
+                        >
+                          <div className={styles.similarImageWrapper}>
+                            <Image
+                              className={styles.similarImage}
+                              src={`https://dash.magnatehub.au/uploads/project/images/${item.images && JSON.parse(item.images)[0]}`}
+                              alt="Project Image"
+                              width={120}
+                              height={100}
+                              unoptimized
+                              onError={(e) => {
+                                e.currentTarget.src =
+                                  "assets/img/notfound/image_notfound.png";
+                              }}
+                            />
+                          </div>
+                          <div className={styles.similarContent}>
+                            <h5 className={styles.similarName}>
+                              {item.name && item.name.length > 20
+                                ? item.name.slice(0, 20) + "..."
+                                : item.name || "Untitled"}
+                            </h5>
+                            {item.date && (
+                              <p className={styles.similarDate}>
+                                <i className="fa-solid fa-calendar me-1"></i>
+                                {item.date}
+                              </p>
+                            )}
+                            {item.price && (
+                              <p className={styles.similarPrice}>
+                                <i className="fa-solid fa-dollar-sign me-1"></i>
+                                ${item.price}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div className={styles.similarContent}>
-                          <h5 className={styles.similarName}>
-                            {item.name && item.name.length > 20
-                              ? item.name.slice(0, 20) + "..."
-                              : item.name || "Untitled"}
-                          </h5>
-                          {item.date && (
-                            <p className={styles.similarDate}>
-                              <i className="fa-solid fa-calendar me-1"></i>
-                              {item.date}
-                            </p>
-                          )}
-                          {item.price && (
-                            <p className={styles.similarPrice}>
-                              <i className="fa-solid fa-dollar-sign me-1"></i>$
-                              {item.price}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -79,7 +79,7 @@ const Listing = ({
   };
 
   const redirectUser = (item: any) => {
-     if (typeof window !== "undefined" && item?.category_name) {
+    if (typeof window !== "undefined" && item?.category_name) {
       window.localStorage.removeItem("categoryName");
       window.localStorage.setItem("categoryName", item.category_name);
     }
@@ -88,7 +88,7 @@ const Listing = ({
       window.localStorage.setItem("categoryName", item.category_name);
     }
     router.push(
-      `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`
+      `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`,
     );
   };
 
@@ -98,6 +98,12 @@ const Listing = ({
 
   const isInWishlist = (id: number) => {
     return wishlist.some((item: any) => item.id === id);
+  };
+
+  const getCompanyLogoUrl = (logo: string) => {
+    if (!logo) return "";
+    if (logo.startsWith("http://") || logo.startsWith("https://")) return logo;
+    return `https://dash.magnatehub.au/uploads/raising/company_logo/${logo}`;
   };
 
   return (
@@ -121,146 +127,228 @@ const Listing = ({
           {loading ? (
             <Loading loadingText={"Loading..."} />
           ) : data.length > 0 ? (
-            data.map((item) => (
-              <div key={item.id} className="col-xl-4 col-lg-4 col-md-6">
-                <div
-                  className="tg-listing-card-item tg-listing-su-card-item mb-25"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => redirectUser(item)}
-                >
-                  <div className="tg-listing-card-thumb fix mb-25 p-relative">
-                    <Image
-                      className="tg-card-border w-100"
-                      src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
-                      alt={item?.name || "Project listing image"}
-                      width={250}
-                      height={250}
-                      style={{
-                        objectFit: "cover",
-                      }}
-                      unoptimized
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "assets/img/notfound/image_notfound.png";
-                      }}
-                    />
+            data.map((item) => {
+              const isFranchiseBooker = String(item?.user_type) === "4";
 
-                    {item.tag && (
-                      <span className="tg-listing-item-price-discount">
-                        {item.tag}
-                      </span>
-                    )}
-                    <div className="tg-listing-item-wishlist">
-                      <a
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddToWishlist(item);
+              return (
+                <div
+                  key={item.id}
+                  className="col-xl-4 col-lg-4 col-md-6 d-flex"
+                  style={{ marginTop: "12px" }}
+                >
+                  <div
+                    className="tg-listing-card-item tg-listing-su-card-item mb-25"
+                    style={{
+                      cursor: "pointer",
+                      height: "100%",
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      borderRadius: "10px",
+                    }}
+                    onClick={() => redirectUser(item)}
+                  >
+                    <div className="tg-listing-card-thumb fix mb-25 p-relative">
+                      {isFranchiseBooker && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "12px",
+                            left: "12px",
+                            background:
+                              "linear-gradient(135deg,#ffb703,#fb8500)",
+                            color: "#fff",
+                            padding: "6px 12px",
+                            fontSize: "12px",
+                            fontWeight: 700,
+                            borderRadius: "20px",
+                            zIndex: 5,
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          }}
+                        >
+                          Verified Partner
+                        </div>
+                      )}
+
+                      <Image
+                        className="tg-card-border w-100"
+                        src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
+                        alt={item?.name || "Project listing image"}
+                        width={250}
+                        height={250}
+                        style={{
+                          objectFit: "cover",
+                          width: "100%",
+                          height: "230px",
                         }}
+                        unoptimized
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "assets/img/notfound/image_notfound.png";
+                        }}
+                      />
+                      {item.tag && (
+                        <span className="tg-listing-item-price-discount">
+                          {item.tag}
+                        </span>
+                      )}
+
+                      <div className="tg-listing-item-wishlist">
+                        <a
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToWishlist(item);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <Wishlist
+                            filled={isInWishlist(item.id)}
+                            style={{
+                              color: isInWishlist(item.id) ? "red" : "#444",
+                            }}
+                          />
+                        </a>
+                      </div>
+                    </div>
+
+                    {isFranchiseBooker && (
+                      <div
+                        style={{
+                          marginTop: "6px",
+                          marginBottom: "10px",
+                          padding: "8px 10px",
+                          background: "#fff8e1",
+                          borderRadius: "6px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        {/* Company Logo */}
+                        {item?.user_company_logo && (
+                          <Image
+                            src={getCompanyLogoUrl(item.user_company_logo)}
+                            alt={item?.user_company_name || "Company Logo"}
+                            width={32}
+                            height={32}
+                            unoptimized
+                            style={{
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                              border: "1px solid #eee",
+                            }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        )}
+                        <span
+                          style={{
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#b45309",
+                          }}
+                        >
+                          {item?.user_company_name ||
+                            "Verified Franchise Partner"}
+                        </span>
+                      </div>
+                    )}
+                    <div
+                      className="tg-listing-card-content"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        flex: 1,
+                        padding: "0 15px 15px 15px",
+                      }}
+                    >
+                      <h4
+                        className="tg-listing-card-title mb-10"
                         style={{ cursor: "pointer" }}
                       >
-                        <Wishlist
-                          filled={isInWishlist(item.id)}
-                          style={{
-                            color: isInWishlist(item.id) ? "red" : "#444",
-                          }}
-                        />
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="tg-listing-card-content">
-                    <h4
-                      className="tg-listing-card-title mb-10"
-                      onClick={() => redirectUser(item)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <Link
-                        href={`/detail?url=${item.url}&id=${
-                          item.project_id
-                        }&category=${showImageAccordingToCategory(
-                          item.category_name
-                        )}`}
-                      >
-                        <span
-                          style={{
-                            fontWeight: 600,
-                            fontSize: "18px",
-                            color: "#1a1a1a",
-                          }}
+                        <Link
+                          href={`/detail?url=${item.url}&id=${item.project_id}`}
                         >
-                          {item.name.length > 30
-                            ? item.name.slice(0, 25) + "..."
-                            : item.name}
-                        </span>
-                      </Link>
-                    </h4>
-                    <p
-                      style={{
-                        fontSize: "13px",
-                        color: "#777",
-                        marginTop: "10px",
-                      }}
-                    >
-                      MGH-{new Date().getFullYear()}-{item.project_id}
-                    </p>
-                    <div className="mb-15">
-                      <span
+                          <span
+                            style={{
+                              fontWeight: 600,
+                              fontSize: "18px",
+                              color: "#1a1a1a",
+                            }}
+                          >
+                            {item.name.length > 30
+                              ? item.name.slice(0, 25) + "..."
+                              : item.name}
+                          </span>
+                        </Link>
+                      </h4>
+
+                      <p
                         style={{
-                          padding: "4px 10px",
-                          background: "#eef4ff",
-                          borderRadius: "6px",
                           fontSize: "13px",
-                          color: "#2a5bd7",
-                          fontWeight: 500,
+                          color: "#777",
+                          marginTop: "10px",
                         }}
                       >
-                        {item.category_name}
-                      </span>
-                    </div>
-
-                    <div
-                      className="mb-20 d-flex align-items-center"
-                      style={{ color: "#666" }}
-                    >
-                      <Location />
-                      <span style={{ marginLeft: "6px" }}>
-                        {item.location_name}
-                      </span>
-                    </div>
-
-                    <div className="d-flex align-items-end justify-content-between mt-10 pt-20 border-top">
-                      <div>
+                        MGH-{new Date().getFullYear()}-{item.project_id}
+                      </p>
+                      <div className="mb-15">
                         <span
-                          className="d-flex align-items-center"
                           style={{
-                            fontSize: "20px",
-                            fontWeight: 700,
-                            color: "#111",
+                            padding: "4px 10px",
+                            background: "#eef4ff",
+                            borderRadius: "6px",
+                            fontSize: "13px",
+                            color: "#2a5bd7",
+                            fontWeight: 500,
                           }}
                         >
-                          <span className="mr-5">$</span>
-                          {item.price}
+                          {item.category_name}
                         </span>
                       </div>
 
-                      <div>
-                        {item?.franchise === "1" ? (
-                          <i
-                            className="fa-sharp fa-solid fa-star"
-                            style={{ color: "#ffb703", fontSize: "20px" }}
-                          ></i>
-                        ) : item?.premium === "1" ? (
-                          <i
-                            className="fa-sharp fa-solid fa-crown"
-                            style={{ color: "#d7263d", fontSize: "20px" }}
-                          ></i>
-                        ) : null}
+                      <div
+                        className="mb-20 d-flex align-items-center"
+                        style={{ color: "#666" }}
+                      >
+                        <Location />
+                        <span style={{ marginLeft: "6px" }}>
+                          {item.location_name}
+                        </span>
+                      </div>
+
+                      <div style={{ marginTop: "auto" }}>
+                        <div className="d-flex align-items-end justify-content-between mt-10 pt-20 border-top">
+                          <div>
+                            <span
+                              className="d-flex align-items-center"
+                              style={{
+                                fontSize: "20px",
+                                fontWeight: 700,
+                                color: "#111",
+                              }}
+                            >
+                              <span className="mr-5">$</span>
+                              {item.price}
+                            </span>
+                          </div>
+
+                          <div>
+                            {item?.premium === "1" && (
+                              <i
+                                className="fa-sharp fa-solid fa-crown"
+                                style={{ color: "#d7263d", fontSize: "20px" }}
+                              ></i>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="text-center py-5">
               <p>No listings found.</p>
