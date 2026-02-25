@@ -58,9 +58,11 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   };
 
   useEffect(() => {
+    if (!id) return;
     getProductDetails();
     getSimilarListing();
-  }, []);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id]);
 
   const parseImage = (Image: string) => {
     if (Image) {
@@ -515,7 +517,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                           <div className={styles.similarImageWrapper}>
                             <Image
                               className={styles.similarImage}
-                              src={`https://dash.magnatehub.au/uploads/project/images/${item.images && JSON.parse(item.images)[0]}`}
+                              src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
                               alt="Project Image"
                               width={120}
                               height={100}
