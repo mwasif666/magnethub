@@ -86,16 +86,42 @@ const BannerFormOne = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onPageChange) onPageChange(1);
 
-    const isMissingRequired =
-      activeTab === "businesses" && !formData.postcode?.trim();
-    if (isMissingRequired) {
-      toast.error("Please fill required field: Search by name.", {
-        position: "top-center",
-      });
+    const hasBusinessFilters =
+      !!formData.postcode.trim() ||
+      !!formData.businessId.trim() ||
+      !!formData.category ||
+      !!formData.state ||
+      !!formData.region ||
+      !!formData.minPrice ||
+      !!formData.maxPrice ||
+      formData.franchise ||
+      formData.premium ||
+      formData.all;
+
+    const hasAgencyFilters =
+      !!formData.sPostcode.trim() ||
+      !!formData.agency.trim() ||
+      !!formData.state2 ||
+      !!formData.region2;
+
+    const hasFilters =
+      activeTab === "businesses" ? hasBusinessFilters : hasAgencyFilters;
+
+    if (!hasFilters) {
       return;
     }
+
+    if (onPageChange) onPageChange(1);
+
+    // const isMissingRequired =
+    //   activeTab === "businesses" && !formData.postcode?.trim();
+    // if (isMissingRequired) {
+    //   toast.error("Please fill required field: Search by name.", {
+    //     position: "top-center",
+    //   });
+    //   return;
+    // }
 
     shouldNotifyRef.current = true;
     shouldScrollRef.current = true;
@@ -559,7 +585,6 @@ const BannerFormOne = ({
                               value={formData.postcode}
                               onChange={handleInputChange}
                               placeholder="Search by name"
-                              required={activeTab === "businesses"}
                             />
                           </div>
                         </div>
@@ -777,7 +802,6 @@ const BannerFormOne = ({
                               value={formData.sPostcode}
                               onChange={handleInputChange}
                               placeholder="Search by keywords"
-                              required={false}
                             />
                           </div>
                         </div>
