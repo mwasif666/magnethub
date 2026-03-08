@@ -52,7 +52,7 @@ const AboutArea = () => {
                   data-wow-duration=".9s"
                 >
                   Welcome to Magnate Hub, your premier destination for
-                  professional business transactions. We're here to connect
+                  professional business transactions. We&apos;re here to connect
                   entrepreneurs, investors, and business owners in a dynamic
                   marketplace designed to facilitate buying, selling, and
                   capital-raising endeavors.
@@ -68,10 +68,10 @@ const AboutArea = () => {
                   data-wow-duration=".9s"
                 >
                   <Link
-                    href="/contact "
+                    href="/about"
                     className="tg-btn tg-btn-switch-animation"
                   >
-                    <Button text="Book Your Room" />
+                    <Button text="More About Us" />
                   </Link>
                 </div>
               </div>

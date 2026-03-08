@@ -52,7 +52,7 @@ const Choose = () => {
                   data-wow-duration=".9s"
                 >
                   <Link
-                    href="/contact"
+                    href="/about"
                     className="tg-btn tg-btn-switch-animation"
                   >
                     <Button text="More About us" />

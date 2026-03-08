@@ -12,6 +12,12 @@ import "swiper/css";
 import location_bg from "@/assets/img/destination/tu/bg.png";
 import { apiRequest } from "@/api/axiosInstance";
 
+type LocationItem = {
+  location_id: number | string;
+  card?: string;
+  name?: string;
+};
+
 const swiperOptions = {
   slidesPerView: 4,
   loop: true,
@@ -19,6 +25,7 @@ const swiperOptions = {
   autoplay: {
     delay: 3000,
     disableOnInteraction: false,
+    pauseOnMouseEnter: true,
   },
   pagination: false,
   breakpoints: {
@@ -39,7 +46,7 @@ const swiperOptions = {
 
 const OurLocation: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [locationData, setLocationData] = useState<any[]>([]);
+  const [locationData, setLocationData] = useState<LocationItem[]>([]);
 
   // Swiper instance ref
   const swiperRef = useRef<SwiperType | null>(null);
@@ -74,6 +81,28 @@ const OurLocation: React.FC = () => {
     if (swiperRef.current) {
       swiperRef.current.slideNext();
     }
+  };
+
+  const handleMouseEnter = () => {
+    if (!swiperRef.current?.autoplay) return;
+
+    if (typeof swiperRef.current.autoplay.pause === "function") {
+      swiperRef.current.autoplay.pause();
+      return;
+    }
+
+    swiperRef.current.autoplay.stop();
+  };
+
+  const handleMouseLeave = () => {
+    if (!swiperRef.current?.autoplay) return;
+
+    if (typeof swiperRef.current.autoplay.resume === "function") {
+      swiperRef.current.autoplay.resume();
+      return;
+    }
+
+    swiperRef.current.autoplay.start();
   };
 
   return (
@@ -141,44 +170,48 @@ const OurLocation: React.FC = () => {
                 <h6>No locations found.</h6>
               </div>
             ) : (
-              <Swiper
-                {...swiperOptions}
-                modules={[Autoplay]}
-                className="swiper-container tg-location-su-slider"
-                // Yahan instance capture kar rahe hain
-                onSwiper={(swiper) => {
-                  swiperRef.current = swiper;
-                }}
+              <div
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
-                {locationData.map((item: any) => (
-                  <SwiperSlide key={item.location_id} className="swiper-slide">
-                    <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
-                      <div className="tg-location-thumb tg-round-25">
-                        <Image
-                          className="w-100 tg-round-25"
-                          src={`https://dash.magnatehub.au/uploads/location/card/${item?.card}`}
-                          alt="location"
-                          width={400}
-                          height={300}
-                          unoptimized
-                          onError={(e) => {
-                            e.currentTarget.src =
-                              "assets/img/notfound/image_notfound.png";
-                          }}
-                        />
-                      </div>
+                <Swiper
+                  {...swiperOptions}
+                  modules={[Autoplay]}
+                  className="swiper-container tg-location-su-slider"
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                  }}
+                >
+                  {locationData.map((item) => (
+                    <SwiperSlide key={item.location_id} className="swiper-slide">
+                      <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
+                        <div className="tg-location-thumb tg-round-25">
+                          <Image
+                            className="w-100 tg-round-25"
+                            src={`https://dash.magnatehub.au/uploads/location/card/${item?.card}`}
+                            alt="location"
+                            width={400}
+                            height={300}
+                            unoptimized
+                            onError={(e) => {
+                              e.currentTarget.src =
+                                "assets/img/notfound/image_notfound.png";
+                            }}
+                          />
+                        </div>
 
-                      <div className="tg-location-content tg-location-su-content">
-                        <div className="content">
-                          <h3 className="tg-location-title mb-5">
-                            <Link href="/tour-grid-1">{item?.name}</Link>
-                          </h3>
+                        <div className="tg-location-content tg-location-su-content">
+                          <div className="content">
+                            <h3 className="tg-location-title mb-5">
+                              <Link href="/tour-grid-1">{item?.name}</Link>
+                            </h3>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             )}
           </div>
         </div>

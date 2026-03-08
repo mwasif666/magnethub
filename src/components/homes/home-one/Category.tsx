@@ -1,12 +1,20 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
 import { Autoplay, Navigation } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
 
 import location_bg from "@/assets/img/destination/tu/bg.png";
 import { apiRequest } from "@/api/axiosInstance";
+
+type CategoryItem = {
+  category_id?: number | string;
+  card?: string;
+  name: string;
+  total?: number | string;
+};
 
 const setting = {
   slidesPerView: 4,
@@ -15,6 +23,7 @@ const setting = {
   autoplay: {
     delay: 3000,
     disableOnInteraction: false,
+    pauseOnMouseEnter: true,
   },
   pagination: false,
   breakpoints: {
@@ -35,7 +44,8 @@ const setting = {
 
 const Category = () => {
   const [loading, setLoading] = useState(true);
-  const [locationData, setLocationData] = useState<any[]>([]);
+  const [locationData, setLocationData] = useState<CategoryItem[]>([]);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   // Navigation buttons ke refs
   const prevRef = useRef<HTMLButtonElement | null>(null);
@@ -124,56 +134,65 @@ const Category = () => {
                 <h6>No categories found.</h6>
               </div>
             ) : (
-              <Swiper
-                {...setting}
-                modules={[Autoplay, Navigation]}
-                className="swiper-container tg-location-su-slider"
-                // Yahan Swiper ko bata rahe hain ke navigation in buttons se hoga
-                onSwiper={(swiper) => {
-                  if (prevRef.current && nextRef.current) {
-                    // @ts-ignore
-                    swiper.params.navigation.prevEl = prevRef.current;
-                    // @ts-ignore
-                    swiper.params.navigation.nextEl = nextRef.current;
-                    swiper.navigation.init();
-                    swiper.navigation.update();
-                  }
-                }}
+              <div
+                onMouseEnter={() => swiperRef.current?.autoplay?.stop()}
+                onMouseLeave={() => swiperRef.current?.autoplay?.start()}
               >
-                {locationData.map((item: any, index: any) => (
-                  <SwiperSlide
-                    key={item.category_id || index}
-                    className="swiper-slide"
-                  >
-                    <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
-                      <div className="tg-location-thumb tg-round-25">
-                        <Image
-                          className="w-100 tg-round-25"
-                          src={`https://dash.magnatehub.au/uploads/category/card/${item?.card}`}
-                          alt="categories"
-                          width={400}
-                          height={300}
-                          unoptimized
-                          onError={(e) => {
-                            e.currentTarget.src =
-                              "assets/img/notfound/image_notfound.png";
-                          }}
-                        />
-                      </div>
-                      <div className="tg-location-content tg-location-su-content">
-                        <div className="content">
-                          <h3 className="tg-location-title mb-5">
-                            <Link href="/tour-grid-1">{item.name}</Link>
-                          </h3>
-                          <span className="tg-location-su-duration">
-                            {item.total}
-                          </span>
+                <Swiper
+                  {...setting}
+                  modules={[Autoplay, Navigation]}
+                  className="swiper-container tg-location-su-slider"
+                  // Yahan Swiper ko bata rahe hain ke navigation in buttons se hoga
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                    if (
+                      prevRef.current &&
+                      nextRef.current &&
+                      swiper.params.navigation &&
+                      typeof swiper.params.navigation !== "boolean"
+                    ) {
+                      swiper.params.navigation.prevEl = prevRef.current;
+                      swiper.params.navigation.nextEl = nextRef.current;
+                      swiper.navigation.init();
+                      swiper.navigation.update();
+                    }
+                  }}
+                >
+                  {locationData.map((item, index) => (
+                    <SwiperSlide
+                      key={item.category_id || index}
+                      className="swiper-slide"
+                    >
+                      <div className="tg-location-3-wrap tg-location-su-wrap p-relative mb-30 tg-round-25">
+                        <div className="tg-location-thumb tg-round-25">
+                          <Image
+                            className="w-100 tg-round-25"
+                            src={`https://dash.magnatehub.au/uploads/category/card/${item?.card}`}
+                            alt="categories"
+                            width={400}
+                            height={300}
+                            unoptimized
+                            onError={(e) => {
+                              e.currentTarget.src =
+                                "assets/img/notfound/image_notfound.png";
+                            }}
+                          />
+                        </div>
+                        <div className="tg-location-content tg-location-su-content">
+                          <div className="content">
+                            <h3 className="tg-location-title mb-5">
+                              <Link href="/tour-grid-1">{item.name}</Link>
+                            </h3>
+                            <span className="tg-location-su-duration">
+                              {item.total}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             )}
           </div>
         </div>

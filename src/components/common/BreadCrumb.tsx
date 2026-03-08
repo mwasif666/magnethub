@@ -10,7 +10,9 @@ interface DataType {
   isCallFrom?: string;
 }
 const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
-  const [catName, setCatName] = useState("default-category");
+  const [catName, setCatName] = useState(title || "default-category");
+  const listingDetailTitle =
+    isCallFrom === "listingDetail" && title !== "Listing Details" ? title : catName;
 
   useEffect(() => {
     const storedCategoryName = window.localStorage.getItem("categoryName");
@@ -35,9 +37,22 @@ const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
         <div className="row">
           <div className="col-12">
             <div className="tg-breadcrumb-content text-center">
-              <h2 className="tg-breadcrumb-title mb-5 fs-40">{title}</h2>
-              {isCallFrom === "listingDetail" && (
-                <h2 className="tg-breadcrumb-subtitle mb-5">{catName}</h2>
+              <h2 className="tg-breadcrumb-title mb-5 fs-40">
+                {isCallFrom === "listingDetail" ? listingDetailTitle : title}
+              </h2>
+              {isCallFrom === "listingDetail" && sub_title && (
+                <p
+                  className="mb-0"
+                  style={{
+                    color: "#ffffff",
+                    fontSize: "20px",
+                    fontWeight: 500,
+                    lineHeight: 1.3,
+                    opacity: 0.92,
+                  }}
+                >
+                  {sub_title}
+                </p>
               )}
               <div className="tg-breadcrumb-list-4">
                 {/* <ul>
