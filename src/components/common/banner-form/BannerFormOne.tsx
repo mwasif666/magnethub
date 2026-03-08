@@ -87,30 +87,6 @@ const BannerFormOne = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const hasBusinessFilters =
-      !!formData.postcode.trim() ||
-      !!formData.businessId.trim() ||
-      !!formData.category ||
-      !!formData.state ||
-      !!formData.region ||
-      !!formData.minPrice ||
-      !!formData.maxPrice ||
-      formData.franchise ||
-      formData.premium ||
-      formData.all;
-
-    const hasAgencyFilters =
-      !!formData.sPostcode.trim() ||
-      !!formData.agency.trim() ||
-      !!formData.state2 ||
-      !!formData.region2;
-
-    const hasFilters =
-      activeTab === "businesses" ? hasBusinessFilters : hasAgencyFilters;
-
-    if (!hasFilters) {
-      return;
-    }
 
     if (onPageChange) onPageChange(1);
 
