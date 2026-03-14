@@ -42,6 +42,19 @@ const truncateText = (value: string, limit: number) => {
   return `${value.slice(0, Math.max(limit - 3, 0)).trimEnd()}...`;
 };
 
+const getCompanyInitials = (value?: string) => {
+  if (!value?.trim()) {
+    return "MH";
+  }
+
+  return value
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("");
+};
+
 type ListingCardSharedProps = {
   item: any;
   detailHref: string;
@@ -58,6 +71,12 @@ const HomeStyleListingCard = ({
   redirectUser,
 }: ListingCardSharedProps) => {
   const isFranchiseBooker = String(item?.user_type) === "4";
+  const companyName = item?.user_company_name?.trim() || "";
+  const companyLogoUrl = item?.user_company_logo?.trim()
+    ? `https://dash.magnatehub.au/uploads/raising/company_logo/${item.user_company_logo}`
+    : "";
+  const companyInitials = getCompanyInitials(companyName);
+  const hasCompanyName = Boolean(companyName);
   const verificationSource = item?.user_company_name?.trim() || "partner";
   const verificationBadgeText = `verified by ${truncateText(verificationSource, 15)}`;
   const verificationBadgeTitle = `verified by ${verificationSource}`;
@@ -175,15 +194,15 @@ const HomeStyleListingCard = ({
             left: "16px",
             bottom: "16px",
             zIndex: 6,
-            maxWidth: "calc(100% - 32px)",
-            padding: "7px 12px",
+            maxWidth: "72%",
+            padding: "6px 12px",
             borderRadius: "999px",
             background: "rgba(255,255,255,0.94)",
             border: "1px solid rgba(90,69,181,0.08)",
             color: "#5a45b5",
-            fontSize: "11px",
-            fontWeight: 600,
-            lineHeight: 1.1,
+            fontSize: "10.5px",
+            fontWeight: 700,
+            lineHeight: 1.15,
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -205,12 +224,107 @@ const HomeStyleListingCard = ({
       >
         <div
           style={{
+            minHeight: "67px",
+            marginBottom: "14px",
+            paddingBottom: "14px",
+            borderBottom: isFranchiseBooker
+              ? "1px solid rgba(126, 108, 255, 0.12)"
+              : "1px solid transparent",
+          }}
+        >
+          {isFranchiseBooker && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: hasCompanyName ? "space-between" : "flex-start",
+                gap: "10px",
+                minHeight: "52px",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minHeight: "34px",
+                  padding: "0 14px",
+                  borderRadius: "999px",
+                  border: "1px solid rgba(108, 92, 231, 0.20)",
+                  background:
+                    "linear-gradient(180deg, rgba(123, 97, 255, 0.16) 0%, rgba(123, 97, 255, 0.08) 100%)",
+                  color: "#5b34e6",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  flex: "0 0 auto",
+                }}
+              >
+                Verified Partner
+              </span>
+              {companyName ? (
+                <span
+                  title={companyName}
+                  style={{
+                    flex: 1,
+                    minWidth: 0,
+                    color: "#4126c6",
+                    fontSize: "16px",
+                    fontWeight: 700,
+                    lineHeight: 1.2,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {companyName}
+                </span>
+              ) : null}
+
+              <span
+                style={{
+                  position: "relative",
+                  width: "38px",
+                  height: "38px",
+                  borderRadius: "999px",
+                  overflow: "hidden",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: "0 0 auto",
+                  background: "linear-gradient(135deg, #6d4cff 0%, #3d73ff 100%)",
+                  color: "#fff",
+                  fontSize: "12px",
+                  fontWeight: 800,
+                  boxShadow: "0 10px 22px rgba(70, 62, 180, 0.22)",
+                  marginLeft: hasCompanyName ? "0" : "auto",
+                }}
+              >
+                {companyLogoUrl ? (
+                  <Image
+                    src={companyLogoUrl}
+                    alt={companyName}
+                    fill
+                    unoptimized
+                    style={{ objectFit: "cover" }}
+                  />
+                ) : (
+                  companyInitials
+                )}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div
+          style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             gap: "8px",
             marginBottom: "10px",
             flexWrap: "wrap",
+            minHeight: "30px",
           }}
         >
           <p
@@ -225,26 +339,6 @@ const HomeStyleListingCard = ({
             {listingCode}
           </p>
 
-          {isFranchiseBooker && (
-            <span
-              title={verificationBadgeTitle}
-              style={{
-                color: "#16a34a",
-                background: "rgba(22, 163, 74, 0.10)",
-                border: "1px solid rgba(22, 163, 74, 0.18)",
-                borderRadius: "999px",
-                fontSize: "11px",
-                fontWeight: 600,
-                lineHeight: 1,
-                whiteSpace: "nowrap",
-                padding: "6px 10px",
-                flex: "0 0 auto",
-                cursor: "default",
-              }}
-            >
-              {verificationBadgeText}
-            </span>
-          )}
         </div>
 
         <h4
@@ -252,6 +346,7 @@ const HomeStyleListingCard = ({
           style={{
             margin: "0 0 16px",
             minWidth: 0,
+            minHeight: "42px",
           }}
         >
           <Link href={detailHref} onClick={(e) => e.stopPropagation()}>
@@ -262,10 +357,10 @@ const HomeStyleListingCard = ({
                 color: "#111827",
                 letterSpacing: "-0.04em",
                 lineHeight: 1.22,
-                display: "block",
-                whiteSpace: "nowrap",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
                 overflow: "hidden",
-                textOverflow: "ellipsis",
               }}
               title={item.name}
             >
@@ -285,7 +380,7 @@ const HomeStyleListingCard = ({
             <div
               style={{
                 display: "flex",
-                alignItems: "flex-end",
+                alignItems: "center",
                 justifyContent: "space-between",
                 gap: "12px",
                 flexWrap: "wrap",
@@ -295,7 +390,7 @@ const HomeStyleListingCard = ({
                 style={{
                   fontSize: "24px",
                   fontWeight: 700,
-                  color: "#101827",
+                  color: "#334155",
                   letterSpacing: "-0.05em",
                   lineHeight: 0.95,
                 }}
@@ -306,48 +401,40 @@ const HomeStyleListingCard = ({
               {item.location_name && (
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    gap: "4px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: "8px",
                     minWidth: 0,
-                    flex: "0 1 52%",
+                    flex: "0 1 58%",
                   }}
                 >
-                  <div
+                  <span
                     style={{
+                      color: "#7d8497",
                       display: "inline-flex",
-                      alignItems: "flex-start",
-                      gap: "6px",
+                      alignItems: "center",
+                      flex: "0 0 auto",
+                    }}
+                  >
+                    <Location />
+                  </span>
+                  <span
+                    style={{
+                      minWidth: 0,
                       color: "#7d8497",
                       fontSize: "12px",
                       fontWeight: 500,
-                      minWidth: 0,
-                      maxWidth: "100%",
-                      alignSelf: "flex-end",
+                      lineHeight: 1.3,
+                      textAlign: "right",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
+                    title={item.location_name}
                   >
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        color: "#7d8497",
-                        flex: "0 0 auto",
-                      }}
-                    >
-                      <Location />
-                    </span>
-                    <span
-                      style={{
-                        minWidth: 0,
-                        flex: "0 1 auto",
-                        lineHeight: 1.35,
-                        overflowWrap: "anywhere",
-                        textAlign: "right",
-                      }}
-                    >
-                      {item.location_name}
-                    </span>
-                  </div>
+                    {truncateText(item.location_name, 28)}
+                  </span>
                 </div>
               )}
             </div>
