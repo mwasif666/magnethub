@@ -93,7 +93,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="mh-auth-form">
         <div className="row text-white">
           <div className="col-lg-12 mb-25">
             <input
@@ -161,23 +161,78 @@ const LoginForm = () => {
       <style jsx>{`
         .input {
           box-sizing: border-box;
-          height: 46px;
-          min-height: 46px;
+          width: 100%;
+          height: 52px;
+          min-height: 52px;
           padding: 0 16px;
-          border-radius: 8px;
+          border: 1px solid var(--mh-auth-field-border) !important;
+          border-radius: 14px;
+          background: var(--mh-auth-field-bg) !important;
+          box-shadow: var(--mh-auth-field-shadow);
+          color: #fff !important;
           font-size: 14px;
           line-height: 1.2;
+        }
+
+        .input::placeholder {
+          color: rgba(255, 255, 255, 0.68);
+        }
+
+        .input:focus {
+          border-color: rgba(255, 255, 255, 0.55) !important;
+          box-shadow: var(--mh-auth-field-shadow), var(--mh-auth-field-focus);
         }
 
         .input:-webkit-autofill,
         .input:-webkit-autofill:hover,
         .input:-webkit-autofill:focus {
-          -webkit-text-fill-color: inherit;
-          box-shadow: 0 0 0 1000px transparent inset;
+          -webkit-text-fill-color: #fff;
+          caret-color: #fff;
+          box-shadow:
+            0 0 0 1000px rgba(255, 255, 255, 0.08) inset,
+            var(--mh-auth-field-shadow);
+          transition: background-color 9999s ease-out 0s;
+        }
+
+        .mh-auth-form :global(.tg-checkbox) {
+          accent-color: #7d12ff;
+        }
+
+        .mh-auth-form :global(.tg-label),
+        .mh-auth-form :global(.tg-login-navigate a),
+        .mh-auth-form :global(a) {
+          color: rgba(255, 255, 255, 0.92) !important;
+          font-size: 12px !important;
+          font-weight: 500;
+        }
+
+        .mh-auth-form :global(.tg-login-navigate a:hover),
+        .mh-auth-form :global(.tg-login-navigate a:focus),
+        .mh-auth-form :global(.tg-login-navigate a:active),
+        .mh-auth-form :global(a:hover),
+        .mh-auth-form :global(a:focus),
+        .mh-auth-form :global(a:active) {
+          color: rgba(255, 255, 255, 0.92) !important;
+          cursor: pointer;
+        }
+
+        .mh-auth-form :global(.tg-btn) {
+          min-height: 52px;
+          border: 0;
+          border-radius: 14px;
+          background: var(--mh-auth-button-bg);
+          color: #fff;
+          font-size: 14px;
+          font-weight: 700;
+          box-shadow: 0 16px 36px rgba(90, 0, 255, 0.28);
+        }
+
+        .mh-auth-form :global(.tg-btn:disabled) {
+          opacity: 0.72;
         }
 
         .form_error {
-          color: red !important;
+          color: #ff9da8 !important;
           font-size: 11px;
           margin: 4px;
         }

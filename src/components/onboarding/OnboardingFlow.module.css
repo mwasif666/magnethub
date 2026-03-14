@@ -1,10 +1,11 @@
 .area {
-  --onboarding-field-height: 46px;
+  --onboarding-field-height: 52px;
   min-height: 100vh;
-  padding: 120px 0 90px;
+  display: flex;
+  align-items: center;
+  padding: 40px 0;
   background-image:
-    linear-gradient(0deg, rgba(47, 33, 77, 0.42), rgba(47, 33, 77, 0.42)),
-    linear-gradient(to right, rgba(41, 27, 78, 0.58), rgba(41, 27, 78, 0.58)),
+    linear-gradient(to right, rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.52)),
     url("/assets/img/banner/banner.png");
   background-position: center;
   background-repeat: no-repeat;
@@ -14,16 +15,13 @@
 .shell {
   width: min(100%, 800px);
   margin: 0 auto;
-  padding: 38px 52px 38px;
-  border: 2px solid rgba(255, 255, 255, 0.82);
-  border-radius: 34px;
-  background:
-    radial-gradient(circle at top right, rgba(251, 184, 77, 0.16), transparent 25%),
-    radial-gradient(circle at center, rgba(64, 87, 255, 0.16), transparent 35%),
-    linear-gradient(180deg, rgba(99, 82, 152, 0.52) 0%, rgba(86, 63, 128, 0.42) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 24px 80px rgba(18, 8, 47, 0.28);
+  padding: 38px 32px;
+  border: 1px solid var(--mh-auth-surface-border);
+  border-radius: 30px;
+  background: var(--mh-auth-surface-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--mh-auth-surface-shadow);
 }
 
 .shellWide {
@@ -139,7 +137,7 @@
 }
 
 .contentHeader {
-  margin-bottom: 14px;
+  margin-bottom: 22px;
 }
 
 .eyebrow {
@@ -206,8 +204,14 @@
 .roleFooterActions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: stretch;
   gap: 16px;
+  margin-top: 14px;
+}
+
+.roleBackRow {
+  display: flex;
+  justify-content: flex-start;
   margin-top: 26px;
 }
 
@@ -403,10 +407,10 @@
 
 .label {
   display: block;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
   color: rgba(255, 255, 255, 0.96);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .signupLabel {
@@ -419,9 +423,10 @@
 .textarea {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.66);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--mh-auth-field-border);
+  border-radius: 14px;
+  background: var(--mh-auth-field-bg);
+  box-shadow: var(--mh-auth-field-shadow);
   color: #fff;
   outline: none;
   appearance: none;
@@ -431,41 +436,89 @@
 
 .input {
   height: var(--onboarding-field-height);
-  padding: 0 12px;
-  font-size: 12px;
+  min-height: var(--onboarding-field-height);
+  padding: 0 16px;
+  font-size: 14px;
   line-height: 1.2;
 }
 
 .signupInputGhost {
   height: var(--onboarding-field-height);
+  min-height: var(--onboarding-field-height);
   padding: 0 16px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--mh-auth-field-border) !important;
+  border-radius: 14px;
+  background: var(--mh-auth-field-bg) !important;
+  box-shadow: var(--mh-auth-field-shadow) !important;
+  color: #fff !important;
   font-size: 14px;
 }
 
 .signupInputSolid {
   height: var(--onboarding-field-height);
+  min-height: var(--onboarding-field-height);
   padding: 0 16px;
-  border-radius: 8px;
-  background: #fff;
-  color: #31324d;
+  border: 1px solid var(--mh-auth-field-border) !important;
+  border-radius: 14px;
+  background: var(--mh-auth-field-bg) !important;
+  box-shadow: var(--mh-auth-field-shadow) !important;
+  color: #fff !important;
   font-size: 14px;
   font-weight: 500;
 }
 
 .signupInputSolid::placeholder {
-  color: rgba(49, 50, 77, 0.72);
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.signupInputGhost::placeholder,
+.signupInputSolid::placeholder,
+.checkoutInput::placeholder,
+.checkoutTextarea::placeholder,
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.68) !important;
+  opacity: 1;
+}
+
+.signupInputGhost::-webkit-input-placeholder,
+.signupInputSolid::-webkit-input-placeholder,
+.checkoutInput::-webkit-input-placeholder,
+.checkoutTextarea::-webkit-input-placeholder,
+.input::-webkit-input-placeholder,
+.textarea::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.signupInputGhost::-moz-placeholder,
+.signupInputSolid::-moz-placeholder,
+.checkoutInput::-moz-placeholder,
+.checkoutTextarea::-moz-placeholder,
+.input::-moz-placeholder,
+.textarea::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.68) !important;
+  opacity: 1;
+}
+
+.signupInputGhost:-ms-input-placeholder,
+.signupInputSolid:-ms-input-placeholder,
+.checkoutInput:-ms-input-placeholder,
+.checkoutTextarea:-ms-input-placeholder,
+.input:-ms-input-placeholder,
+.textarea:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.68) !important;
 }
 
 .checkoutInput {
   height: var(--onboarding-field-height);
   min-height: var(--onboarding-field-height);
-  padding: 0 14px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  color: #fff;
-  font-size: 13px;
+  padding: 0 16px;
+  border: 1px solid var(--mh-auth-field-border) !important;
+  border-radius: 14px;
+  background: var(--mh-auth-field-bg) !important;
+  box-shadow: var(--mh-auth-field-shadow) !important;
+  color: #fff !important;
+  font-size: 14px;
   line-height: 1.2;
 }
 
@@ -482,8 +535,10 @@
 .checkoutTextarea:-webkit-autofill:focus {
   -webkit-text-fill-color: #fff;
   caret-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.02) inset;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1000px rgba(255, 255, 255, 0.08) inset,
+    var(--mh-auth-field-shadow);
   transition: background-color 9999s ease-out 0s;
 }
 
@@ -494,30 +549,32 @@
 
 .checkoutTextarea {
   min-height: 96px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  color: #fff;
-  font-size: 13px;
+  padding: 14px 16px;
+  border: 1px solid var(--mh-auth-field-border) !important;
+  border-radius: 14px;
+  background: var(--mh-auth-field-bg) !important;
+  box-shadow: var(--mh-auth-field-shadow) !important;
+  color: #fff !important;
+  font-size: 14px;
 }
 
 .textarea {
   min-height: 76px;
-  padding: 10px 12px;
+  padding: 12px 16px;
   resize: vertical;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .input::placeholder,
 .textarea::placeholder {
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .input:focus,
 .textarea:focus,
 .otpBoxRow:focus-within {
-  border-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 0 0 3px rgba(95, 20, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: var(--mh-auth-field-shadow), var(--mh-auth-field-focus);
 }
 
 .error {
@@ -537,9 +594,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 4px;
+  margin-top: 10px;
   color: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -555,14 +612,23 @@
 }
 
 .inlineLink:hover,
-.linkButton:hover {
+.inlineLink:focus,
+.inlineLink:active,
+.linkButton:hover,
+.linkButton:focus,
+.linkButton:active,
+.secondaryButton:hover,
+.secondaryButton:focus,
+.secondaryButton:active {
+  color: rgba(255, 255, 255, 0.92);
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .actionRow {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  justify-content: stretch;
+  margin-top: 24px;
 }
 
 .footerActions {
@@ -576,19 +642,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 32px;
-  padding: 0 18px;
-  border-radius: 4px;
+  min-height: 52px;
+  padding: 0 20px;
+  border-radius: 14px;
   border: 1px solid transparent;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .primaryButton {
-  min-width: 220px;
-  background: linear-gradient(90deg, #5a00ff 0%, #7d12ff 100%);
+  width: 100%;
+  min-width: 0;
+  background: var(--mh-auth-button-bg);
   color: #fff;
+  box-shadow: 0 16px 36px rgba(90, 0, 255, 0.28);
 }
 
 .primaryButton:hover,
@@ -598,20 +666,22 @@
 }
 
 .rolePrimaryButton {
-  min-width: 276px;
-  min-height: 40px;
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
   font-size: 14px;
 }
 
 .signupPrimaryButton {
-  min-width: 276px;
-  min-height: 40px;
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
   font-size: 14px;
 }
 
 .secondaryButton {
-  background: transparent;
-  border-color: rgba(255, 255, 255, 0.66);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.22);
   color: #fff;
   text-decoration: none;
 }
@@ -902,7 +972,7 @@
 
 @media (max-width: 991px) {
   .area {
-    padding: 100px 0 70px;
+    padding: 32px 0;
   }
 
   .shell,
@@ -948,8 +1018,12 @@
   }
 
   .roleFooterActions {
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: stretch;
+  }
+
+  .roleBackRow {
+    justify-content: stretch;
   }
 
   .primaryButton {
@@ -961,14 +1035,14 @@
 
 @media (max-width: 575px) {
   .area {
-    padding: 86px 0 54px;
+    padding: 20px 0;
   }
 
   .shell,
   .shellWide,
   .shellCompact {
-    padding: 20px 16px 22px;
-    border-radius: 26px;
+    padding: 24px 18px;
+    border-radius: 24px;
   }
 
   .otpBoxRow {

@@ -79,37 +79,37 @@ const STEP_CONTENT: Record<
     eyebrow: "Step 1 of 6",
     title: "Select Role",
     description:
-      "Welcome to Magnate Hub your first step success",
+      "Choose the role that best describes how you will use Magnate Hub. This helps us customize your experience from the start.",
   },
   signup: {
     eyebrow: "Step 2 of 6",
     title: "Create Your Account",
     description:
-      "Use the same registration details already wired to Magnate Hub's account API.",
+      "Create your Magnate Hub account by entering your basic details. This will allow you to securely access your dashboard and services.",
   },
   otp: {
     eyebrow: "Step 3 of 6",
-    title: "Verify your email",
+    title: "Verify Your Email",
     description:
-      "Enter the OTP sent to your inbox. Once verified, the flow signs you in automatically and moves to plan selection.",
+      "Enter the OTP sent to your email address to verify your account. Once verified, you will be automatically signed in.",
   },
   plan: {
     eyebrow: "Step 4 of 6",
-    title: "Select a plan",
+    title: "Select a Plan",
     description:
-      "Choose from the existing website pricing plans. You can adjust the recommendation before moving to checkout.",
+      "Choose the plan that best fits your needs. You can review features and select the option that works best for you.",
   },
   checkout: {
     eyebrow: "Step 5 of 6",
     title: "Checkout",
     description:
-      "Review your package, complete payment if required, and prepare the account for onboarding questions.",
+      "Review your selected plan and complete the payment if required. Once finished, your account will be ready for setup.",
   },
   questions: {
     eyebrow: "Step 6 of 6",
-    title: "Personalise your dashboard",
+    title: "Personalize Your Dashboard",
     description:
-      "Answer a few role-based questions so the dashboard can be tailored to your goals and activity.",
+      "Answer a few quick questions so we can tailor your dashboard and features to match your goals.",
   },
 };
 
@@ -892,11 +892,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           );
         })}
       </div>
-
       <div className={styles.roleFooterActions}>
-        <Link href="/login" className={styles.secondaryButton}>
-          Back to login
-        </Link>
         <button
           type="button"
           className={`${styles.primaryButton} ${styles.rolePrimaryButton}`}
@@ -904,6 +900,11 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         >
           Next
         </button>
+      </div>
+       <div className={styles.roleBackRow}>
+        <Link href="/login" className={styles.secondaryButton}>
+          Back to login
+        </Link>
       </div>
     </>
   );

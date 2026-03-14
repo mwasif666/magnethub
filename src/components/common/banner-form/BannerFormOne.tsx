@@ -551,12 +551,12 @@ const BannerFormOne = ({
                       <div className="row mb-4">
                         <div className="col-md-12">
                           <div className="input-group">
-                            <span className="input-group-text bg-white border-end-0">
+                            <span className="input-group-text banner-search-addon bg-white border-end-0">
                               <i className="fas fa-search text-muted"></i>
                             </span>
                             <input
                               type="text"
-                              className="form-control border-start-0"
+                              className="form-control banner-search-control border-start-0"
                               name="postcode"
                               value={formData.postcode}
                               onChange={handleInputChange}
@@ -579,7 +579,7 @@ const BannerFormOne = ({
                         <div className="col-md-6">
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control banner-search-control"
                             name="businessId"
                             value={formData.businessId}
                             onChange={handleInputChange}
@@ -588,7 +588,7 @@ const BannerFormOne = ({
                         </div>
                         <div className="col-md-6">
                           <select
-                            className="form-select"
+                            className="form-select banner-search-control"
                             name="category"
                             value={formData.category}
                             onChange={handleInputChange}
@@ -604,7 +604,7 @@ const BannerFormOne = ({
                         </div>
                         <div className="col-md-3">
                           <select
-                            className="form-select"
+                            className="form-select banner-search-control"
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
@@ -620,7 +620,7 @@ const BannerFormOne = ({
                         </div>
                         <div className="col-md-3">
                           <select
-                            className="form-select"
+                            className="form-select banner-search-control"
                             name="region"
                             value={formData.region}
                             onChange={handleInputChange}
@@ -645,7 +645,7 @@ const BannerFormOne = ({
                         </div>
                         <div className="col-md-3">
                           <select
-                            className="form-select"
+                            className="form-select banner-search-control"
                             name="minPrice"
                             value={formData.minPrice}
                             onChange={handleInputChange}
@@ -660,7 +660,7 @@ const BannerFormOne = ({
                         </div>
                         <div className="col-md-3">
                           <select
-                            className="form-select"
+                            className="form-select banner-search-control"
                             name="maxPrice"
                             value={formData.maxPrice}
                             onChange={handleInputChange}
@@ -735,14 +735,14 @@ const BannerFormOne = ({
                         <div className="col-md-5 d-flex gap-3">
                           <button
                             type="reset"
-                            className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
+                            className="btn w-100 d-flex align-items-center banner-action-button btn-clear justify-content-center gap-2"
                             onClick={handleClear}
                           >
                             <FaRedo /> Clear
                           </button>
                           <button
                             type="submit"
-                            className="btn w-100 h-100 d-flex align-items-center btn-submit justify-content-center gap-2"
+                            className="btn w-100 d-flex align-items-center banner-action-button btn-submit justify-content-center gap-2"
                           >
                             <FaSearch /> SEARCH
                           </button>
@@ -768,12 +768,12 @@ const BannerFormOne = ({
                       <div className="row mb-4">
                         <div className="col-md-12">
                           <div className="input-group">
-                            <span className="input-group-text bg-white border-end-0">
+                            <span className="input-group-text banner-search-addon bg-white border-end-0">
                               <i className="fas fa-search text-muted"></i>
                             </span>
                             <input
                               type="text"
-                              className="form-control border-start-0"
+                              className="form-control banner-search-control border-start-0"
                               name="sPostcode"
                               value={formData.sPostcode}
                               onChange={handleInputChange}
@@ -795,7 +795,7 @@ const BannerFormOne = ({
                         </div> */}
                         <div className="col-md-4">
                           <select
-                            className="form-select"
+                            className="form-select banner-search-control"
                             name="state2"
                             value={formData.state2}
                             onChange={handleInputChange}
@@ -811,7 +811,7 @@ const BannerFormOne = ({
                         </div>
                         <div className="col-md-4">
                           <select
-                            className="form-select"
+                            className="form-select banner-search-control"
                             name="region2"
                             value={formData.region2}
                             onChange={handleInputChange}
@@ -839,14 +839,14 @@ const BannerFormOne = ({
                         <div className="col-md-5 d-flex gap-3">
                           <button
                             type="reset"
-                            className="btn w-100 h-100 d-flex align-items-center btn-clear justify-content-center gap-2"
+                            className="btn w-100 d-flex align-items-center banner-action-button btn-clear justify-content-center gap-2"
                             onClick={handleClear}
                           >
                             <FaRedo /> Clear
                           </button>
                           <button
                             type="submit"
-                            className="btn w-100 h-100 d-flex align-items-center btn-submit justify-content-center gap-2"
+                            className="btn w-100 d-flex align-items-center banner-action-button btn-submit justify-content-center gap-2"
                           >
                             <FaSearch /> SEARCH
                           </button>
@@ -924,6 +924,44 @@ const BannerFormOne = ({
         .form-select {
           border-radius: 8px;
           padding: 0.75rem 1rem;
+        }
+
+        .input-group {
+          align-items: stretch;
+        }
+
+        .banner-search-control {
+          height: 50px;
+          min-height: 50px;
+          padding: 0 16px;
+          font-size: 14px;
+          line-height: 1.2;
+          border-radius: 12px;
+        }
+
+        .banner-search-control.form-select {
+          padding-right: 2.5rem;
+        }
+
+        .banner-search-addon {
+          display: flex;
+          align-items: center;
+          height: 50px;
+          min-height: 50px;
+          padding: 0 16px;
+          border-radius: 12px 0 0 12px;
+        }
+
+        .banner-search-control.border-start-0 {
+          border-radius: 0 12px 12px 0;
+        }
+
+        .banner-action-button {
+          min-height: 50px;
+          height: 50px;
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 700;
         }
 
         .btn-primary {
