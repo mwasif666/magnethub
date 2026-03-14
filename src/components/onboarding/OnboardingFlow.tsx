@@ -9,13 +9,14 @@ import {
   PRE_DASHBOARD_MESSAGE,
 } from "@/data/OnboardingQuestions";
 import pricing_data from "@/data/PricingData";
+import { submitStripePayment } from "@/lib/submitStripePayment";
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import type { StepIconProps } from "@mui/material/StepIcon";
 import Link from "next/link";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import styles from "./OnboardingFlow.module.css";
@@ -115,7 +116,7 @@ const STEP_CONTENT: Record<
 const DASHBOARD_URL = "https://dash.magnatehub.au/dashboard/professionals";
 const STRIPE_TEST_PUBLISHABLE_KEY =
   "pk_test_51MNU17FLKdDrx0HlvOHo2FL7A2WgPTHhoF39uLjJ85HE9MzIcdfVg7538L663FmEPKf2zHRE344l4cUhekQS8Il700Ai0b51y2";
-const OTP_LENGTH = 5;
+const OTP_LENGTH = 6;
 
 const initialSignupState: SignupState = {
   firstName: "",
@@ -218,6 +219,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const [otpCode, setOtpCode] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [resendCountdown, setResendCountdown] = useState(30);
+  const [expandedPlanDescriptions, setExpandedPlanDescriptions] = useState<
+    Record<string, boolean>
+  >({});
   const [questionAnswers, setQuestionAnswers] = useState<Record<string, string>>(
     {}
   );
@@ -230,6 +234,11 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
   const selectedRole = getOnboardingRole(selectedRoleId);
   const selectedPlan = getPlanBySlug(selectedPlanSlug) ?? pricing_data[0];
+  const expiryDisplayValue = paymentState.expMonth
+    ? `${paymentState.expMonth}${
+        paymentState.expYear ? ` / ${paymentState.expYear.slice(-2)}` : ""
+      }`
+    : "";
   const unansweredQuestions = selectedRole
     ? selectedRole.questions.filter((question) => !questionAnswers[question.id])
     : [];
@@ -320,6 +329,20 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const updatePaymentField = (field: keyof PaymentState, value: string) => {
     setPaymentState((current) => ({ ...current, [field]: value }));
     clearFieldError(field);
+  };
+
+  const updateExpiryValue = (value: string) => {
+    const digits = sanitizeDigits(value, 4);
+    const month = digits.slice(0, 2);
+    const yearSuffix = digits.slice(2, 4);
+
+    setPaymentState((current) => ({
+      ...current,
+      expMonth: month,
+      expYear: yearSuffix ? `20${yearSuffix}` : "",
+    }));
+    clearFieldError("expMonth");
+    clearFieldError("expYear");
   };
 
   const validateSignup = () => {
@@ -476,7 +499,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     }
 
     if (otpCode.trim().length < OTP_LENGTH) {
-      setFieldErrors({ otp: "Enter the full 5-digit code." });
+      setFieldErrors({ otp: "Enter the full 6-digit code." });
       return;
     }
 
@@ -603,6 +626,25 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     setPlanManuallySelected(true);
   };
 
+  const handlePlanCardKeyDown = (
+    event: KeyboardEvent<HTMLDivElement>,
+    slug: string
+  ) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+    handlePlanSelect(slug);
+  };
+
+  const togglePlanDescription = (planKey: string) => {
+    setExpandedPlanDescriptions((current) => ({
+      ...current,
+      [planKey]: !current[planKey],
+    }));
+  };
+
   const handlePlanContinue = () => {
     if (!selectedPlan) {
       toast.error("Please choose a plan to continue.");
@@ -657,14 +699,13 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         );
       });
 
-      const formData = new FormData();
-      formData.append("stripeToken", stripeResponse.id);
-      formData.append("plan_id", String(selectedPlan.id));
-
-      const response = await apiRequest({
-        url: "/stripe",
-        method: "POST",
-        data: formData,
+      const response = await submitStripePayment({
+        stripeToken: stripeResponse.id,
+        planId: selectedPlan.id,
+        email: paymentState.email,
+        name: paymentState.name,
+        phone: paymentState.phone,
+        message: paymentState.message,
       });
 
       setRedirectUrl(
@@ -852,10 +893,13 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         })}
       </div>
 
-      <div className={styles.actionRow}>
+      <div className={styles.roleFooterActions}>
+        <Link href="/login" className={styles.secondaryButton}>
+          Back to login
+        </Link>
         <button
           type="button"
-          className={styles.primaryButton}
+          className={`${styles.primaryButton} ${styles.rolePrimaryButton}`}
           onClick={handleContinueFromRole}
         >
           Next
@@ -865,7 +909,25 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   );
 
   const renderSignupStep = () => (
-    <form onSubmit={handleSignupSubmit} className={styles.signupForm}>
+    <form
+      onSubmit={handleSignupSubmit}
+      className={styles.signupForm}
+      autoComplete="off"
+    >
+      <input
+        type="text"
+        name="fake_username"
+        autoComplete="username"
+        tabIndex={-1}
+        className={styles.autofillTrap}
+      />
+      <input
+        type="password"
+        name="fake_password"
+        autoComplete="current-password"
+        tabIndex={-1}
+        className={styles.autofillTrap}
+      />
       <div className={`${styles.formGrid} ${styles.signupFormGrid}`}>
         <div className={styles.field}>
           <label className={`${styles.label} ${styles.signupLabel}`}>
@@ -873,6 +935,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           </label>
           <input
             className={`${styles.input} ${styles.signupInputGhost}`}
+            name="register_first_name"
+            autoComplete="off"
             value={signupState.firstName}
             onChange={(event) =>
               updateSignupField("firstName", event.target.value)
@@ -888,6 +952,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           </label>
           <input
             className={`${styles.input} ${styles.signupInputGhost}`}
+            name="register_last_name"
+            autoComplete="off"
             value={signupState.lastName}
             onChange={(event) =>
               updateSignupField("lastName", event.target.value)
@@ -904,6 +970,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           <input
             className={`${styles.input} ${styles.signupInputSolid}`}
             type="email"
+            name="register_email"
+            autoComplete="off"
             value={signupState.email}
             onChange={(event) => updateSignupField("email", event.target.value)}
             placeholder="john@example.com"
@@ -918,6 +986,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           <input
             className={`${styles.input} ${styles.signupInputSolid}`}
             type="password"
+            name="register_password"
+            autoComplete="new-password"
             value={signupState.password}
             onChange={(event) =>
               updateSignupField("password", event.target.value)
@@ -934,6 +1004,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           <input
             className={`${styles.input} ${styles.signupInputSolid}`}
             type="password"
+            name="register_confirm_password"
+            autoComplete="new-password"
             value={signupState.confirmPassword}
             onChange={(event) =>
               updateSignupField("confirmPassword", event.target.value)
@@ -1030,15 +1102,22 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     <>
       <div className={styles.planGrid}>
         {pricing_data.map((plan) => {
+          const planKey = plan.slug || String(plan.id);
           const isActive = plan.slug === selectedPlan.slug;
           const isRecommended = selectedRole?.recommendedPlanSlug === plan.slug;
+          const isExpanded = Boolean(expandedPlanDescriptions[planKey]);
+          const shouldShowToggle = plan.desc.trim().length > 140;
 
           return (
-            <button
+            <div
               key={plan.id}
-              type="button"
+              role="button"
+              tabIndex={0}
               className={`${styles.planCard} ${isActive ? styles.planCardActive : ""}`}
               onClick={() => handlePlanSelect(plan.slug || "")}
+              onKeyDown={(event) =>
+                handlePlanCardKeyDown(event, plan.slug || "")
+              }
             >
               <div className={styles.planHeader}>
                 <div>
@@ -1053,7 +1132,27 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
                 )}
               </div>
 
-              <p className={styles.planDescription}>{plan.desc.trim()}</p>
+              <div className={styles.planDescriptionWrap}>
+                <p
+                  className={`${styles.planDescription} ${
+                    !isExpanded ? styles.planDescriptionCollapsed : ""
+                  }`}
+                >
+                  {plan.desc.trim()}
+                </p>
+                {shouldShowToggle && (
+                  <button
+                    type="button"
+                    className={styles.readMoreButton}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      togglePlanDescription(planKey);
+                    }}
+                  >
+                    {isExpanded ? "Read less" : "Read more"}
+                  </button>
+                )}
+              </div>
 
               <ul className={styles.planList}>
                 {plan.list.slice(0, 4).map((item) => (
@@ -1066,7 +1165,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
                   +{plan.list.length - 4} more included benefits
                 </p>
               )}
-            </button>
+            </div>
           );
         })}
       </div>
@@ -1086,7 +1185,158 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const renderCheckoutStep = () => (
     <form onSubmit={handleCheckoutSubmit}>
       <div className={styles.checkoutGrid}>
-        <div className={styles.checkoutSummary}>
+        <div className={styles.checkoutFormPanel}>
+          {selectedPlan.price > 0 && (
+            <div className={styles.checkoutSection}>
+              <div className={styles.checkoutSectionHeader}>
+                <h3 className={styles.checkoutSectionTitle}>
+                  Payment information
+                </h3>
+                <span className={styles.checkoutSecurityNote}>
+                  Secured by Stripe
+                </span>
+              </div>
+
+              <div className={styles.checkoutPaymentGrid}>
+                <div className={`${styles.field} ${styles.checkoutFieldWide}`}>
+                  <input
+                    className={`${styles.input} ${styles.checkoutInput}`}
+                    value={paymentState.cardNumber}
+                    onChange={(event) =>
+                      updatePaymentField(
+                        "cardNumber",
+                        formatCardNumber(event.target.value)
+                      )
+                    }
+                    placeholder="Card number"
+                    inputMode="numeric"
+                  />
+                  <p className={styles.error}>{fieldErrors.cardNumber}</p>
+                </div>
+
+                <div className={styles.field}>
+                  <input
+                    className={`${styles.input} ${styles.checkoutInput}`}
+                    value={expiryDisplayValue}
+                    onChange={(event) => updateExpiryValue(event.target.value)}
+                    placeholder="MM / YY"
+                    inputMode="numeric"
+                  />
+                  <p className={styles.error}>
+                    {fieldErrors.expMonth || fieldErrors.expYear}
+                  </p>
+                </div>
+
+                <div className={styles.field}>
+                  <input
+                    className={`${styles.input} ${styles.checkoutInput}`}
+                    value={paymentState.cardName}
+                    onChange={(event) =>
+                      updatePaymentField("cardName", event.target.value)
+                    }
+                    placeholder="Name on card"
+                  />
+                  <p className={styles.error}>{fieldErrors.cardName}</p>
+                </div>
+
+                <div className={styles.field}>
+                  <input
+                    className={`${styles.input} ${styles.checkoutInput}`}
+                    value={paymentState.cvc}
+                    onChange={(event) =>
+                      updatePaymentField(
+                        "cvc",
+                        sanitizeDigits(event.target.value, 4)
+                      )
+                    }
+                    placeholder="CVV"
+                    inputMode="numeric"
+                  />
+                  <p className={styles.error}>{fieldErrors.cvc}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className={styles.checkoutSection}>
+            <h3 className={styles.checkoutSectionTitle}>Billing information</h3>
+            <div className={styles.formGrid}>
+              <div className={styles.field}>
+                <label className={styles.label}>Full name</label>
+                <input
+                  className={`${styles.input} ${styles.checkoutInput}`}
+                  value={paymentState.name}
+                  onChange={(event) =>
+                    updatePaymentField("name", event.target.value)
+                  }
+                  placeholder="John Doe"
+                />
+                <p className={styles.error}>{fieldErrors.name}</p>
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>Email address</label>
+                <input
+                  className={`${styles.input} ${styles.checkoutInput}`}
+                  type="email"
+                  value={paymentState.email}
+                  onChange={(event) =>
+                    updatePaymentField("email", event.target.value)
+                  }
+                  placeholder="john@example.com"
+                />
+                <p className={styles.error}>{fieldErrors.email}</p>
+              </div>
+
+              <div className={`${styles.field} ${styles.fieldFull}`}>
+                <label className={styles.label}>Phone number</label>
+                <input
+                  className={`${styles.input} ${styles.checkoutInput}`}
+                  value={paymentState.phone}
+                  onChange={(event) =>
+                    updatePaymentField("phone", event.target.value)
+                  }
+                  placeholder="+61 400 000 000"
+                />
+                <p className={styles.error}>{fieldErrors.phone}</p>
+              </div>
+
+              <div className={`${styles.field} ${styles.fieldFull}`}>
+                <label className={styles.label}>Message</label>
+                <textarea
+                  className={`${styles.textarea} ${styles.checkoutTextarea}`}
+                  value={paymentState.message}
+                  onChange={(event) =>
+                    updatePaymentField("message", event.target.value)
+                  }
+                  placeholder="Any additional details you want the team to know..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.checkoutNotice}>
+            {selectedPlan.price === 0
+              ? "Free plan selected. No card details are required. Continue to the final setup questions."
+              : "Payment is processed securely through Stripe. After a successful payment, you will continue to the onboarding questions."}
+          </div>
+
+          <div className={`${styles.actionRow} ${styles.checkoutActionRow}`}>
+            <button
+              type="submit"
+              className={`${styles.primaryButton} ${styles.checkoutPrimaryButton}`}
+              disabled={actionLoading === "checkout"}
+            >
+              {actionLoading === "checkout"
+                ? "Processing..."
+                : selectedPlan.price === 0
+                ? "Continue to questions"
+                : `Pay $${selectedPlan.price} and continue`}
+            </button>
+          </div>
+        </div>
+
+        <aside className={styles.checkoutSummaryPanel}>
           <div className={styles.summaryPanel}>
             <span className={styles.summaryEyebrow}>Selected plan</span>
             <h3 className={styles.summaryTitle}>{selectedPlan.title}</h3>
@@ -1101,162 +1351,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
             <div className={styles.secureBadge}>Secure Stripe tokenised payment</div>
           </div>
-        </div>
-
-        <div className={styles.checkoutForm}>
-          <div className={styles.formGrid}>
-            <div className={styles.field}>
-              <label className={styles.label}>Full name</label>
-              <input
-                className={styles.input}
-                value={paymentState.name}
-                onChange={(event) => updatePaymentField("name", event.target.value)}
-                placeholder="John Doe"
-              />
-              <p className={styles.error}>{fieldErrors.name}</p>
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label}>Email address</label>
-              <input
-                className={styles.input}
-                type="email"
-                value={paymentState.email}
-                onChange={(event) =>
-                  updatePaymentField("email", event.target.value)
-                }
-                placeholder="john@example.com"
-              />
-              <p className={styles.error}>{fieldErrors.email}</p>
-            </div>
-
-            <div className={`${styles.field} ${styles.fieldFull}`}>
-              <label className={styles.label}>Phone number</label>
-              <input
-                className={styles.input}
-                value={paymentState.phone}
-                onChange={(event) =>
-                  updatePaymentField("phone", event.target.value)
-                }
-                placeholder="+61 400 000 000"
-              />
-              <p className={styles.error}>{fieldErrors.phone}</p>
-            </div>
-
-            <div className={`${styles.field} ${styles.fieldFull}`}>
-              <label className={styles.label}>Message</label>
-              <textarea
-                className={styles.textarea}
-                value={paymentState.message}
-                onChange={(event) =>
-                  updatePaymentField("message", event.target.value)
-                }
-                placeholder="Any additional details you want the team to know..."
-              />
-            </div>
-          </div>
-
-          {selectedPlan.price === 0 ? (
-            <div className={styles.messageBox}>
-              Free plan selected. No card details are required. Continue to the
-              final setup questions.
-            </div>
-          ) : (
-            <div className={styles.formGrid}>
-              <div className={`${styles.field} ${styles.fieldFull}`}>
-                <label className={styles.label}>Name on card</label>
-                <input
-                  className={styles.input}
-                  value={paymentState.cardName}
-                  onChange={(event) =>
-                    updatePaymentField("cardName", event.target.value)
-                  }
-                  placeholder="JOHN DOE"
-                />
-                <p className={styles.error}>{fieldErrors.cardName}</p>
-              </div>
-
-              <div className={`${styles.field} ${styles.fieldFull}`}>
-                <label className={styles.label}>Card number</label>
-                <input
-                  className={styles.input}
-                  value={paymentState.cardNumber}
-                  onChange={(event) =>
-                    updatePaymentField(
-                      "cardNumber",
-                      formatCardNumber(event.target.value)
-                    )
-                  }
-                  placeholder="1234 5678 9012 3456"
-                  inputMode="numeric"
-                />
-                <p className={styles.error}>{fieldErrors.cardNumber}</p>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label}>CVC</label>
-                <input
-                  className={styles.input}
-                  value={paymentState.cvc}
-                  onChange={(event) =>
-                    updatePaymentField("cvc", sanitizeDigits(event.target.value, 4))
-                  }
-                  placeholder="123"
-                  inputMode="numeric"
-                />
-                <p className={styles.error}>{fieldErrors.cvc}</p>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label}>Expiry month</label>
-                <input
-                  className={styles.input}
-                  value={paymentState.expMonth}
-                  onChange={(event) =>
-                    updatePaymentField(
-                      "expMonth",
-                      sanitizeDigits(event.target.value, 2)
-                    )
-                  }
-                  placeholder="MM"
-                  inputMode="numeric"
-                />
-                <p className={styles.error}>{fieldErrors.expMonth}</p>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label}>Expiry year</label>
-                <input
-                  className={styles.input}
-                  value={paymentState.expYear}
-                  onChange={(event) =>
-                    updatePaymentField(
-                      "expYear",
-                      sanitizeDigits(event.target.value, 4)
-                    )
-                  }
-                  placeholder="YYYY"
-                  inputMode="numeric"
-                />
-                <p className={styles.error}>{fieldErrors.expYear}</p>
-              </div>
-            </div>
-          )}
-
-          <div className={styles.actionRow}>
-            <button
-              type="submit"
-              className={styles.primaryButton}
-              disabled={actionLoading === "checkout"}
-            >
-              {actionLoading === "checkout"
-                ? "Processing..."
-                : selectedPlan.price === 0
-                ? "Continue to questions"
-                : `Pay $${selectedPlan.price} and continue`}
-            </button>
-          </div>
-        </div>
+        </aside>
       </div>
     </form>
   );
@@ -1320,7 +1415,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
   const currentStepContent = STEP_CONTENT[currentStep];
   const shellClassName = `${styles.shell} ${
-    currentStep === "plan" || currentStep === "questions"
+    currentStep === "plan" ||
+    currentStep === "questions" ||
+    currentStep === "checkout"
       ? styles.shellWide
       : currentStep === "otp"
       ? styles.shellCompact

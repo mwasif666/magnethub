@@ -159,6 +159,23 @@ const LoginForm = () => {
       </form>
 
       <style jsx>{`
+        .input {
+          box-sizing: border-box;
+          height: 46px;
+          min-height: 46px;
+          padding: 0 16px;
+          border-radius: 8px;
+          font-size: 14px;
+          line-height: 1.2;
+        }
+
+        .input:-webkit-autofill,
+        .input:-webkit-autofill:hover,
+        .input:-webkit-autofill:focus {
+          -webkit-text-fill-color: inherit;
+          box-shadow: 0 0 0 1000px transparent inset;
+        }
+
         .form_error {
           color: red !important;
           font-size: 11px;

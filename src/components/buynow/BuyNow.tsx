@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast, ToastContainer } from "react-toastify";
-import { apiRequest } from "@/api/axiosInstance";
 import * as yup from "yup";
 import styles from "./BuyNow.module.css";
 import pricing_data from "@/data/PricingData";
 import Loading from "../loading/Loading";
+import { submitStripePayment } from "@/lib/submitStripePayment";
 import "react-toastify/dist/ReactToastify.css";
 
 interface BuyNowProps {
@@ -125,24 +125,23 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
 
       const token = (stripeResponse as any).id;
 
-      const formData =  new FormData();
-      formData.append("stripeToken", token);
-      formData.append("plan_id", item && item.id);
-      
-      const response = await apiRequest({
-        url: "/stripe",
-        method: "POST",
-        data: formData,
+      const response = await submitStripePayment({
+        stripeToken: token,
+        planId: item && item.id,
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        message: data.message,
       });
 
        window.open(
-          `https://dash.magnatehub.au${response.redirect}`,
+          `https://dash.magnatehub.au${response.redirect || "/dashboard/professionals"}`,
           "_blank"
         );
       toast.success("Plan Purchase Successfully!");
       reset({plan: selectedSlug});
-    } catch (error) {
-      toast.error("Error submitting form");
+    } catch (error: any) {
+      toast.error(error?.message || "Error submitting form");
     } finally {
       setLoading(false);
     }
