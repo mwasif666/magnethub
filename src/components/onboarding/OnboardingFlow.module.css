@@ -1,0 +1,716 @@
+.area {
+  min-height: 100vh;
+  padding: 120px 0 90px;
+  background-image:
+    linear-gradient(0deg, rgba(47, 33, 77, 0.42), rgba(47, 33, 77, 0.42)),
+    linear-gradient(to right, rgba(41, 27, 78, 0.58), rgba(41, 27, 78, 0.58)),
+    url("/assets/img/banner/banner.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.shell {
+  width: min(100%, 800px);
+  margin: 0 auto;
+  padding: 38px 52px 38px;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(251, 184, 77, 0.16), transparent 25%),
+    radial-gradient(circle at center, rgba(64, 87, 255, 0.16), transparent 35%),
+    linear-gradient(180deg, rgba(99, 82, 152, 0.52) 0%, rgba(86, 63, 128, 0.42) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 24px 80px rgba(18, 8, 47, 0.28);
+}
+
+.shellWide {
+  width: min(100%, 860px);
+}
+
+.shellCompact {
+  width: min(100%, 500px);
+}
+
+.sidebar,
+.content {
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.brand,
+.sidebarTitle,
+.sidebarText,
+.progressTrack,
+.summaryCard {
+  display: none;
+}
+
+.stepList {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin-bottom: 26px;
+  padding-top: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.stepList::before,
+.stepList::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 7%;
+  right: 7%;
+  height: 2px;
+  border-radius: 999px;
+}
+
+.stepList::before {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.stepList::after {
+  right: auto;
+  width: var(--step-progress, 0%);
+  background: linear-gradient(90deg, #5a00ff 0%, #9a33ff 100%);
+}
+
+.stepList::-webkit-scrollbar {
+  display: none;
+}
+
+.stepItem {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 92px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  opacity: 0.9;
+}
+
+.stepItemActive,
+.stepItemComplete {
+  opacity: 1;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.stepItemActive .stepNumber,
+.stepItemComplete .stepNumber {
+  background: #5f14ff;
+}
+
+.stepLabel {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stepCaption {
+  display: none;
+}
+
+.contentHeader {
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  display: none;
+}
+
+.title {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.description {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.roleChoiceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 26px;
+  margin-top: 6px;
+}
+
+.roleChoiceButton {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  background: #fff;
+  color: #1b1630;
+  font-size: 12px;
+  font-weight: 700;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.roleChoiceButtonActive {
+  border-color: transparent;
+  background: linear-gradient(90deg, #5a00ff 0%, #7d12ff 100%);
+  color: #fff;
+}
+
+.contentBody {
+  display: grid;
+  gap: 18px;
+}
+
+.roleGrid,
+.planGrid,
+.questionList {
+  display: grid;
+  gap: 14px;
+}
+
+.roleGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.planGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.questionList {
+  grid-template-columns: 1fr;
+}
+
+.roleCard,
+.planCard,
+.questionCard {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.roleCard,
+.planCard {
+  padding: 16px;
+}
+
+.questionCard {
+  padding: 16px;
+}
+
+.roleCard:hover,
+.planCard:hover,
+.optionButton:hover {
+  transform: translateY(-1px);
+}
+
+.roleCardActive,
+.planCardActive {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(106, 20, 218, 0.18);
+}
+
+.roleBadge,
+.recommendedTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.recommendedTag {
+  background: rgba(95, 20, 255, 0.4);
+}
+
+.roleTitle,
+.planTitle,
+.questionTitle,
+.summaryTitle {
+  margin: 10px 0 8px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.roleTitle,
+.planTitle,
+.summaryTitle {
+  font-size: 16px;
+}
+
+.questionTitle {
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.roleDescription,
+.planDescription,
+.summaryText,
+.helperText {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 14px;
+}
+
+.signupForm {
+  display: grid;
+  gap: 0;
+}
+
+.signupFormGrid {
+  gap: 22px 18px;
+}
+
+.field {
+  min-width: 0;
+}
+
+.fieldFull {
+  grid-column: 1 / -1;
+}
+
+.label {
+  display: block;
+  margin-bottom: 7px;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.signupLabel {
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.66);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.signupInputGhost {
+  height: 54px;
+  padding: 0 18px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 14px;
+}
+
+.signupInputSolid {
+  height: 54px;
+  padding: 0 18px;
+  border-radius: 8px;
+  background: #fff;
+  color: #31324d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.signupInputSolid::placeholder {
+  color: rgba(49, 50, 77, 0.72);
+}
+
+.textarea {
+  min-height: 76px;
+  padding: 10px 12px;
+  resize: vertical;
+  font-size: 12px;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.input:focus,
+.textarea:focus,
+.otpBoxRow:focus-within {
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(95, 20, 255, 0.18);
+}
+
+.error {
+  min-height: 16px;
+  margin: 5px 0 0;
+  color: #ff9da8;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.inlineFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.inlineLink,
+.linkButton {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.inlineLink:hover,
+.linkButton:hover {
+  text-decoration: underline;
+}
+
+.actionRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.footerActions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 22px;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 18px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 700;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.primaryButton {
+  min-width: 220px;
+  background: linear-gradient(90deg, #5a00ff 0%, #7d12ff 100%);
+  color: #fff;
+}
+
+.signupPrimaryButton {
+  min-width: 276px;
+  min-height: 40px;
+  font-size: 14px;
+}
+
+.secondaryButton {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.66);
+  color: #fff;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.linkButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.planHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.planPrice,
+.summaryAmount {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.planPrice span {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.planList,
+.summaryList {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.planList li,
+.summaryList li {
+  position: relative;
+  padding-left: 14px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.planList li::before,
+.summaryList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.checkoutGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.summaryPanel,
+.messageBox {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.summaryPanel {
+  padding: 14px;
+}
+
+.summaryEyebrow {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.secureBadge {
+  display: inline-flex;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.messageBox {
+  padding: 12px 14px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.messageinfo {
+  background: rgba(96, 154, 255, 0.16);
+}
+
+.messagesuccess {
+  background: rgba(58, 214, 131, 0.16);
+}
+
+.messageerror {
+  background: rgba(255, 88, 88, 0.14);
+}
+
+.questionHeader {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.questionNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(95, 20, 255, 0.3);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.optionButton {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.optionButtonActive {
+  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(95, 20, 255, 0.26);
+}
+
+.otpWrap {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+.otpHiddenInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.otpBoxRow {
+  display: flex;
+  gap: 14px;
+}
+
+.otpBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 54px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: text;
+}
+
+.otpTimer {
+  margin: 0;
+  color: #ff4040;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 991px) {
+  .area {
+    padding: 100px 0 70px;
+  }
+
+  .shell,
+  .shellWide,
+  .shellCompact {
+    width: min(100%, 92vw);
+    padding: 28px 20px 30px;
+  }
+
+  .planGrid,
+  .roleGrid,
+  .formGrid,
+  .optionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .roleChoiceGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .primaryButton {
+    width: 100%;
+    min-width: 0;
+  }
+
+}
+
+@media (max-width: 575px) {
+  .area {
+    padding: 86px 0 54px;
+  }
+
+  .shell,
+  .shellWide,
+  .shellCompact {
+    padding: 20px 16px 22px;
+    border-radius: 26px;
+  }
+
+  .otpBoxRow {
+    gap: 10px;
+  }
+
+  .otpBox {
+    width: 48px;
+    height: 48px;
+  }
+
+  .inlineFooter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

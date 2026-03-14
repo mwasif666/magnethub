@@ -1,0 +1,1475 @@
+"use client";
+
+import { apiRequest } from "@/api/axiosInstance";
+import { useAuth } from "@/context/AuthContext";
+import {
+  getOnboardingRole,
+  onboardingRoleConfigs,
+  OnboardingRoleId,
+  PRE_DASHBOARD_MESSAGE,
+} from "@/data/OnboardingQuestions";
+import pricing_data from "@/data/PricingData";
+import Box from "@mui/material/Box";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
+import type { StepIconProps } from "@mui/material/StepIcon";
+import Link from "next/link";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
+import styles from "./OnboardingFlow.module.css";
+
+type StepId = "role" | "signup" | "otp" | "plan" | "checkout" | "questions";
+type MessageTone = "info" | "success" | "error";
+
+interface PricingItem {
+  id: number;
+  slug?: string;
+  title: string;
+  desc: string;
+  price: number;
+  list: string[];
+}
+
+interface OnboardingFlowProps {
+  defaultPlanSlug?: string;
+}
+
+interface SignupState {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface PaymentState {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  cardName: string;
+  cardNumber: string;
+  cvc: string;
+  expMonth: string;
+  expYear: string;
+}
+
+interface InlineMessage {
+  tone: MessageTone;
+  text: string;
+}
+
+const STEP_ORDER: StepId[] = [
+  "role",
+  "signup",
+  "otp",
+  "plan",
+  "checkout",
+  "questions",
+];
+
+const STEP_CONTENT: Record<
+  StepId,
+  { eyebrow: string; title: string; description: string }
+> = {
+  role: {
+    eyebrow: "Step 1 of 6",
+    title: "Select Role",
+    description:
+      "Welcome to Magnate Hub your first step success",
+  },
+  signup: {
+    eyebrow: "Step 2 of 6",
+    title: "Create Your Account",
+    description:
+      "Use the same registration details already wired to Magnate Hub's account API.",
+  },
+  otp: {
+    eyebrow: "Step 3 of 6",
+    title: "Verify your email",
+    description:
+      "Enter the OTP sent to your inbox. Once verified, the flow signs you in automatically and moves to plan selection.",
+  },
+  plan: {
+    eyebrow: "Step 4 of 6",
+    title: "Select a plan",
+    description:
+      "Choose from the existing website pricing plans. You can adjust the recommendation before moving to checkout.",
+  },
+  checkout: {
+    eyebrow: "Step 5 of 6",
+    title: "Checkout",
+    description:
+      "Review your package, complete payment if required, and prepare the account for onboarding questions.",
+  },
+  questions: {
+    eyebrow: "Step 6 of 6",
+    title: "Personalise your dashboard",
+    description:
+      "Answer a few role-based questions so the dashboard can be tailored to your goals and activity.",
+  },
+};
+
+const DASHBOARD_URL = "https://dash.magnatehub.au/dashboard/professionals";
+const STRIPE_TEST_PUBLISHABLE_KEY =
+  "pk_test_51MNU17FLKdDrx0HlvOHo2FL7A2WgPTHhoF39uLjJ85HE9MzIcdfVg7538L663FmEPKf2zHRE344l4cUhekQS8Il700Ai0b51y2";
+const OTP_LENGTH = 5;
+
+const initialSignupState: SignupState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+const initialPaymentState: PaymentState = {
+  name: "",
+  email: "",
+  phone: "",
+  message: "",
+  cardName: "",
+  cardNumber: "",
+  cvc: "",
+  expMonth: "",
+  expYear: "",
+};
+
+const isValidRoleId = (value?: string | null): value is OnboardingRoleId =>
+  onboardingRoleConfigs.some((role) => role.id === value);
+
+const getDefaultPlanForRole = (roleId?: OnboardingRoleId | null) =>
+  getOnboardingRole(roleId)?.recommendedPlanSlug ?? "free_plan";
+
+const getPlanBySlug = (slug?: string | null): PricingItem | undefined =>
+  pricing_data.find((item) => item.slug === slug);
+
+const getApiErrorMessage = (error: any, fallback: string) =>
+  error?.response?.data?.message ||
+  error?.data?.message ||
+  error?.message ||
+  fallback;
+
+const formatCardNumber = (value: string) =>
+  value
+    .replace(/\D/g, "")
+    .slice(0, 16)
+    .replace(/(.{4})/g, "$1 ")
+    .trim();
+
+const sanitizeDigits = (value: string, maxLength: number) =>
+  value.replace(/\D/g, "").slice(0, maxLength);
+
+const OnboardingStepIcon = ({ active, completed, icon }: StepIconProps) => {
+  const isHighlighted = Boolean(active || completed);
+
+  return (
+    <Box
+      sx={{
+        width: 34,
+        height: 34,
+        borderRadius: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: isHighlighted
+          ? "linear-gradient(90deg, #5a00ff 0%, #7d12ff 100%)"
+          : "rgba(255, 255, 255, 0.24)",
+        color: "#fff",
+        fontSize: "14px",
+        fontWeight: 700,
+        lineHeight: 1,
+        boxShadow: isHighlighted
+          ? "0 10px 24px rgba(95, 20, 255, 0.24)"
+          : "none",
+      }}
+    >
+      {icon}
+    </Box>
+  );
+};
+
+const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
+  const searchParams = useSearchParams();
+  const requestedPlan = searchParams.get("plan");
+  const requestedRole = searchParams.get("role");
+
+  const initialRoleId = isValidRoleId(requestedRole) ? requestedRole : null;
+  const initialPlanSlug =
+    getPlanBySlug(requestedPlan)?.slug ??
+    getPlanBySlug(defaultPlanSlug)?.slug ??
+    getDefaultPlanForRole(initialRoleId);
+
+  const { registerUser, verifiyOtp, loginUser } = useAuth();
+
+  const [currentStep, setCurrentStep] = useState<StepId>("role");
+  const [selectedRoleId, setSelectedRoleId] =
+    useState<OnboardingRoleId | null>(initialRoleId);
+  const [selectedPlanSlug, setSelectedPlanSlug] =
+    useState<string>(initialPlanSlug);
+  const [planManuallySelected, setPlanManuallySelected] = useState(
+    Boolean(requestedPlan || defaultPlanSlug)
+  );
+  const [signupState, setSignupState] = useState<SignupState>(initialSignupState);
+  const [paymentState, setPaymentState] =
+    useState<PaymentState>(initialPaymentState);
+  const [otpCode, setOtpCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [resendCountdown, setResendCountdown] = useState(30);
+  const [questionAnswers, setQuestionAnswers] = useState<Record<string, string>>(
+    {}
+  );
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [actionLoading, setActionLoading] = useState<StepId | null>(null);
+  const [otpMessage, setOtpMessage] = useState<InlineMessage | null>(null);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState(DASHBOARD_URL);
+  const otpInputRef = useRef<HTMLInputElement | null>(null);
+
+  const selectedRole = getOnboardingRole(selectedRoleId);
+  const selectedPlan = getPlanBySlug(selectedPlanSlug) ?? pricing_data[0];
+  const unansweredQuestions = selectedRole
+    ? selectedRole.questions.filter((question) => !questionAnswers[question.id])
+    : [];
+  const stripePublishableKey =
+    process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || STRIPE_TEST_PUBLISHABLE_KEY;
+
+  useEffect(() => {
+    if (!selectedRoleId || planManuallySelected) {
+      return;
+    }
+
+    setSelectedPlanSlug(getDefaultPlanForRole(selectedRoleId));
+  }, [selectedRoleId, planManuallySelected]);
+
+  useEffect(() => {
+    const fullName = `${signupState.firstName} ${signupState.lastName}`.trim();
+
+    setPaymentState((current) => ({
+      ...current,
+      name: current.name || fullName,
+      email: current.email || signupState.email,
+      cardName: current.cardName || fullName,
+    }));
+  }, [signupState.email, signupState.firstName, signupState.lastName]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !stripePublishableKey) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      if (window.Stripe) {
+        window.Stripe.setPublishableKey(stripePublishableKey);
+        window.clearInterval(interval);
+      }
+    }, 300);
+
+    return () => window.clearInterval(interval);
+  }, [stripePublishableKey]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setFieldErrors({});
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (currentStep !== "otp") {
+      return;
+    }
+
+    setResendCountdown(30);
+
+    const interval = window.setInterval(() => {
+      setResendCountdown((current) => {
+        if (current <= 1) {
+          window.clearInterval(interval);
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, [currentStep, verificationCode]);
+
+  const setStep = (step: StepId) => {
+    setCurrentStep(step);
+  };
+
+  const clearFieldError = (field: string) => {
+    setFieldErrors((current) => {
+      if (!current[field]) {
+        return current;
+      }
+
+      const nextErrors = { ...current };
+      delete nextErrors[field];
+      return nextErrors;
+    });
+  };
+
+  const updateSignupField = (field: keyof SignupState, value: string) => {
+    setSignupState((current) => ({ ...current, [field]: value }));
+    clearFieldError(field);
+  };
+
+  const updatePaymentField = (field: keyof PaymentState, value: string) => {
+    setPaymentState((current) => ({ ...current, [field]: value }));
+    clearFieldError(field);
+  };
+
+  const validateSignup = () => {
+    const errors: Record<string, string> = {};
+
+    if (!signupState.firstName.trim()) {
+      errors.firstName = "First name is required.";
+    }
+    if (!signupState.lastName.trim()) {
+      errors.lastName = "Last name is required.";
+    }
+    if (!signupState.email.trim()) {
+      errors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupState.email.trim())) {
+      errors.email = "Enter a valid email address.";
+    }
+    if (!signupState.password) {
+      errors.password = "Password is required.";
+    } else if (signupState.password.length < 6) {
+      errors.password = "Password must be at least 6 characters.";
+    }
+    if (!signupState.confirmPassword) {
+      errors.confirmPassword = "Please confirm your password.";
+    } else if (signupState.confirmPassword !== signupState.password) {
+      errors.confirmPassword = "Passwords must match.";
+    }
+
+    return errors;
+  };
+
+  const validatePayment = () => {
+    const errors: Record<string, string> = {};
+
+    if (!paymentState.name.trim()) {
+      errors.name = "Full name is required.";
+    }
+    if (!paymentState.email.trim()) {
+      errors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paymentState.email.trim())) {
+      errors.email = "Enter a valid email address.";
+    }
+    if (!paymentState.phone.trim()) {
+      errors.phone = "Phone number is required.";
+    }
+
+    if (selectedPlan.price === 0) {
+      return errors;
+    }
+
+    const cleanCardNumber = paymentState.cardNumber.replace(/\s/g, "");
+
+    if (!paymentState.cardName.trim()) {
+      errors.cardName = "Name on card is required.";
+    }
+    if (!cleanCardNumber) {
+      errors.cardNumber = "Card number is required.";
+    } else if (!/^\d{16}$/.test(cleanCardNumber)) {
+      errors.cardNumber = "Card number must be 16 digits.";
+    }
+    if (!/^\d{3,4}$/.test(paymentState.cvc)) {
+      errors.cvc = "Enter a valid CVC.";
+    }
+    if (!/^(0[1-9]|1[0-2])$/.test(paymentState.expMonth)) {
+      errors.expMonth = "Enter a valid month.";
+    }
+    if (!/^20\d{2}$/.test(paymentState.expYear)) {
+      errors.expYear = "Enter a valid year.";
+    }
+
+    return errors;
+  };
+
+  const handleContinueFromRole = () => {
+    if (!selectedRoleId) {
+      toast.error("Please select a role to continue.");
+      return;
+    }
+
+    setStep("signup");
+  };
+
+  const handleSignupSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!selectedRoleId) {
+      toast.error("Please select a role to continue.");
+      setStep("role");
+      return;
+    }
+
+    const errors = validateSignup();
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    try {
+      setActionLoading("signup");
+
+      const formData = new FormData();
+      formData.append("first_name", signupState.firstName.trim());
+      formData.append("last_name", signupState.lastName.trim());
+      formData.append("email", signupState.email.trim());
+      formData.append("password", signupState.password);
+      formData.append("password_confirmation", signupState.confirmPassword);
+      formData.append("type", selectedRoleId);
+
+      const response = await registerUser(formData);
+
+      if (!response) {
+        toast.error("No response received from the server.");
+        return;
+      }
+
+      if ((response as any).error) {
+        toast.error((response as any).message || "Registration failed.");
+        return;
+      }
+
+      if (!response.code) {
+        toast.error("Verification code was not returned by the server.");
+        return;
+      }
+
+      localStorage.setItem("code", response.code);
+      if (response.otp) {
+        localStorage.setItem("otp", response.otp);
+      }
+
+      setVerificationCode(response.code);
+      setOtpMessage({
+        tone: "info",
+        text: `We've sent an OTP to ${signupState.email.trim()}. Enter it below to continue.`,
+      });
+      toast.success("Account created. Verify your email to continue.");
+      setStep("otp");
+    } catch (error: any) {
+      toast.error(
+        getApiErrorMessage(error, "Something went wrong. Please try again.")
+      );
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleVerifyOtp = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const activeCode = verificationCode || localStorage.getItem("code") || "";
+
+    if (!otpCode.trim()) {
+      setFieldErrors({ otp: "OTP is required." });
+      return;
+    }
+
+    if (otpCode.trim().length < OTP_LENGTH) {
+      setFieldErrors({ otp: "Enter the full 5-digit code." });
+      return;
+    }
+
+    if (!activeCode) {
+      setOtpMessage({
+        tone: "error",
+        text: "Verification session expired. Please register again.",
+      });
+      return;
+    }
+
+    try {
+      setActionLoading("otp");
+      setOtpMessage(null);
+
+      const formData = new FormData();
+      formData.append("otp", otpCode.trim());
+      formData.append("code", activeCode);
+
+      const response = await verifiyOtp(formData);
+
+      if ((response as any).error) {
+        setOtpMessage({
+          tone: "error",
+          text: response.message || "Invalid OTP. Please try again.",
+        });
+        return;
+      }
+
+      const loginFormData = new FormData();
+      loginFormData.append("email", signupState.email.trim());
+      loginFormData.append("password", signupState.password);
+      loginFormData.append("rememberMe", "true");
+
+      const loginResponse = await loginUser(loginFormData);
+
+      if (!loginResponse || (loginResponse as any).error) {
+        toast.error(
+          (loginResponse as any)?.message ||
+            "OTP verified, but automatic sign-in failed."
+        );
+        return;
+      }
+
+      localStorage.removeItem("code");
+      localStorage.removeItem("otp");
+      setOtpMessage({
+        tone: "success",
+        text: "Verification successful. Your plan selection is ready.",
+      });
+      toast.success("OTP verified successfully.");
+      setStep("plan");
+    } catch (error: any) {
+      setOtpMessage({
+        tone: "error",
+        text: getApiErrorMessage(
+          error,
+          "Unable to verify OTP. Please try again."
+        ),
+      });
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    const activeCode = verificationCode || localStorage.getItem("code") || "";
+
+    if (!activeCode) {
+      setOtpMessage({
+        tone: "error",
+        text: "Verification session expired. Please register again.",
+      });
+      return;
+    }
+
+    try {
+      setActionLoading("otp");
+      setOtpMessage({
+        tone: "info",
+        text: "Generating a fresh OTP for your email address.",
+      });
+
+      const formData = new FormData();
+      formData.append("code", activeCode);
+
+      const response = await apiRequest({
+        url: "Raising/Resend/Otp",
+        method: "POST",
+        data: formData,
+      });
+
+      if ((response as any).error) {
+        setOtpMessage({
+          tone: "error",
+          text: response.message || "Failed to resend OTP.",
+        });
+        return;
+      }
+
+      if (response.code) {
+        localStorage.setItem("code", response.code);
+        setVerificationCode(response.code);
+      }
+
+      setResendCountdown(30);
+      setOtpMessage({
+        tone: "success",
+        text: "OTP resent successfully. Check your inbox and continue.",
+      });
+      toast.success("OTP resent successfully.");
+    } catch (error: any) {
+      setOtpMessage({
+        tone: "error",
+        text: getApiErrorMessage(error, "Failed to resend OTP."),
+      });
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handlePlanSelect = (slug: string) => {
+    setSelectedPlanSlug(slug);
+    setPlanManuallySelected(true);
+  };
+
+  const handlePlanContinue = () => {
+    if (!selectedPlan) {
+      toast.error("Please choose a plan to continue.");
+      return;
+    }
+
+    setStep("checkout");
+  };
+
+  const handleCheckoutSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const errors = validatePayment();
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    try {
+      setActionLoading("checkout");
+
+      if (selectedPlan.price === 0) {
+        setPaymentCompleted(true);
+        setRedirectUrl(DASHBOARD_URL);
+        toast.success(`${selectedPlan.title} selected.`);
+        setStep("questions");
+        return;
+      }
+
+      if (!window.Stripe) {
+        toast.error("Stripe is still loading. Please try again in a moment.");
+        return;
+      }
+
+      const stripeResponse = await new Promise<any>((resolve, reject) => {
+        window.Stripe?.createToken(
+          {
+            number: paymentState.cardNumber.replace(/\s/g, ""),
+            cvc: paymentState.cvc,
+            exp_month: paymentState.expMonth,
+            exp_year: paymentState.expYear,
+            name: paymentState.cardName.trim(),
+          },
+          (_status: number, response: any) => {
+            if (response?.error) {
+              reject(response.error.message);
+              return;
+            }
+
+            resolve(response);
+          }
+        );
+      });
+
+      const formData = new FormData();
+      formData.append("stripeToken", stripeResponse.id);
+      formData.append("plan_id", String(selectedPlan.id));
+
+      const response = await apiRequest({
+        url: "/stripe",
+        method: "POST",
+        data: formData,
+      });
+
+      setRedirectUrl(
+        response?.redirect
+          ? `https://dash.magnatehub.au${response.redirect}`
+          : DASHBOARD_URL
+      );
+      setPaymentCompleted(true);
+      toast.success("Payment completed successfully.");
+      setStep("questions");
+    } catch (error: any) {
+      toast.error(
+        getApiErrorMessage(error, "Payment could not be completed.")
+      );
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleQuestionSelect = (questionId: string, answer: string) => {
+    setQuestionAnswers((current) => ({
+      ...current,
+      [questionId]: answer,
+    }));
+  };
+
+  const handleFinishOnboarding = async () => {
+    if (!selectedRole) {
+      toast.error("Please select a role before continuing.");
+      setStep("role");
+      return;
+    }
+
+    if (unansweredQuestions.length > 0) {
+      toast.error("Please answer all questions before continuing.");
+      return;
+    }
+
+    const payload = {
+      role_id: selectedRole.id,
+      role: selectedRole.label,
+      plan_slug: selectedPlan.slug,
+      plan_title: selectedPlan.title,
+      answers: selectedRole.questions.map((question) => ({
+        id: question.id,
+        question: question.prompt,
+        answer: questionAnswers[question.id],
+      })),
+    };
+
+    try {
+      setActionLoading("questions");
+
+      sessionStorage.setItem(
+        "mh-onboarding-answers",
+        JSON.stringify(payload.answers)
+      );
+      sessionStorage.setItem("mh-onboarding-plan", selectedPlan.slug || "");
+      sessionStorage.setItem("mh-onboarding-role", selectedRole.id);
+
+      const questionEndpoint =
+        process.env.NEXT_PUBLIC_ONBOARDING_QUESTION_ENDPOINT;
+
+      if (questionEndpoint) {
+        await apiRequest({
+          url: questionEndpoint,
+          method: "POST",
+          data: payload,
+        });
+      }
+
+      toast.success("Onboarding complete. Redirecting to your dashboard.");
+
+      window.setTimeout(() => {
+        window.location.href = redirectUrl || DASHBOARD_URL;
+      }, 700);
+    } catch (error: any) {
+      toast.warn(
+        getApiErrorMessage(
+          error,
+          "Responses were kept locally. Redirecting to dashboard."
+        )
+      );
+      window.setTimeout(() => {
+        window.location.href = redirectUrl || DASHBOARD_URL;
+      }, 700);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep === "signup") {
+      setStep("role");
+      return;
+    }
+
+    if (currentStep === "otp") {
+      setStep("signup");
+      return;
+    }
+
+    if (currentStep === "plan") {
+      setStep("otp");
+      return;
+    }
+
+    if (currentStep === "checkout") {
+      setStep("plan");
+    }
+  };
+
+  const showBackButton =
+    currentStep !== "role" && !(currentStep === "questions" && paymentCompleted);
+  const showStepper = currentStep !== "otp";
+  const displayStepIndex =
+    currentStep === "role"
+      ? 0
+      : currentStep === "signup" || currentStep === "otp"
+      ? 1
+      : currentStep === "plan"
+      ? 2
+      : currentStep === "checkout"
+      ? 3
+      : 4;
+  const displaySteps = [
+    {
+      key: "role",
+      number: 1,
+      label: "ROLE",
+      isActive: currentStep === "role",
+      isComplete: false,
+    },
+    {
+      key: "account",
+      number: 2,
+      label: "CREATE ACCOUNT",
+      isActive: currentStep === "signup" || currentStep === "otp",
+      isComplete:
+        currentStep === "plan" ||
+        currentStep === "checkout" ||
+        currentStep === "questions",
+    },
+    {
+      key: "plan",
+      number: 3,
+      label: "PLAN",
+      isActive: currentStep === "plan",
+      isComplete: currentStep === "checkout" || currentStep === "questions",
+    },
+    {
+      key: "checkout",
+      number: 4,
+      label: "CHECKOUT",
+      isActive: currentStep === "checkout",
+      isComplete: currentStep === "questions",
+    },
+    {
+      key: "questions",
+      number: 5,
+      label: "QUESTIONS",
+      isActive: currentStep === "questions",
+      isComplete: false,
+    },
+  ];
+
+  const renderRoleStep = () => (
+    <>
+      <div className={styles.roleChoiceGrid}>
+        {onboardingRoleConfigs.map((role) => {
+          const isActive = selectedRoleId === role.id;
+
+          return (
+            <button
+              key={role.id}
+              type="button"
+              className={`${styles.roleChoiceButton} ${
+                isActive ? styles.roleChoiceButtonActive : ""
+              }`}
+              onClick={() => setSelectedRoleId(role.id)}
+            >
+              {role.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className={styles.actionRow}>
+        <button
+          type="button"
+          className={styles.primaryButton}
+          onClick={handleContinueFromRole}
+        >
+          Next
+        </button>
+      </div>
+    </>
+  );
+
+  const renderSignupStep = () => (
+    <form onSubmit={handleSignupSubmit} className={styles.signupForm}>
+      <div className={`${styles.formGrid} ${styles.signupFormGrid}`}>
+        <div className={styles.field}>
+          <label className={`${styles.label} ${styles.signupLabel}`}>
+            First name
+          </label>
+          <input
+            className={`${styles.input} ${styles.signupInputGhost}`}
+            value={signupState.firstName}
+            onChange={(event) =>
+              updateSignupField("firstName", event.target.value)
+            }
+            placeholder="John"
+          />
+          <p className={styles.error}>{fieldErrors.firstName}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label className={`${styles.label} ${styles.signupLabel}`}>
+            Last name
+          </label>
+          <input
+            className={`${styles.input} ${styles.signupInputGhost}`}
+            value={signupState.lastName}
+            onChange={(event) =>
+              updateSignupField("lastName", event.target.value)
+            }
+            placeholder="Doe"
+          />
+          <p className={styles.error}>{fieldErrors.lastName}</p>
+        </div>
+
+        <div className={`${styles.field} ${styles.fieldFull}`}>
+          <label className={`${styles.label} ${styles.signupLabel}`}>
+            Email address
+          </label>
+          <input
+            className={`${styles.input} ${styles.signupInputSolid}`}
+            type="email"
+            value={signupState.email}
+            onChange={(event) => updateSignupField("email", event.target.value)}
+            placeholder="john@example.com"
+          />
+          <p className={styles.error}>{fieldErrors.email}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label className={`${styles.label} ${styles.signupLabel}`}>
+            Password
+          </label>
+          <input
+            className={`${styles.input} ${styles.signupInputSolid}`}
+            type="password"
+            value={signupState.password}
+            onChange={(event) =>
+              updateSignupField("password", event.target.value)
+            }
+            placeholder="Minimum 6 characters"
+          />
+          <p className={styles.error}>{fieldErrors.password}</p>
+        </div>
+
+        <div className={styles.field}>
+          <label className={`${styles.label} ${styles.signupLabel}`}>
+            Confirm password
+          </label>
+          <input
+            className={`${styles.input} ${styles.signupInputSolid}`}
+            type="password"
+            value={signupState.confirmPassword}
+            onChange={(event) =>
+              updateSignupField("confirmPassword", event.target.value)
+            }
+            placeholder="Re-type password"
+          />
+          <p className={styles.error}>{fieldErrors.confirmPassword}</p>
+        </div>
+      </div>
+
+      <div className={styles.inlineFooter}>
+        <span>Already have an account?</span>
+        <Link href="/login" className={styles.inlineLink}>
+          Log in
+        </Link>
+      </div>
+
+      <div className={styles.actionRow}>
+        <button
+          type="submit"
+          className={`${styles.primaryButton} ${styles.signupPrimaryButton}`}
+          disabled={actionLoading === "signup"}
+        >
+          {actionLoading === "signup" ? "Creating account..." : "Create account"}
+        </button>
+      </div>
+    </form>
+  );
+
+  const renderOtpStep = () => (
+    <form onSubmit={handleVerifyOtp}>
+      <div className={styles.otpWrap}>
+        <input
+          ref={otpInputRef}
+          className={styles.otpHiddenInput}
+          value={otpCode}
+          onChange={(event) => {
+            setOtpCode(sanitizeDigits(event.target.value, OTP_LENGTH));
+            clearFieldError("otp");
+          }}
+          inputMode="numeric"
+          maxLength={OTP_LENGTH}
+        />
+
+        <div
+          className={styles.otpBoxRow}
+          onClick={() => otpInputRef.current?.focus()}
+          role="presentation"
+        >
+          {Array.from({ length: OTP_LENGTH }).map((_, index) => (
+            <div key={index} className={styles.otpBox}>
+              {otpCode[index] || ""}
+            </div>
+          ))}
+        </div>
+
+        <p className={styles.otpTimer}>
+          00:{String(resendCountdown).padStart(2, "0")}
+        </p>
+        <p className={styles.error}>{fieldErrors.otp}</p>
+      </div>
+
+      {otpMessage && (
+        <div className={`${styles.messageBox} ${styles[`message${otpMessage.tone}`]}`}>
+          {otpMessage.text}
+        </div>
+      )}
+
+      <div className={styles.inlineFooter}>
+        <span>Didn't receive the code?</span>
+        <button
+          type="button"
+          className={styles.linkButton}
+          onClick={handleResendOtp}
+          disabled={actionLoading === "otp" || resendCountdown > 0}
+        >
+          {actionLoading === "otp" ? "Please wait..." : "Resend"}
+        </button>
+      </div>
+
+      <div className={styles.actionRow}>
+        <button
+          type="submit"
+          className={styles.primaryButton}
+          disabled={actionLoading === "otp"}
+        >
+          {actionLoading === "otp" ? "Verifying..." : "Verify and continue"}
+        </button>
+      </div>
+    </form>
+  );
+
+  const renderPlanStep = () => (
+    <>
+      <div className={styles.planGrid}>
+        {pricing_data.map((plan) => {
+          const isActive = plan.slug === selectedPlan.slug;
+          const isRecommended = selectedRole?.recommendedPlanSlug === plan.slug;
+
+          return (
+            <button
+              key={plan.id}
+              type="button"
+              className={`${styles.planCard} ${isActive ? styles.planCardActive : ""}`}
+              onClick={() => handlePlanSelect(plan.slug || "")}
+            >
+              <div className={styles.planHeader}>
+                <div>
+                  <h3 className={styles.planTitle}>{plan.title}</h3>
+                  <p className={styles.planPrice}>
+                    ${plan.price}
+                    <span>{plan.price === 0 ? " / free" : " / once off"}</span>
+                  </p>
+                </div>
+                {isRecommended && (
+                  <span className={styles.recommendedTag}>Recommended</span>
+                )}
+              </div>
+
+              <p className={styles.planDescription}>{plan.desc.trim()}</p>
+
+              <ul className={styles.planList}>
+                {plan.list.slice(0, 4).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+
+              {plan.list.length > 4 && (
+                <p className={styles.helperText}>
+                  +{plan.list.length - 4} more included benefits
+                </p>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className={styles.actionRow}>
+        <button
+          type="button"
+          className={styles.primaryButton}
+          onClick={handlePlanContinue}
+        >
+          Continue to checkout
+        </button>
+      </div>
+    </>
+  );
+
+  const renderCheckoutStep = () => (
+    <form onSubmit={handleCheckoutSubmit}>
+      <div className={styles.checkoutGrid}>
+        <div className={styles.checkoutSummary}>
+          <div className={styles.summaryPanel}>
+            <span className={styles.summaryEyebrow}>Selected plan</span>
+            <h3 className={styles.summaryTitle}>{selectedPlan.title}</h3>
+            <p className={styles.summaryAmount}>${selectedPlan.price}</p>
+            <p className={styles.summaryText}>{selectedPlan.desc.trim()}</p>
+
+            <ul className={styles.summaryList}>
+              {selectedPlan.list.slice(0, 5).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+
+            <div className={styles.secureBadge}>Secure Stripe tokenised payment</div>
+          </div>
+        </div>
+
+        <div className={styles.checkoutForm}>
+          <div className={styles.formGrid}>
+            <div className={styles.field}>
+              <label className={styles.label}>Full name</label>
+              <input
+                className={styles.input}
+                value={paymentState.name}
+                onChange={(event) => updatePaymentField("name", event.target.value)}
+                placeholder="John Doe"
+              />
+              <p className={styles.error}>{fieldErrors.name}</p>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Email address</label>
+              <input
+                className={styles.input}
+                type="email"
+                value={paymentState.email}
+                onChange={(event) =>
+                  updatePaymentField("email", event.target.value)
+                }
+                placeholder="john@example.com"
+              />
+              <p className={styles.error}>{fieldErrors.email}</p>
+            </div>
+
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <label className={styles.label}>Phone number</label>
+              <input
+                className={styles.input}
+                value={paymentState.phone}
+                onChange={(event) =>
+                  updatePaymentField("phone", event.target.value)
+                }
+                placeholder="+61 400 000 000"
+              />
+              <p className={styles.error}>{fieldErrors.phone}</p>
+            </div>
+
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <label className={styles.label}>Message</label>
+              <textarea
+                className={styles.textarea}
+                value={paymentState.message}
+                onChange={(event) =>
+                  updatePaymentField("message", event.target.value)
+                }
+                placeholder="Any additional details you want the team to know..."
+              />
+            </div>
+          </div>
+
+          {selectedPlan.price === 0 ? (
+            <div className={styles.messageBox}>
+              Free plan selected. No card details are required. Continue to the
+              final setup questions.
+            </div>
+          ) : (
+            <div className={styles.formGrid}>
+              <div className={`${styles.field} ${styles.fieldFull}`}>
+                <label className={styles.label}>Name on card</label>
+                <input
+                  className={styles.input}
+                  value={paymentState.cardName}
+                  onChange={(event) =>
+                    updatePaymentField("cardName", event.target.value)
+                  }
+                  placeholder="JOHN DOE"
+                />
+                <p className={styles.error}>{fieldErrors.cardName}</p>
+              </div>
+
+              <div className={`${styles.field} ${styles.fieldFull}`}>
+                <label className={styles.label}>Card number</label>
+                <input
+                  className={styles.input}
+                  value={paymentState.cardNumber}
+                  onChange={(event) =>
+                    updatePaymentField(
+                      "cardNumber",
+                      formatCardNumber(event.target.value)
+                    )
+                  }
+                  placeholder="1234 5678 9012 3456"
+                  inputMode="numeric"
+                />
+                <p className={styles.error}>{fieldErrors.cardNumber}</p>
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>CVC</label>
+                <input
+                  className={styles.input}
+                  value={paymentState.cvc}
+                  onChange={(event) =>
+                    updatePaymentField("cvc", sanitizeDigits(event.target.value, 4))
+                  }
+                  placeholder="123"
+                  inputMode="numeric"
+                />
+                <p className={styles.error}>{fieldErrors.cvc}</p>
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>Expiry month</label>
+                <input
+                  className={styles.input}
+                  value={paymentState.expMonth}
+                  onChange={(event) =>
+                    updatePaymentField(
+                      "expMonth",
+                      sanitizeDigits(event.target.value, 2)
+                    )
+                  }
+                  placeholder="MM"
+                  inputMode="numeric"
+                />
+                <p className={styles.error}>{fieldErrors.expMonth}</p>
+              </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>Expiry year</label>
+                <input
+                  className={styles.input}
+                  value={paymentState.expYear}
+                  onChange={(event) =>
+                    updatePaymentField(
+                      "expYear",
+                      sanitizeDigits(event.target.value, 4)
+                    )
+                  }
+                  placeholder="YYYY"
+                  inputMode="numeric"
+                />
+                <p className={styles.error}>{fieldErrors.expYear}</p>
+              </div>
+            </div>
+          )}
+
+          <div className={styles.actionRow}>
+            <button
+              type="submit"
+              className={styles.primaryButton}
+              disabled={actionLoading === "checkout"}
+            >
+              {actionLoading === "checkout"
+                ? "Processing..."
+                : selectedPlan.price === 0
+                ? "Continue to questions"
+                : `Pay $${selectedPlan.price} and continue`}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+
+  const renderQuestionsStep = () => (
+    <>
+      <div className={styles.messageBox}>{PRE_DASHBOARD_MESSAGE}</div>
+
+      <div className={styles.questionList}>
+        {selectedRole?.questions.map((question, index) => (
+          <div key={question.id} className={styles.questionCard}>
+            <div className={styles.questionHeader}>
+              <span className={styles.questionNumber}>{index + 1}</span>
+              <h3 className={styles.questionTitle}>{question.prompt}</h3>
+            </div>
+
+            <div className={styles.optionGrid}>
+              {question.options.map((option) => {
+                const isActive = questionAnswers[question.id] === option;
+
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    className={`${styles.optionButton} ${
+                      isActive ? styles.optionButtonActive : ""
+                    }`}
+                    onClick={() => handleQuestionSelect(question.id, option)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className={styles.helperText}>
+        {unansweredQuestions.length === 0
+          ? "All questions answered. You can finish onboarding."
+          : `${unansweredQuestions.length} question${
+              unansweredQuestions.length > 1 ? "s are" : " is"
+            } still pending.`}
+      </p>
+
+      <div className={styles.actionRow}>
+        <button
+          type="button"
+          className={styles.primaryButton}
+          onClick={handleFinishOnboarding}
+          disabled={actionLoading === "questions"}
+        >
+          {actionLoading === "questions"
+            ? "Finalising..."
+            : "Finish and open dashboard"}
+        </button>
+      </div>
+    </>
+  );
+
+  const currentStepContent = STEP_CONTENT[currentStep];
+  const shellClassName = `${styles.shell} ${
+    currentStep === "plan" || currentStep === "questions"
+      ? styles.shellWide
+      : currentStep === "otp"
+      ? styles.shellCompact
+      : ""
+  }`;
+
+  return (
+    <section className={styles.area}>
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-xl-11 col-lg-11">
+            <div className={shellClassName}>
+              <aside className={styles.sidebar}>
+                <span className={styles.brand}>Magnate Hub Onboarding</span>
+                <h2 className={styles.sidebarTitle}>
+                  Create, verify, choose your package, and launch.
+                </h2>
+                <p className={styles.sidebarText}>
+                  The flow follows the sequence you requested: role, signup, OTP,
+                  plan selection, checkout, then role-based dashboard questions.
+                </p>
+
+                {showStepper && (
+                  <Box
+                    sx={{
+                      width: "100%",
+                      mb: "28px",
+                      overflowX: { xs: "auto", md: "visible" },
+                      pb: { xs: "4px", md: 0 },
+                      scrollbarWidth: "none",
+                      "&::-webkit-scrollbar": {
+                        display: "none",
+                      },
+                      "& .MuiStepper-root": {
+                        width: { xs: "620px", md: "100%" },
+                      },
+                      "& .MuiStep-root": {
+                        px: 0,
+                      },
+                      "& .MuiStepLabel-root": {
+                        alignItems: "center",
+                      },
+                      "& .MuiStepLabel-alternativeLabel": {
+                        alignItems: "center",
+                      },
+                      "& .MuiStepLabel-labelContainer": {
+                        mt: "14px",
+                      },
+                      "& .MuiStepLabel-label": {
+                        mt: "0 !important",
+                        color: "rgba(255, 255, 255, 0.92)",
+                        fontSize: "12px",
+                        fontWeight: 700,
+                        lineHeight: 1.35,
+                        letterSpacing: "0.08em",
+                        textAlign: "center",
+                        textTransform: "uppercase",
+                        whiteSpace: "nowrap",
+                      },
+                      "& .MuiStepLabel-label.Mui-active, & .MuiStepLabel-label.Mui-completed":
+                        {
+                          color: "#fff",
+                        },
+                      "& .MuiStepConnector-root": {
+                        top: "17px",
+                        left: "calc(-50% + 28px)",
+                        right: "calc(50% + 28px)",
+                      },
+                      "& .MuiStepConnector-line": {
+                        borderTopWidth: "2px",
+                        borderColor: "rgba(255, 255, 255, 0.22)",
+                      },
+                      "& .MuiStepConnector-root.Mui-active .MuiStepConnector-line, & .MuiStepConnector-root.Mui-completed .MuiStepConnector-line":
+                        {
+                          borderColor: "#7d12ff",
+                        },
+                    }}
+                  >
+                    <Stepper activeStep={displayStepIndex} alternativeLabel>
+                      {displaySteps.map((step, index) => (
+                        <Step
+                          key={step.key}
+                          completed={displayStepIndex > index}
+                        >
+                          <StepLabel StepIconComponent={OnboardingStepIcon}>
+                            {step.label}
+                          </StepLabel>
+                        </Step>
+                      ))}
+                    </Stepper>
+                  </Box>
+                )}
+
+                <div className={styles.summaryCard}>
+                  <div className={styles.summaryRow}>
+                    <span>Role</span>
+                    <strong>{selectedRole?.label || "Not selected"}</strong>
+                  </div>
+                  <div className={styles.summaryRow}>
+                    <span>Email</span>
+                    <strong>{signupState.email || "Pending"}</strong>
+                  </div>
+                  <div className={styles.summaryRow}>
+                    <span>Plan</span>
+                    <strong>
+                      {selectedPlan.title}{" "}
+                      {selectedPlan.price === 0 ? "(Free)" : `($${selectedPlan.price})`}
+                    </strong>
+                  </div>
+                </div>
+              </aside>
+
+              <div className={styles.content}>
+                <div className={styles.contentHeader}>
+                  <p className={styles.eyebrow}>{currentStepContent.eyebrow}</p>
+                  <h1 className={styles.title}>{currentStepContent.title}</h1>
+                  <p className={styles.description}>
+                    {currentStepContent.description}
+                  </p>
+                </div>
+
+                <div className={styles.contentBody}>
+                  {currentStep === "role" && renderRoleStep()}
+                  {currentStep === "signup" && renderSignupStep()}
+                  {currentStep === "otp" && renderOtpStep()}
+                  {currentStep === "plan" && renderPlanStep()}
+                  {currentStep === "checkout" && renderCheckoutStep()}
+                  {currentStep === "questions" && renderQuestionsStep()}
+                </div>
+
+                {showBackButton && (
+                  <div className={styles.footerActions}>
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={handleBack}
+                      disabled={actionLoading !== null}
+                    >
+                      Back
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default OnboardingFlow;

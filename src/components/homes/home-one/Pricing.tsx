@@ -129,7 +129,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
         ? router.push(`https://dash.magnatehub.au/dashboard/professionals`)
         : router.push(`/plan/${slug}`);
     } else {
-      id === 5 ? router.push("/signup-free") : router.push("/login");
+      router.push(`/register?plan=${slug}`);
     }
   };
 

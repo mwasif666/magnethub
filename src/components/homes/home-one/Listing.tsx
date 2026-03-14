@@ -599,6 +599,7 @@ const ListingCard = ({
               </span>
 
               {item.location_name && (
+                
                 <div
                   style={{
                     display: "flex",
