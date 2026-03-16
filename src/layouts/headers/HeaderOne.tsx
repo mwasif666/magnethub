@@ -52,17 +52,19 @@ const HeaderOne = () => {
             width:110px;
             height:70px;
           }
-          /* ✅ Wishlist icon styling (same glass morphism container ke andar rahega) */
           .wishlist-link {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-left: 12px;
-            font-size: 20px;
+            font-size: 22px;
             line-height: 1;
           }
           .wishlist-link svg {
             display: block;
+          }
+        .shopping-icon {
+            font-size: 20px !important;
           }
         `}
       </style>
@@ -113,7 +115,7 @@ const HeaderOne = () => {
                             aria-label="Wishlist"
                             title="Wishlist"
                           >
-                            <TbShoppingBagHeart style={{fontSize:"20px"}}/>
+                            <TbShoppingBagHeart className="shopping-icon" />
                           </Link>
                         </>
                       ) : (

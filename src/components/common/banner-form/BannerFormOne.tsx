@@ -876,6 +876,10 @@ const BannerFormOne = ({
         .form-check label {
           color: white;
         }
+          
+        .form-check-input:checked {
+          background-color: #560ce3;
+        }
 
         .glass-card {
           background: rgba(255, 255, 255, 0.08);
