@@ -1,28 +1,14 @@
+import AuthShell from "@/components/auth/AuthShell";
 import LoginForm from "@/components/forms/LoginForm";
 
 const LoginArea = () => {
   return (
-    <div className="tg-login-area mh-auth-page pt-130 pb-130 bg-cover bg-center relative">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-xl-6 col-lg-8 col-md-10">
-            <div className="mh-auth-wrapper">
-              <div className="tg-login-top text-center mb-30">
-                <h2 className="mh-auth-heading">Sign in to your account</h2>
-                <p className="mh-auth-subheading">
-                  Enter your credentials to access your account.
-                </p>
-              </div>
-              <div className="tg-login-form">
-                <div className="tg-tour-about-review-form">
-                  <LoginForm />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <AuthShell
+      title="Sign in to your account"
+      description="Enter your credentials to access your account."
+    >
+      <LoginForm />
+    </AuthShell>
   );
 };
 

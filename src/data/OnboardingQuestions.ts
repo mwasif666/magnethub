@@ -4,6 +4,10 @@ export interface OnboardingQuestion {
   id: string;
   prompt: string;
   options: string[];
+  allowMultiple?: boolean;
+  customOptionLabel?: string;
+  customInputPlaceholder?: string;
+  helperText?: string;
 }
 
 export interface OnboardingRoleConfig {
@@ -12,6 +16,7 @@ export interface OnboardingRoleConfig {
   shortLabel: string;
   description: string;
   recommendedPlanSlug: string;
+  availablePlanSlugs: string[];
   questions: OnboardingQuestion[];
 }
 
@@ -26,6 +31,7 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
     description:
       "Browse businesses, define your budget, and get matched with opportunities that fit your acquisition goals.",
     recommendedPlanSlug: "free_plan",
+    availablePlanSlugs: [],
     questions: [
       {
         id: "buyer-business-type",
@@ -40,6 +46,8 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
           "Franchise",
           "Other",
         ],
+        allowMultiple: true,
+        helperText: "Select all business types that match your interests.",
       },
       {
         id: "buyer-budget",
@@ -66,7 +74,11 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
           "ACT",
           "NT",
           "All Australia",
+          "Custom location entry",
         ],
+        allowMultiple: true,
+        customOptionLabel: "Custom location entry",
+        customInputPlaceholder: "Enter preferred city, suburb, or region",
       },
       {
         id: "buyer-intent",
@@ -100,6 +112,7 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
     description:
       "Set up your seller profile, choose the right package, and get ready to attract serious buyers.",
     recommendedPlanSlug: "essentials",
+    availablePlanSlugs: ["free_plan", "essentials", "premium"],
     questions: [
       {
         id: "seller-business-type",
@@ -163,6 +176,7 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
     description:
       "Create an investor-ready profile, secure the right plan, and surface opportunities to the right audience.",
     recommendedPlanSlug: "capitai_rise",
+    availablePlanSlugs: ["capitai_rise"],
     questions: [
       {
         id: "capital-opportunity-type",
@@ -176,6 +190,8 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
           "Project",
           "Other",
         ],
+        allowMultiple: true,
+        helperText: "Select all opportunity types that apply to your raise.",
       },
       {
         id: "capital-amount",
@@ -234,6 +250,7 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
     description:
       "Set up your broker or franchisor profile, choose the right package, and unlock tailored lead tooling.",
     recommendedPlanSlug: "enterprise",
+    availablePlanSlugs: ["enterprise"],
     questions: [
       {
         id: "broker-type",
@@ -268,6 +285,8 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
           "NT",
           "National",
         ],
+        allowMultiple: true,
+        helperText: "Select all regions you actively cover.",
       },
       {
         id: "broker-volume",

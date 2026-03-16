@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import {
   getOnboardingRole,
   onboardingRoleConfigs,
+  OnboardingQuestion,
   OnboardingRoleId,
   PRE_DASHBOARD_MESSAGE,
 } from "@/data/OnboardingQuestions";
@@ -18,7 +19,12 @@ import type { StepIconProps } from "@mui/material/StepIcon";
 import Link from "next/link";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import SimpleBar from "simplebar-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
 import { toast } from "react-toastify";
+import "simplebar-react/dist/simplebar.min.css";
+import "swiper/css";
 import styles from "./OnboardingFlow.module.css";
 
 type StepId = "role" | "signup" | "otp" | "plan" | "checkout" | "questions";
@@ -60,6 +66,11 @@ interface PaymentState {
 interface InlineMessage {
   tone: MessageTone;
   text: string;
+}
+
+interface QuestionAnswerState {
+  selectedOptions: string[];
+  customValue: string;
 }
 
 const STEP_ORDER: StepId[] = [
@@ -222,15 +233,16 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const [expandedPlanDescriptions, setExpandedPlanDescriptions] = useState<
     Record<string, boolean>
   >({});
-  const [questionAnswers, setQuestionAnswers] = useState<Record<string, string>>(
-    {}
-  );
+  const [questionAnswers, setQuestionAnswers] = useState<
+    Record<string, QuestionAnswerState>
+  >({});
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [actionLoading, setActionLoading] = useState<StepId | null>(null);
   const [otpMessage, setOtpMessage] = useState<InlineMessage | null>(null);
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(DASHBOARD_URL);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
+  const planSwiperRef = useRef<SwiperType | null>(null);
 
   const selectedRole = getOnboardingRole(selectedRoleId);
   const selectedPlan = getPlanBySlug(selectedPlanSlug) ?? pricing_data[0];
@@ -240,7 +252,22 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       }`
     : "";
   const unansweredQuestions = selectedRole
-    ? selectedRole.questions.filter((question) => !questionAnswers[question.id])
+    ? selectedRole.questions.filter((question) => {
+        const answerState = questionAnswers[question.id];
+
+        if (!answerState || answerState.selectedOptions.length === 0) {
+          return true;
+        }
+
+        if (
+          question.customOptionLabel &&
+          answerState.selectedOptions.includes(question.customOptionLabel)
+        ) {
+          return !answerState.customValue.trim();
+        }
+
+        return false;
+      })
     : [];
   const stripePublishableKey =
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || STRIPE_TEST_PUBLISHABLE_KEY;
@@ -319,6 +346,20 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       delete nextErrors[field];
       return nextErrors;
     });
+  };
+
+  const getQuestionAnswerState = (questionId: string): QuestionAnswerState =>
+    questionAnswers[questionId] ?? { selectedOptions: [], customValue: "" };
+
+  const formatQuestionAnswer = (
+    question: OnboardingQuestion,
+    answerState: QuestionAnswerState
+  ) => {
+    const normalizedOptions = answerState.selectedOptions.map((option) =>
+      option === question.customOptionLabel ? answerState.customValue.trim() : option
+    );
+
+    return question.allowMultiple ? normalizedOptions : normalizedOptions[0] ?? "";
   };
 
   const updateSignupField = (field: keyof SignupState, value: string) => {
@@ -725,11 +766,52 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     }
   };
 
-  const handleQuestionSelect = (questionId: string, answer: string) => {
-    setQuestionAnswers((current) => ({
-      ...current,
-      [questionId]: answer,
-    }));
+  const handleQuestionSelect = (question: OnboardingQuestion, answer: string) => {
+    setQuestionAnswers((current) => {
+      const existing = current[question.id] ?? {
+        selectedOptions: [],
+        customValue: "",
+      };
+
+      const selectedOptions = question.allowMultiple
+        ? existing.selectedOptions.includes(answer)
+          ? existing.selectedOptions.filter((option) => option !== answer)
+          : [...existing.selectedOptions, answer]
+        : [answer];
+
+      return {
+        ...current,
+        [question.id]: {
+          selectedOptions,
+          customValue:
+            question.customOptionLabel &&
+            !selectedOptions.includes(question.customOptionLabel)
+              ? ""
+              : existing.customValue,
+        },
+      };
+    });
+
+    clearFieldError(question.id);
+  };
+
+  const handleQuestionCustomValueChange = (questionId: string, value: string) => {
+    setQuestionAnswers((current) => {
+      const existing = current[questionId] ?? {
+        selectedOptions: [],
+        customValue: "",
+      };
+
+      return {
+        ...current,
+        [questionId]: {
+          ...existing,
+          customValue: value,
+        },
+      };
+    });
+
+    clearFieldError(questionId);
   };
 
   const handleFinishOnboarding = async () => {
@@ -740,6 +822,20 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     }
 
     if (unansweredQuestions.length > 0) {
+      setFieldErrors((current) => ({
+        ...current,
+        ...Object.fromEntries(
+          unansweredQuestions.map((question) => [
+            question.id,
+            question.customOptionLabel &&
+            getQuestionAnswerState(question.id).selectedOptions.includes(
+              question.customOptionLabel
+            )
+              ? "Please enter the custom value to continue."
+              : "Please answer this question before continuing.",
+          ])
+        ),
+      }));
       toast.error("Please answer all questions before continuing.");
       return;
     }
@@ -752,7 +848,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       answers: selectedRole.questions.map((question) => ({
         id: question.id,
         question: question.prompt,
-        answer: questionAnswers[question.id],
+        answer: formatQuestionAnswer(question, getQuestionAnswerState(question.id)),
       })),
     };
 
@@ -1101,74 +1197,110 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
   const renderPlanStep = () => (
     <>
-      <div className={styles.planGrid}>
-        {pricing_data.map((plan) => {
-          const planKey = plan.slug || String(plan.id);
-          const isActive = plan.slug === selectedPlan.slug;
-          const isRecommended = selectedRole?.recommendedPlanSlug === plan.slug;
-          const isExpanded = Boolean(expandedPlanDescriptions[planKey]);
-          const shouldShowToggle = plan.desc.trim().length > 140;
-
-          return (
-            <div
-              key={plan.id}
-              role="button"
-              tabIndex={0}
-              className={`${styles.planCard} ${isActive ? styles.planCardActive : ""}`}
-              onClick={() => handlePlanSelect(plan.slug || "")}
-              onKeyDown={(event) =>
-                handlePlanCardKeyDown(event, plan.slug || "")
-              }
+      <div className={styles.planToolbar}>
+        <p className={styles.planToolbarText}>Swipe to compare plans and pick the best fit.</p>
+        {pricing_data.length > 1 && (
+          <div className={styles.planNav}>
+            <button
+              type="button"
+              className={styles.planNavButton}
+              onClick={() => planSwiperRef.current?.slidePrev()}
+              aria-label="Show previous plans"
             >
-              <div className={styles.planHeader}>
-                <div>
-                  <h3 className={styles.planTitle}>{plan.title}</h3>
-                  <p className={styles.planPrice}>
-                    ${plan.price}
-                    <span>{plan.price === 0 ? " / free" : " / once off"}</span>
-                  </p>
-                </div>
-                {isRecommended && (
-                  <span className={styles.recommendedTag}>Recommended</span>
-                )}
-              </div>
+              <i className="fa-solid fa-arrow-left-long" />
+            </button>
+            <button
+              type="button"
+              className={styles.planNavButton}
+              onClick={() => planSwiperRef.current?.slideNext()}
+              aria-label="Show next plans"
+            >
+              <i className="fa-solid fa-arrow-right-long" />
+            </button>
+          </div>
+        )}
+      </div>
 
-              <div className={styles.planDescriptionWrap}>
-                <p
-                  className={`${styles.planDescription} ${
-                    !isExpanded ? styles.planDescriptionCollapsed : ""
-                  }`}
+      <div className={styles.planGrid}>
+        <Swiper
+          className={styles.planSwiper}
+          spaceBetween={16}
+          slidesPerView={1.18}
+          watchOverflow={true}
+          breakpoints={{
+            576: { slidesPerView: 1.35 },
+            768: { slidesPerView: 1.9 },
+            1200: { slidesPerView: 2.35 },
+          }}
+          onSwiper={(swiper) => {
+            planSwiperRef.current = swiper;
+          }}
+        >
+          {pricing_data.map((plan) => {
+            const planKey = plan.slug || String(plan.id);
+            const isActive = plan.slug === selectedPlan.slug;
+            const isRecommended = selectedRole?.recommendedPlanSlug === plan.slug;
+            const isExpanded = Boolean(expandedPlanDescriptions[planKey]);
+            const shouldShowToggle = plan.desc.trim().length > 140;
+
+            return (
+              <SwiperSlide key={plan.id} className={styles.planSlide}>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className={`${styles.planCard} ${isActive ? styles.planCardActive : ""}`}
+                  onClick={() => handlePlanSelect(plan.slug || "")}
+                  onKeyDown={(event) =>
+                    handlePlanCardKeyDown(event, plan.slug || "")
+                  }
                 >
-                  {plan.desc.trim()}
-                </p>
-                {shouldShowToggle && (
-                  <button
-                    type="button"
-                    className={styles.readMoreButton}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      togglePlanDescription(planKey);
-                    }}
-                  >
-                    {isExpanded ? "Read less" : "Read more"}
-                  </button>
-                )}
-              </div>
+                  <div className={styles.planHeader}>
+                    <div>
+                      <h3 className={styles.planTitle}>{plan.title}</h3>
+                      <p className={styles.planPrice}>
+                        ${plan.price}
+                        <span>{plan.price === 0 ? " / free" : " / once off"}</span>
+                      </p>
+                    </div>
+                    {isRecommended && (
+                      <span className={styles.recommendedTag}>Recommended</span>
+                    )}
+                  </div>
 
-              <ul className={styles.planList}>
-                {plan.list.slice(0, 4).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+                  <div className={styles.planDescriptionWrap}>
+                    <p
+                      className={`${styles.planDescription} ${
+                        !isExpanded ? styles.planDescriptionCollapsed : ""
+                      }`}
+                    >
+                      {plan.desc.trim()}
+                    </p>
+                    {shouldShowToggle && (
+                      <button
+                        type="button"
+                        className={styles.readMoreButton}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          togglePlanDescription(planKey);
+                        }}
+                      >
+                        {isExpanded ? "Read less" : "Read more"}
+                      </button>
+                    )}
+                  </div>
 
-              {plan.list.length > 4 && (
-                <p className={styles.helperText}>
-                  +{plan.list.length - 4} more included benefits
-                </p>
-              )}
-            </div>
-          );
-        })}
+                  <SimpleBar autoHide={true} className={styles.planListScroll}>
+                    <ul className={styles.planList}>
+                      {plan.list.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </SimpleBar>
+                </div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
       </div>
 
       <div className={styles.actionRow}>
@@ -1366,12 +1498,18 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           <div key={question.id} className={styles.questionCard}>
             <div className={styles.questionHeader}>
               <span className={styles.questionNumber}>{index + 1}</span>
-              <h3 className={styles.questionTitle}>{question.prompt}</h3>
+              <div>
+                <h3 className={styles.questionTitle}>{question.prompt}</h3>
+                {question.helperText && (
+                  <p className={styles.questionHelper}>{question.helperText}</p>
+                )}
+              </div>
             </div>
 
             <div className={styles.optionGrid}>
               {question.options.map((option) => {
-                const isActive = questionAnswers[question.id] === option;
+                const answerState = getQuestionAnswerState(question.id);
+                const isActive = answerState.selectedOptions.includes(option);
 
                 return (
                   <button
@@ -1380,13 +1518,33 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
                     className={`${styles.optionButton} ${
                       isActive ? styles.optionButtonActive : ""
                     }`}
-                    onClick={() => handleQuestionSelect(question.id, option)}
+                    onClick={() => handleQuestionSelect(question, option)}
                   >
                     {option}
                   </button>
                 );
               })}
             </div>
+
+            {question.customOptionLabel &&
+              getQuestionAnswerState(question.id).selectedOptions.includes(
+                question.customOptionLabel
+              ) && (
+                <div className={styles.questionCustomField}>
+                  <input
+                    className={styles.input}
+                    value={getQuestionAnswerState(question.id).customValue}
+                    onChange={(event) =>
+                      handleQuestionCustomValueChange(question.id, event.target.value)
+                    }
+                    placeholder={
+                      question.customInputPlaceholder || "Enter your answer"
+                    }
+                  />
+                </div>
+              )}
+
+            <p className={styles.error}>{fieldErrors[question.id]}</p>
           </div>
         ))}
       </div>
@@ -1427,7 +1585,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
   return (
     <section className={styles.area}>
-      <div className="container">
+      <div className="container " style={{marginTop:"5rem"}}>
         <div className="row justify-content-center">
           <div className="col-xl-11 col-lg-11">
             <div className={shellClassName}>
@@ -1542,7 +1700,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
                 <div className={styles.contentBody}>
                   {currentStep === "role" && renderRoleStep()}
-                  {currentStep === "signup" && renderSignupStep()}
+                  {currentStep === "signup" && renderQuestionsStep()}
                   {currentStep === "otp" && renderOtpStep()}
                   {currentStep === "plan" && renderPlanStep()}
                   {currentStep === "checkout" && renderCheckoutStep()}

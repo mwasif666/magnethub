@@ -4,12 +4,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import { apiRequest } from "@/api/axiosInstance";
 import { useState } from "react";
 
 interface OtpData {
   otp: string;
+  code?: string;
+}
+
+interface PasswordOtpResponse {
+  error?: boolean;
+  message?: string;
   code?: string;
 }
 
@@ -24,7 +29,6 @@ type MessageType = "success" | "error" | "info";
 
 const PasswordOtpForm = () => {
   const router = useRouter();
-  const { verifiyOtp } = useAuth();
 
   const {
     register,
@@ -36,7 +40,6 @@ const PasswordOtpForm = () => {
 
   const [otpResendLoading, setOtpResendLoading] = useState(false);
   const [otpVerifyLoading, setOtpVerifyLoading] = useState(false);
-
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<MessageType>("info");
 
@@ -47,6 +50,7 @@ const PasswordOtpForm = () => {
       setMessage("Something went wrong. Please try again.");
       return;
     }
+
     return code;
   };
 
@@ -62,13 +66,13 @@ const PasswordOtpForm = () => {
       setOtpVerifyLoading(true);
       setMessage(null);
 
-      const response = await apiRequest({
+      const response = (await apiRequest({
         url: "Raising/Forgot/Check/Otp",
         method: "POST",
         data: formData,
-      });
+      })) as PasswordOtpResponse;
 
-      if ((response as any)?.error) {
+      if (response?.error) {
         setMessageType("error");
         setMessage(response.message || "Invalid OTP!");
         return;
@@ -97,13 +101,13 @@ const PasswordOtpForm = () => {
       setMessageType("info");
       setMessage("Generating OTP...");
 
-      const response = await apiRequest({
+      const response = (await apiRequest({
         url: "Raising/Resend/Otp",
         method: "POST",
         data: formData,
-      });
+      })) as PasswordOtpResponse;
 
-      if ((response as any)?.error) {
+      if (response?.error) {
         setMessageType("error");
         setMessage(response.message || "Failed to resend OTP");
         return;
@@ -122,76 +126,90 @@ const PasswordOtpForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="col-lg-12 mb-25">
-          <input
-            className="input"
-            type="text"
-            placeholder="Enter OTP"
-            {...register("otp")}
-          />
-          <p className="form_error">{errors.otp?.message}</p>
+      <form onSubmit={handleSubmit(onSubmit)} className="mh-auth-form">
+        <div className="row text-white">
+          <div className="col-lg-12 mb-25">
+            <input
+              className="mh-auth-input"
+              type="text"
+              placeholder="Enter OTP"
+              {...register("otp")}
+            />
+            <p className="mh-auth-error">{errors.otp?.message}</p>
+          </div>
+
+          {message && (
+            <div className="col-lg-12">
+              <p className={`mh-auth-message ${messageType}`}>{message}</p>
+            </div>
+          )}
+
+          <div className="col-lg-12 mb-20">
+            <div className="mh-auth-helper-row">
+              <span>Didn&apos;t receive the OTP?</span>
+              <button
+                type="button"
+                className="mh-auth-text-button"
+                onClick={handleResend}
+                disabled={otpResendLoading}
+              >
+                {otpResendLoading ? "Resending..." : "Resend"}
+              </button>
+            </div>
+          </div>
+
+          <div className="col-lg-12">
+            <button
+              type="submit"
+              className="tg-btn w-100"
+              disabled={otpResendLoading || otpVerifyLoading}
+            >
+              {otpVerifyLoading ? "Verifying..." : "Verify code"}
+            </button>
+          </div>
         </div>
-
-        {message && (
-          <p className={`form_message ${messageType}`}>
-            {message}
-          </p>
-        )}
-
-        <div className="d-flex align-items-center justify-content-between mb-3">
-          <span>Didn’t receive the OTP?</span>
-          <button
-            type="button"
-            className="resend-btn"
-            onClick={handleResend}
-            disabled={otpResendLoading}
-          >
-            {otpResendLoading ? "Resending..." : "Resend"}
-          </button>
-        </div>
-
-        <button
-          type="submit"
-          className="tg-btn w-100"
-          disabled={otpResendLoading || otpVerifyLoading}
-        >
-          {otpVerifyLoading ? "Verify OTP..." : "Verify OTP"}
-        </button>
       </form>
 
       <style jsx>{`
-        .form_error {
-          color: red;
-          font-size: 11px;
-          margin: 4px 0;
+        .mh-auth-message {
+          margin: 0 0 16px;
+          font-size: 12px;
+          line-height: 1.45;
         }
 
-        .form_message {
-          font-size: 13px;
-          margin-bottom: 12px;
+        .mh-auth-message.success {
+          color: #7fffb0;
         }
 
-        .form_message.success {
-          color: #28a745;
+        .mh-auth-message.error {
+          color: #ff9da8;
         }
 
-        .form_message.error {
-          color: #dc3545;
+        .mh-auth-message.info {
+          color: #ffd76f;
         }
 
-        .form_message.info {
-          color: #ffc107;
+        .mh-auth-helper-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          color: rgba(255, 255, 255, 0.92);
+          font-size: 12px;
         }
 
-        .resend-btn {
-          background: none;
-          border: none;
-          color: white;
-          text-decoration: underline;
-          cursor: pointer;
-          font-size: 14px;
+        .mh-auth-text-button {
           padding: 0;
+          border: 0;
+          background: transparent;
+          color: rgba(255, 255, 255, 0.92);
+          font-size: 12px;
+          font-weight: 600;
+          text-decoration: underline;
+        }
+
+        .mh-auth-text-button:disabled {
+          opacity: 0.72;
         }
       `}</style>
     </>

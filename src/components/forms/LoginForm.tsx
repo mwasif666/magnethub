@@ -15,6 +15,13 @@ interface LoginData {
   rememberMe: boolean;
 }
 
+interface LoginResponse {
+  error?: boolean;
+  message?: string;
+  code?: string;
+  link?: string;
+}
+
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
   password: yup.string().required("Password is required"),
@@ -44,7 +51,7 @@ const LoginForm = () => {
       formData.append("password", data.password);
       formData.append("rememberMe", data.rememberMe ? "true" : "false");
 
-      const response = await loginUser(formData);
+      const response = (await loginUser(formData)) as LoginResponse;
 
       if (!response) {
         toast.error("No response from server.", { position: "top-center" });
@@ -61,6 +68,7 @@ const LoginForm = () => {
           router.push("/verifiy-otp");
           return;
         }
+
         toast.error(response?.message || "Login failed.", {
           position: "top-center",
         });
@@ -70,22 +78,22 @@ const LoginForm = () => {
       toast.success("Login successful!", { position: "top-center" });
       localStorage.removeItem("code");
       reset();
-      if ((response as any)?.link) {
+
+      if (response?.link) {
         window.open(
           "https://dash.magnatehub.au/dashboard/professionals",
           "_blank"
         );
-        // router.push("https://dash.magnatehub.au/dashboard/professionals");
-        // window.open((response as any).link, "_blank");
       }
+
       router.push("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login error:", error);
       const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Invalid email or password.";
-      toast.error(message, { position: "top-center" });
+        error instanceof Error ? error.message : null;
+      toast.error(message || "Invalid email or password.", {
+        position: "top-center",
+      });
     } finally {
       setLoading(false);
     }
@@ -97,30 +105,26 @@ const LoginForm = () => {
         <div className="row text-white">
           <div className="col-lg-12 mb-25">
             <input
-              className="input"
+              className="mh-auth-input"
               type="text"
               placeholder="E-mail"
               {...register("email")}
             />
-            <p className="form_error">{errors.email?.message}</p>
+            <p className="mh-auth-error">{errors.email?.message}</p>
           </div>
 
           <div className="col-lg-12 mb-25">
             <input
-              className="input"
+              className="mh-auth-input"
               type="password"
               placeholder="Password"
               {...register("password")}
             />
-            <p className="form_error">{errors.password?.message}</p>
+            <p className="mh-auth-error">{errors.password?.message}</p>
           </div>
 
           <div className="col-lg-12 mb-20 text-end">
-            <Link
-              href="/forgot-password"
-              className="text-white"
-              style={{ textDecoration: "underline", fontSize: "0.9rem" }}
-            >
+            <Link href="/forgot-password" className="mh-auth-inline-link">
               Forgot Password?
             </Link>
           </div>
@@ -139,13 +143,7 @@ const LoginForm = () => {
                 </label>
               </div>
               <div className="tg-login-navigate mb-25 text-white">
-                <Link
-                  href="/register"
-                  className="text-white"
-                  style={{
-                    textDecoration: "none",
-                  }}
-                >
+                <Link href="/register" className="mh-auth-nav-link">
                   Register Now
                 </Link>
               </div>
@@ -159,41 +157,6 @@ const LoginForm = () => {
       </form>
 
       <style jsx>{`
-        .input {
-          box-sizing: border-box;
-          width: 100%;
-          height: 52px;
-          min-height: 52px;
-          padding: 0 16px;
-          border: 1px solid var(--mh-auth-field-border) !important;
-          border-radius: 14px;
-          background: var(--mh-auth-field-bg) !important;
-          box-shadow: var(--mh-auth-field-shadow);
-          color: #fff !important;
-          font-size: 14px;
-          line-height: 1.2;
-        }
-
-        .input::placeholder {
-          color: rgba(255, 255, 255, 0.68);
-        }
-
-        .input:focus {
-          border-color: rgba(255, 255, 255, 0.55) !important;
-          box-shadow: var(--mh-auth-field-shadow), var(--mh-auth-field-focus);
-        }
-
-        .input:-webkit-autofill,
-        .input:-webkit-autofill:hover,
-        .input:-webkit-autofill:focus {
-          -webkit-text-fill-color: #fff;
-          caret-color: #fff;
-          box-shadow:
-            0 0 0 1000px rgba(255, 255, 255, 0.08) inset,
-            var(--mh-auth-field-shadow);
-          transition: background-color 9999s ease-out 0s;
-        }
-
         .mh-auth-form :global(.tg-checkbox) {
           accent-color: #7d12ff;
         }
@@ -229,12 +192,6 @@ const LoginForm = () => {
 
         .mh-auth-form :global(.tg-btn:disabled) {
           opacity: 0.72;
-        }
-
-        .form_error {
-          color: #ff9da8 !important;
-          font-size: 11px;
-          margin: 4px;
         }
       `}</style>
     </>

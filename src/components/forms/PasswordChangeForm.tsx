@@ -13,6 +13,11 @@ interface PasswordData {
   confirmPassword: string;
 }
 
+interface PasswordChangeResponse {
+  error?: boolean;
+  message?: string;
+}
+
 const schema = yup.object({
   password: yup
     .string()
@@ -23,7 +28,6 @@ const schema = yup.object({
     .oneOf([yup.ref("password")], "Passwords must match")
     .required("Confirm Password is required"),
 });
-
 
 const PasswordChangeForm = () => {
   const router = useRouter();
@@ -41,25 +45,31 @@ const PasswordChangeForm = () => {
   const onSubmit = async (data: PasswordData) => {
     try {
       setLoading(true);
+
       const code = localStorage.getItem("code") || "";
       const formData = new FormData();
       formData.append("code", code);
       formData.append("password", data.password);
 
-      const response = await apiRequest({
+      const response = (await apiRequest({
         url: "Raising/Forgot/Change/Password",
         method: "POST",
         data: formData,
-      });
+      })) as PasswordChangeResponse;
 
       if (!response?.error) {
-        toast.success("Password changed successfully", { position: "top-center" });
+        toast.success("Password changed successfully", {
+          position: "top-center",
+        });
         reset();
         router.push("/");
-      } else {
-        toast.error(response?.message || "Something went wrong", { position: "top-center" });
+        return;
       }
-    } catch (error: any) {
+
+      toast.error(response?.message || "Something went wrong", {
+        position: "top-center",
+      });
+    } catch {
       toast.error("Something went wrong", { position: "top-center" });
     } finally {
       setLoading(false);
@@ -67,26 +77,26 @@ const PasswordChangeForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className="mh-auth-form">
       <div className="row text-white">
         <div className="col-lg-12 mb-25">
           <input
-            className="input"
+            className="mh-auth-input"
             type="password"
             placeholder="New Password"
             {...register("password")}
           />
-          <p className="form_error">{errors.password?.message}</p>
+          <p className="mh-auth-error">{errors.password?.message}</p>
         </div>
 
         <div className="col-lg-12 mb-25">
           <input
-            className="input"
+            className="mh-auth-input"
             type="password"
             placeholder="Confirm Password"
             {...register("confirmPassword")}
           />
-          <p className="form_error">{errors.confirmPassword?.message}</p>
+          <p className="mh-auth-error">{errors.confirmPassword?.message}</p>
         </div>
 
         <div className="col-lg-12">
@@ -95,14 +105,6 @@ const PasswordChangeForm = () => {
           </button>
         </div>
       </div>
-
-      <style jsx>{`
-        .form_error {
-          color: red !important;
-          font-size: 11px;
-          margin: 4px 0;
-        }
-      `}</style>
     </form>
   );
 };

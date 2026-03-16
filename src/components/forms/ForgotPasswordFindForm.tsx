@@ -13,6 +13,12 @@ interface EmailData {
   email: string;
 }
 
+interface ForgotPasswordResponse {
+  error?: boolean;
+  message?: string;
+  code?: string;
+}
+
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
 });
@@ -36,68 +42,58 @@ const ForgotPasswordFindForm = () => {
 
       const formData = new FormData();
       formData.append("email", data.email);
-      const response = await apiRequest({
+
+      const response = (await apiRequest({
         url: "Raising/Find",
         method: "POST",
         data: formData,
-      });
-     
-      if(!response?.error){
-        toast.success("Token Send Successfully", { position: "top-center" });
+      })) as ForgotPasswordResponse;
+
+      if (!response?.error) {
+        toast.success("Token sent successfully", { position: "top-center" });
         localStorage.removeItem("code");
         localStorage.setItem("code", response.code || "");
         reset();
         router.push("/verify-reset-code");
-      }else{
-        toast.error(response.message || "Not able to send token")
-
+        return;
       }
-    } catch (error: any) {
-      toast.error('Some thing went wrong', { position: "top-center" });
+
+      toast.error(response.message || "Not able to send token", {
+        position: "top-center",
+      });
+    } catch {
+      toast.error("Something went wrong", { position: "top-center" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="row text-white">
-          <div className="col-lg-12 mb-25">
-            <input
-              className="input"
-              type="text"
-              placeholder="E-mail"
-              {...register("email")}
-            />
-            <p className="form_error">{errors.email?.message}</p>
-          </div>
-          <div className="col-lg-12 mb-20 text-end">
-            <Link
-              href="/login"
-              className="text-white"
-              style={{ textDecoration: "underline", fontSize: "0.9rem" }}
-            >
-              Login?
-            </Link>
-          </div>
-
-          <div className="col-lg-12">
-            <button type="submit" className="tg-btn w-100" disabled={loading}>
-              {loading ? "Sending Otp..." : "Send Otp"}
-            </button>
-          </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="mh-auth-form">
+      <div className="row text-white">
+        <div className="col-lg-12 mb-25">
+          <input
+            className="mh-auth-input"
+            type="text"
+            placeholder="E-mail"
+            {...register("email")}
+          />
+          <p className="mh-auth-error">{errors.email?.message}</p>
         </div>
-      </form>
 
-      <style jsx>{`
-        .form_error {
-          color: red !important;
-          font-size: 11px;
-          margin: 4px;
-        }
-      `}</style>
-    </>
+        <div className="col-lg-12 mb-20 text-end">
+          <Link href="/login" className="mh-auth-inline-link">
+            Back to login
+          </Link>
+        </div>
+
+        <div className="col-lg-12">
+          <button type="submit" className="tg-btn w-100" disabled={loading}>
+            {loading ? "Sending code..." : "Send code"}
+          </button>
+        </div>
+      </div>
+    </form>
   );
 };
 
