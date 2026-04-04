@@ -8,7 +8,6 @@ import styles from "./BuyNow.module.css";
 import pricing_data from "@/data/PricingData";
 import Loading from "../loading/Loading";
 import { submitStripePayment } from "@/lib/submitStripePayment";
-import "react-toastify/dist/ReactToastify.css";
 
 interface BuyNowProps {
   slug: string;

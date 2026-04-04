@@ -1,7 +1,6 @@
 "use client";
 
 import { apiRequest } from "@/api/axiosInstance";
-import { useAuth } from "@/context/AuthContext";
 import {
   getOnboardingRole,
   onboardingRoleConfigs,
@@ -10,21 +9,19 @@ import {
   PRE_DASHBOARD_MESSAGE,
 } from "@/data/OnboardingQuestions";
 import pricing_data from "@/data/PricingData";
-import { submitStripePayment } from "@/lib/submitStripePayment";
 import Box from "@mui/material/Box";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import type { StepIconProps } from "@mui/material/StepIcon";
 import Link from "next/link";
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import SimpleBar from "simplebar-react";
+import { useSearchParams } from "next/navigation";
+import { submitStripePayment } from "@/lib/submitStripePayment";
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { Swiper as SwiperType } from "swiper";
 import { toast } from "react-toastify";
-import "simplebar-react/dist/simplebar.min.css";
-import "swiper/css";
+import type { StepIconProps } from "@mui/material/StepIcon";
+import type { Swiper as SwiperType } from "swiper";
 import styles from "./OnboardingFlow.module.css";
 
 type StepId = "role" | "signup" | "otp" | "plan" | "checkout" | "questions";
@@ -96,13 +93,13 @@ const STEP_CONTENT: Record<
     eyebrow: "Step 2 of 6",
     title: "Create Your Account",
     description:
-      "Create your Magnate Hub account by entering your basic details. This will allow you to securely access your dashboard and services.",
+      "Create your Magnate Hub account by entering your details. We'll email you a verification code before your account is created.",
   },
   otp: {
     eyebrow: "Step 3 of 6",
     title: "Verify Your Email",
     description:
-      "Enter the OTP sent to your email address to verify your account. Once verified, you will be automatically signed in.",
+      "Enter the verification code sent to your email. Once it's confirmed, we'll create your signup lead and unlock plan selection.",
   },
   plan: {
     eyebrow: "Step 4 of 6",
@@ -154,6 +151,8 @@ const isValidRoleId = (value?: string | null): value is OnboardingRoleId =>
 
 const getDefaultPlanForRole = (roleId?: OnboardingRoleId | null) =>
   getOnboardingRole(roleId)?.recommendedPlanSlug ?? "free_plan";
+
+const isBuyerRole = (roleId?: OnboardingRoleId | null) => roleId === "buyer";
 
 const getPlanBySlug = (slug?: string | null): PricingItem | undefined =>
   pricing_data.find((item) => item.slug === slug);
@@ -214,8 +213,6 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     getPlanBySlug(defaultPlanSlug)?.slug ??
     getDefaultPlanForRole(initialRoleId);
 
-  const { registerUser, verifiyOtp, loginUser } = useAuth();
-
   const [currentStep, setCurrentStep] = useState<StepId>("role");
   const [selectedRoleId, setSelectedRoleId] =
     useState<OnboardingRoleId | null>(initialRoleId);
@@ -228,7 +225,6 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const [paymentState, setPaymentState] =
     useState<PaymentState>(initialPaymentState);
   const [otpCode, setOtpCode] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
   const [resendCountdown, setResendCountdown] = useState(30);
   const [expandedPlanDescriptions, setExpandedPlanDescriptions] = useState<
     Record<string, boolean>
@@ -245,6 +241,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const planSwiperRef = useRef<SwiperType | null>(null);
 
   const selectedRole = getOnboardingRole(selectedRoleId);
+  const isBuyer = isBuyerRole(selectedRoleId);
   const selectedPlan = getPlanBySlug(selectedPlanSlug) ?? pricing_data[0];
   const expiryDisplayValue = paymentState.expMonth
     ? `${paymentState.expMonth}${
@@ -330,7 +327,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [currentStep, verificationCode]);
+  }, [currentStep]);
 
   const setStep = (step: StepId) => {
     setCurrentStep(step);
@@ -483,15 +480,13 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     try {
       setActionLoading("signup");
 
-      const formData = new FormData();
-      formData.append("first_name", signupState.firstName.trim());
-      formData.append("last_name", signupState.lastName.trim());
-      formData.append("email", signupState.email.trim());
-      formData.append("password", signupState.password);
-      formData.append("password_confirmation", signupState.confirmPassword);
-      formData.append("type", selectedRoleId);
-
-      const response = await registerUser(formData);
+      const response = await apiRequest({
+        url: "signup/send-code",
+        method: "POST",
+        data: {
+          email: signupState.email.trim(),
+        },
+      });
 
       if (!response) {
         toast.error("No response received from the server.");
@@ -499,26 +494,16 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       }
 
       if ((response as any).error) {
-        toast.error((response as any).message || "Registration failed.");
+        toast.error((response as any).message || "Unable to send verification code.");
         return;
       }
 
-      if (!response.code) {
-        toast.error("Verification code was not returned by the server.");
-        return;
-      }
-
-      localStorage.setItem("code", response.code);
-      if (response.otp) {
-        localStorage.setItem("otp", response.otp);
-      }
-
-      setVerificationCode(response.code);
+      setOtpCode("");
       setOtpMessage({
         tone: "info",
-        text: `We've sent an OTP to ${signupState.email.trim()}. Enter it below to continue.`,
+        text: `We've sent a verification code to ${signupState.email.trim()}. Enter it below to continue.`,
       });
-      toast.success("Account created. Verify your email to continue.");
+      toast.success("Verification code sent successfully.");
       setStep("otp");
     } catch (error: any) {
       toast.error(
@@ -532,8 +517,6 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const handleVerifyOtp = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const activeCode = verificationCode || localStorage.getItem("code") || "";
-
     if (!otpCode.trim()) {
       setFieldErrors({ otp: "OTP is required." });
       return;
@@ -544,54 +527,120 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       return;
     }
 
-    if (!activeCode) {
-      setOtpMessage({
-        tone: "error",
-        text: "Verification session expired. Please register again.",
-      });
-      return;
-    }
-
     try {
       setActionLoading("otp");
       setOtpMessage(null);
 
-      const formData = new FormData();
-      formData.append("otp", otpCode.trim());
-      formData.append("code", activeCode);
+      const verifyResponse = await apiRequest({
+        url: "signup/verify-code",
+        method: "POST",
+        data: {
+          email: signupState.email.trim(),
+          email_verification_code: otpCode.trim(),
+        },
+      });
 
-      const response = await verifiyOtp(formData);
-
-      if ((response as any).error) {
+      if ((verifyResponse as any).error) {
         setOtpMessage({
           tone: "error",
-          text: response.message || "Invalid OTP. Please try again.",
+          text: verifyResponse.message || "Invalid verification code. Please try again.",
+        });
+        return;
+      }
+      const nextVerificationToken = (verifyResponse as any).data?.verification_token;
+
+      if (!nextVerificationToken) {
+        setOtpMessage({
+          tone: "error",
+          text: "Verification succeeded, but no verification token was returned.",
         });
         return;
       }
 
-      const loginFormData = new FormData();
-      loginFormData.append("email", signupState.email.trim());
-      loginFormData.append("password", signupState.password);
-      loginFormData.append("rememberMe", "true");
+      const createLeadResponse = await apiRequest({
+        url: "signup/lead",
+        method: "POST",
+        data: {
+          role: selectedRoleId,
+          first_name: signupState.firstName.trim(),
+          last_name: signupState.lastName.trim(),
+          email: signupState.email.trim(),
+          password: signupState.password,
+          password_confirmation: signupState.confirmPassword,
+          verification_token: nextVerificationToken,
+        },
+      });
 
-      const loginResponse = await loginUser(loginFormData);
-
-      if (!loginResponse || (loginResponse as any).error) {
-        toast.error(
-          (loginResponse as any)?.message ||
-            "OTP verified, but automatic sign-in failed."
-        );
+      if ((createLeadResponse as any).error) {
+        setOtpMessage({
+          tone: "error",
+          text: createLeadResponse.message || "Your email was verified, but we could not create the signup lead.",
+        });
         return;
       }
 
-      localStorage.removeItem("code");
-      localStorage.removeItem("otp");
+      const leadId =
+        (createLeadResponse as any).lead?.id ||
+        (createLeadResponse as any).data?.lead?.id;
+      const leadCode =
+        (createLeadResponse as any).lead?.code ||
+        (createLeadResponse as any).data?.lead?.code ||
+        "";
+
+      if (!leadId || !leadCode) {
+        setOtpMessage({
+          tone: "error",
+          text: "Lead created, but the lead ID or code was missing from the response.",
+        });
+        return;
+      }
+
+      sessionStorage.setItem("mh-signup-verification-token", nextVerificationToken);
+      sessionStorage.setItem("mh-signup-lead-id", String(leadId));
+      sessionStorage.setItem("mh-signup-lead-code", String(leadCode));
+
+      if (isBuyerRole(selectedRoleId)) {
+        const completeSignupResponse = await apiRequest({
+          url: "signup/complete",
+          method: "POST",
+          data: {
+            lead_id: leadId,
+            lead_code: leadCode,
+          },
+        });
+
+        if ((completeSignupResponse as any).error) {
+          setOtpMessage({
+            tone: "error",
+            text:
+              completeSignupResponse.message ||
+              "Your account was verified, but buyer signup could not be completed.",
+          });
+          return;
+        }
+
+        setRedirectUrl(
+          (completeSignupResponse as any).redirect
+            ? `https://dash.magnatehub.au${
+                (completeSignupResponse as any).redirect
+              }`
+            : DASHBOARD_URL
+        );
+        setPaymentCompleted(true);
+        setOtpMessage({
+          tone: "success",
+          text: "Verification successful. Buyer signup is complete, so you can continue straight to the questions.",
+        });
+        toast.success("Buyer signup completed successfully.");
+        setStep("questions");
+        return;
+      }
+
       setOtpMessage({
         tone: "success",
-        text: "Verification successful. Your plan selection is ready.",
+        text: "Verification successful. Your account details are saved and plan selection is ready.",
       });
-      toast.success("OTP verified successfully.");
+      toast.success("Verification complete. Choose your plan.");
       setStep("plan");
     } catch (error: any) {
       setOtpMessage({
@@ -607,12 +656,10 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   };
 
   const handleResendOtp = async () => {
-    const activeCode = verificationCode || localStorage.getItem("code") || "";
-
-    if (!activeCode) {
+    if (!signupState.email.trim()) {
       setOtpMessage({
         tone: "error",
-        text: "Verification session expired. Please register again.",
+        text: "Enter your email address first so we can resend the verification code.",
       });
       return;
     }
@@ -621,41 +668,35 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       setActionLoading("otp");
       setOtpMessage({
         tone: "info",
-        text: "Generating a fresh OTP for your email address.",
+        text: "Sending a fresh verification code to your email address.",
       });
 
-      const formData = new FormData();
-      formData.append("code", activeCode);
-
       const response = await apiRequest({
-        url: "Raising/Resend/Otp",
+        url: "signup/send-code",
         method: "POST",
-        data: formData,
+        data: {
+          email: signupState.email.trim(),
+        },
       });
 
       if ((response as any).error) {
         setOtpMessage({
           tone: "error",
-          text: response.message || "Failed to resend OTP.",
+          text: response.message || "Failed to resend verification code.",
         });
         return;
-      }
-
-      if (response.code) {
-        localStorage.setItem("code", response.code);
-        setVerificationCode(response.code);
       }
 
       setResendCountdown(30);
       setOtpMessage({
         tone: "success",
-        text: "OTP resent successfully. Check your inbox and continue.",
+        text: "Verification code resent successfully. Check your inbox and continue.",
       });
-      toast.success("OTP resent successfully.");
+      toast.success("Verification code resent successfully.");
     } catch (error: any) {
       setOtpMessage({
         tone: "error",
-        text: getApiErrorMessage(error, "Failed to resend OTP."),
+        text: getApiErrorMessage(error, "Failed to resend verification code."),
       });
     } finally {
       setActionLoading(null);
@@ -911,6 +952,11 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
     if (currentStep === "checkout") {
       setStep("plan");
+      return;
+    }
+
+    if (currentStep === "questions" && isBuyer) {
+      setStep("otp");
     }
   };
 
@@ -918,7 +964,13 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     currentStep !== "role" && !(currentStep === "questions" && paymentCompleted);
   const showStepper = currentStep !== "otp";
   const displayStepIndex =
-    currentStep === "role"
+    isBuyer
+      ? currentStep === "role"
+        ? 0
+        : currentStep === "signup" || currentStep === "otp"
+        ? 1
+        : 2
+      : currentStep === "role"
       ? 0
       : currentStep === "signup" || currentStep === "otp"
       ? 1
@@ -927,46 +979,70 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       : currentStep === "checkout"
       ? 3
       : 4;
-  const displaySteps = [
-    {
-      key: "role",
-      number: 1,
-      label: "ROLE",
-      isActive: currentStep === "role",
-      isComplete: false,
-    },
-    {
-      key: "account",
-      number: 2,
-      label: "CREATE ACCOUNT",
-      isActive: currentStep === "signup" || currentStep === "otp",
-      isComplete:
-        currentStep === "plan" ||
-        currentStep === "checkout" ||
-        currentStep === "questions",
-    },
-    {
-      key: "plan",
-      number: 3,
-      label: "PLAN",
-      isActive: currentStep === "plan",
-      isComplete: currentStep === "checkout" || currentStep === "questions",
-    },
-    {
-      key: "checkout",
-      number: 4,
-      label: "CHECKOUT",
-      isActive: currentStep === "checkout",
-      isComplete: currentStep === "questions",
-    },
-    {
-      key: "questions",
-      number: 5,
-      label: "QUESTIONS",
-      isActive: currentStep === "questions",
-      isComplete: false,
-    },
-  ];
+  const displaySteps = isBuyer
+    ? [
+        {
+          key: "role",
+          number: 1,
+          label: "ROLE",
+          isActive: currentStep === "role",
+          isComplete: false,
+        },
+        {
+          key: "account",
+          number: 2,
+          label: "CREATE ACCOUNT",
+          isActive: currentStep === "signup" || currentStep === "otp",
+          isComplete: currentStep === "questions",
+        },
+        {
+          key: "questions",
+          number: 3,
+          label: "QUESTIONS",
+          isActive: currentStep === "questions",
+          isComplete: false,
+        },
+      ]
+    : [
+        {
+          key: "role",
+          number: 1,
+          label: "ROLE",
+          isActive: currentStep === "role",
+          isComplete: false,
+        },
+        {
+          key: "account",
+          number: 2,
+          label: "CREATE ACCOUNT",
+          isActive: currentStep === "signup" || currentStep === "otp",
+          isComplete:
+            currentStep === "plan" ||
+            currentStep === "checkout" ||
+            currentStep === "questions",
+        },
+        {
+          key: "plan",
+          number: 3,
+          label: "PLAN",
+          isActive: currentStep === "plan",
+          isComplete: currentStep === "checkout" || currentStep === "questions",
+        },
+        {
+          key: "checkout",
+          number: 4,
+          label: "CHECKOUT",
+          isActive: currentStep === "checkout",
+          isComplete: currentStep === "questions",
+        },
+        {
+          key: "questions",
+          number: 5,
+          label: "QUESTIONS",
+          isActive: currentStep === "questions",
+          isComplete: false,
+        },
+      ];
 
   const renderRoleStep = () => (
     <>
@@ -1700,7 +1776,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
                 <div className={styles.contentBody}>
                   {currentStep === "role" && renderRoleStep()}
-                  {currentStep === "signup" && renderQuestionsStep()}
+                  {currentStep === "signup" && renderSignupStep()}
                   {currentStep === "otp" && renderOtpStep()}
                   {currentStep === "plan" && renderPlanStep()}
                   {currentStep === "checkout" && renderCheckoutStep()}

@@ -34,7 +34,7 @@ const schema = yup
   .required();
 
 const SignupForm = () => {
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState("buyer");
   const [loading, setLoading] = useState(false);
   const { registerUser } = useAuth();
   const router = useRouter();
@@ -58,7 +58,7 @@ const SignupForm = () => {
       formData.append("email", data.email);
       formData.append("password", data.password);
       formData.append("password_confirmation", data.confirmPassword);
-      formData.append("type", activeTab.toString());
+      formData.append("type", activeTab);
 
       const response = await registerUser(formData);
 
@@ -93,10 +93,10 @@ const SignupForm = () => {
   };
 
   const tabs = [
-    { id: 1, label: "Buyer" },
-    { id: 2, label: "Seller" },
-    { id: 3, label: "Capital Raiser" },
-    { id: 4, label: "Brokers + Franchisers" },
+    { id: "buyer", label: "Buyer" },
+    { id: "seller", label: "Seller" },
+    { id: "capital_raiser", label: "Capital Raiser" },
+    { id: "broker", label: "Brokers + Franchisers" },
   ];
 
   return (

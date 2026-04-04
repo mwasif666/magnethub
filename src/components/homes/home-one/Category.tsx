@@ -56,7 +56,7 @@ const Category = () => {
       setLoading(true);
       const response = await apiRequest({
         method: "GET",
-        url: "GetAllProjectCategories",
+        url: "categories",
       });
       setLocationData(response?.data || []);
     } catch (error) {

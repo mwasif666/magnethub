@@ -132,13 +132,13 @@ const HeaderOne = () => {
                               <span>
                                 <UserIcon />
                               </span>
-                              {role === "1"
+                              {role === "buyer"
                                 ? "Buyer"
-                                : role === "2"
+                                : role === "seller"
                                 ? "Seller"
-                                : role === "3"
+                                : role === "capital_raiser"
                                 ? "Capital Raiser"
-                                : role === "4"
+                                : role === "broker"
                                 ? "Broker/Franchisers"
                                 : "User"}
                             </div>

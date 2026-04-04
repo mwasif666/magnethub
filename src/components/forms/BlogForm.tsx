@@ -57,7 +57,7 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
       }
 
       await apiRequest({
-        url: "/GetAllBlogs/comment",
+        url: "/blogs/comment",
         method: "POST",
         data: formData,
         headers: { "Content-Type": "multipart/form-data" },

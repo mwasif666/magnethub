@@ -26,7 +26,7 @@ const FooterOne = () => {
     try {
       const response = await apiRequest({
         method: "POST",
-        url: "/SaveNewsLetterForm",
+        url: "subscribe",
         data: { email },
       });
 

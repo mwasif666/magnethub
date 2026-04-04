@@ -1,4 +1,8 @@
-export type OnboardingRoleId = "1" | "2" | "3" | "4";
+export type OnboardingRoleId =
+  | "buyer"
+  | "seller"
+  | "capital_raiser"
+  | "broker";
 
 export interface OnboardingQuestion {
   id: string;
@@ -25,7 +29,7 @@ export const PRE_DASHBOARD_MESSAGE =
 
 export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
   {
-    id: "1",
+    id: "buyer",
     label: "Buyer",
     shortLabel: "Buyer",
     description:
@@ -106,7 +110,7 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
     ],
   },
   {
-    id: "2",
+    id: "seller",
     label: "Seller",
     shortLabel: "Seller",
     description:
@@ -170,7 +174,7 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
     ],
   },
   {
-    id: "3",
+    id: "capital_raiser",
     label: "Capital Raiser",
     shortLabel: "Capital",
     description:
@@ -244,7 +248,7 @@ export const onboardingRoleConfigs: OnboardingRoleConfig[] = [
     ],
   },
   {
-    id: "4",
+    id: "broker",
     label: "Broker / Franchisor",
     shortLabel: "Broker",
     description:

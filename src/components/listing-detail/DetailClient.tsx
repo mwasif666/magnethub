@@ -31,7 +31,7 @@ const DetailClient: React.FC<DetailClientProps> = ({ url, id, category }) => {
         }
 
         const response = await apiRequest({
-          url: `GetAllProjects?id=${id}`,
+          url: `projects?id=${id}`,
           method: "GET",
         });
         const listing = response?.data?.data?.[0];

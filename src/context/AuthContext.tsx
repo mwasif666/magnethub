@@ -1,5 +1,5 @@
 "use client";
-import { apiRequest } from "@/api/axiosInstance";
+import { apiRequest, BACKEND_ORIGIN } from "@/api/axiosInstance";
 import {
   createContext,
   useContext,
@@ -20,6 +20,7 @@ interface AuthResponse {
   user?: User;
   data?: User;
   _token?: string;
+  token?: string;
   user_id?: string;
   error?: boolean;
   type?: string;
@@ -54,6 +55,9 @@ interface RegisterData {
 interface OTP {
   code: string | any;
 }
+
+const formDataToObject = (formData: FormData) =>
+  Object.fromEntries(formData.entries());
 
 interface AuthContextType {
   token: string | null;
@@ -92,22 +96,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (savedUser) setUserId(JSON.parse(savedUser));
       if (savedToken) setToken(savedToken);
       if (saveRole) setRole(saveRole);
-      if (savedUser && savedToken) setIsAuthenticated(true);
+      if (savedUser) setIsAuthenticated(true);
     }
   }, []);
 
-  const storeDataInLS = (res: AuthResponse) => {
-    if (!res.error) {
+  const storeDataInLS = (res: any) => {
+    const user = res?.user || res?.data?.user || res?.data;
+    const nextToken = res?.token || res?._token || res?.data?.token || null;
+    const nextRole = user?.role || res?.type || res?.data?.type || null;
+
+    if (!res.error && user?.id) {
       if (typeof window !== "undefined") {
-        if (res.user_id)
-          localStorage.setItem("user_id", JSON.stringify(res.user_id));
-        if (res._token) localStorage.setItem("token", res._token);
-        if (res.type) localStorage.setItem("role", res.type);
+        localStorage.setItem("user_id", JSON.stringify(user.id));
+
+        if (nextToken) {
+          localStorage.setItem("token", nextToken);
+        } else {
+          localStorage.removeItem("token");
+        }
+
+        if (nextRole) {
+          localStorage.setItem("role", nextRole);
+        }
       }
 
-      setUserId(res.user_id || "");
-      setToken(res._token || null);
-      setRole(res.type || null);
+      setUserId(String(user.id));
+      setToken(nextToken);
+      setRole(nextRole);
       setIsAuthenticated(true);
     }
   };
@@ -125,14 +140,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const loginUser = async (
     loginData: LoginData | FormData
   ): Promise<AuthResponse> => {
-    const res = await apiRequest({
-      url: "/Raising/Login",
-      method: "POST",
-      data: loginData,
+    await apiRequest({
+      url: "/sanctum/csrf-cookie",
+      method: "GET",
+      baseURL: BACKEND_ORIGIN,
+      withCredentials: true,
+      skipAuth: true,
     });
-    if(!res.error){
+
+    const payload =
+      loginData instanceof FormData ? formDataToObject(loginData) : loginData;
+
+    const res = await apiRequest({
+      url: "/professionals/login",
+      method: "POST",
+      baseURL: BACKEND_ORIGIN,
+      data: payload,
+      withCredentials: true,
+      skipAuth: true,
+    });
+    if (!res.error) {
       storeDataInLS(res);
-      storeDataISession(res.sessions);
     }
     return res;
   };
@@ -141,7 +169,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     registerData: RegisterData | FormData
   ): Promise<AuthResponse> => {
     const res = await apiRequest({
-      url: "Raising/Register",
+      url: "signup",
       method: "POST",
       data: registerData,
       withCredentials: false,

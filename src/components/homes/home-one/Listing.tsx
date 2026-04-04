@@ -143,7 +143,7 @@ const Listing = ({
       setLoading(true);
       const response = await apiRequest({
         method: "GET",
-        url: "GetAllProjectCategories",
+        url: "categories",
       });
       setCategoryData(response?.data || []);
     } catch (error) {

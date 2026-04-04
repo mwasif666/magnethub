@@ -32,7 +32,7 @@ const Blog = ({ style }: PropTypes) => {
     try {
       setLoading(true);
       const res = await apiRequest({
-        url: "GetAllBlogs",
+        url: "blogs",
         method: "GET",
       });
 

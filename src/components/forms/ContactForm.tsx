@@ -41,7 +41,7 @@ const ContactForm = () => {
     try {
       setLoading(true);
       await apiRequest({
-        url: "/SaveContactForm",
+        url: "/contact",
         method: "POST",
         data,
       });

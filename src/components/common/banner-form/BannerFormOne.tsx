@@ -135,18 +135,18 @@ const BannerFormOne = ({
   };
 
   const getCategories = async () => {
-    return apiRequest({ url: "GetAllProjectCategories", method: "GET" });
+    return apiRequest({ url: "categories", method: "GET" });
   };
 
   const getLocations = async () => {
-    return apiRequest({ url: "GetAllProjectLocations", method: "GET" });
+    return apiRequest({ url: "locations", method: "GET" });
   };
 
   const getBusinessRegionsById = async (id: string) => {
     try {
       setBusinessRegionLoading(true);
       const response = await apiRequest({
-        url: `GetAllRegions?locationId=${id}`,
+        url: `regions?locationId=${id}`,
         method: "GET",
       });
 
@@ -165,7 +165,7 @@ const BannerFormOne = ({
     try {
       setAgencyRegionLoading(true);
       const response = await apiRequest({
-        url: `GetAllRegions?locationId=${id}`,
+        url: `regions?locationId=${id}`,
         method: "GET",
       });
 
@@ -225,7 +225,7 @@ const BannerFormOne = ({
       }
       params.per_page = perPage;
       params.page = page;
-      return `GetAllProjects?${Object.keys(params)
+      return `projects?${Object.keys(params)
         .map((key) => `${key}=${encodeURIComponent(params[key])}`)
         .join("&")}`;
     }
@@ -238,7 +238,7 @@ const BannerFormOne = ({
       params.type = 3
       params.per_page = perPage;
       params.page = page;
-      return `GetAllProjects?${Object.keys(params)
+      return `projects?${Object.keys(params)
         .map((key) => `${key}=${encodeURIComponent(params[key])}`)
         .join("&")}`;
     }
@@ -474,7 +474,7 @@ const BannerFormOne = ({
         }
         params.per_page = 12;
         params.page = 1;
-        const url = `GetAllProjects?${Object.keys(params)
+        const url = `projects?${Object.keys(params)
           .map((key) => `${key}=${encodeURIComponent(params[key])}`)
           .join("&")}`;
         fetchProductDataAsPerFilter(url);
@@ -486,7 +486,7 @@ const BannerFormOne = ({
         params.per_page = 12;
         params.page = 1;
         params.type = 3;
-        const url = `GetAllProjects?${Object.keys(params)
+        const url = `projects?${Object.keys(params)
           .map((key) => `${key}=${encodeURIComponent(params[key])}`)
           .join("&")}`;
         fetchProductDataAsPerFilter(url);

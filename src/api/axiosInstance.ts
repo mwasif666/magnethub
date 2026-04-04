@@ -1,14 +1,23 @@
 import axios, { AxiosRequestConfig, Method } from "axios";
 
+export const BACKEND_ORIGIN = "https://dash.magnatehub.au";
+export const WEBSITE_API_BASE_URL = `${BACKEND_ORIGIN}/api/website/`;
+
 const api = axios.create({
-  baseURL: "https://dash.magnatehub.au/",
+  baseURL: WEBSITE_API_BASE_URL,
   headers: {
     Accept: "application/json",
   },
   withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
 });
 
 api.interceptors.request.use((config) => {
+  if ((config as any).skipAuth) {
+    return config;
+  }
+
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem("token") || sessionStorage.getItem("token")
@@ -29,6 +38,7 @@ interface ApiRequestProps {
   baseURL?: string | null;
   headers?: Record<string, string>;
   withCredentials?: boolean;
+  skipAuth?: boolean;
 }
 
 export const apiRequest = async ({
@@ -38,13 +48,15 @@ export const apiRequest = async ({
   baseURL = null,
   headers = {},
   withCredentials,
+  skipAuth = false,
 }: ApiRequestProps) => {
   try {
-    const config: AxiosRequestConfig = {
+    const config: AxiosRequestConfig & { skipAuth?: boolean } = {
       url,
       method,
       baseURL: baseURL || api.defaults.baseURL,
       withCredentials: withCredentials ?? api.defaults.withCredentials,
+      ...(skipAuth ? { skipAuth: true } : {}),
       headers: {
         ...headers,
       },

@@ -31,7 +31,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     try {
       setLoading(true);
       const response = await apiRequest({
-        url: `GetAllProjects?id=${id}`,
+        url: `projects?id=${id}`,
         method: "GET",
       });
       setListing(response.data?.data[0]);
@@ -46,7 +46,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     try {
       setSimilarLoading(true);
       const response = await apiRequest({
-        url: `GetAllProjects/similar?project_id=${id}`,
+        url: `projects/similar?project_id=${id}`,
         method: "GET",
       });
       setSimilarListing(response.data);
@@ -80,7 +80,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
       setLoading(true);
       const response = await apiRequest({
         method: "GET",
-        url: "GetAllProjectCategories",
+        url: "categories",
       });
       setCategoryData(response?.data || []);
     } catch (error) {

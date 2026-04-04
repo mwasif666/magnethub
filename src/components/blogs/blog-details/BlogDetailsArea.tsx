@@ -39,7 +39,7 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
     try {
       setBlogLoading(true);
       const response = await apiRequest({
-        url: `GetAllBlogs/${url}`,
+        url: `blogs/${url}`,
         method: "GET",
       });
 

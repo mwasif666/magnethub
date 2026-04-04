@@ -62,11 +62,11 @@ const BannerFormTwo: React.FC<BannerFormTwoProps> = ({ setListing }) => {
   };
 
   const getCategories = async () => {
-    return apiRequest({ url: "GetAllProjectCategories", method: "GET" });
+    return apiRequest({ url: "categories", method: "GET" });
   };
 
   const getLocations = async () => {
-    return apiRequest({ url: "GetAllProjectLocations", method: "GET" });
+    return apiRequest({ url: "locations", method: "GET" });
   };
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const BannerFormTwo: React.FC<BannerFormTwoProps> = ({ setListing }) => {
       if (filters.premium) params.premium = "";
     }
 
-    return `GetAllProjects?${Object.keys(params)
+    return `projects?${Object.keys(params)
       .map((key) => (params[key] === "" ? key : `${params[key]}`))
       .join("&")}`;
   };

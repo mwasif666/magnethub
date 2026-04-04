@@ -6,9 +6,6 @@ import type { Swiper as SwiperType } from "swiper";
 import { Autoplay } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
-
-import "swiper/css";
-
 import location_bg from "@/assets/img/destination/tu/bg.png";
 import { apiRequest } from "@/api/axiosInstance";
 
@@ -56,7 +53,7 @@ const OurLocation: React.FC = () => {
       setLoading(true);
       const response = await apiRequest({
         method: "GET",
-        url: "GetAllProjectLocations",
+        url: "locations",
       });
       setLocationData(response?.data || []);
     } catch (error) {
@@ -188,7 +185,7 @@ const OurLocation: React.FC = () => {
                         <div className="tg-location-thumb tg-round-25">
                           <Image
                             className="w-100 tg-round-25"
-                            src={`https://dash.magnatehub.au/uploads/location/card/${item?.card}`}
+                            src={`https://dash.magnatehub.au/storage/uploads/location/card/${item?.card}`}
                             alt="location"
                             width={400}
                             height={300}

@@ -53,7 +53,7 @@ const BlogArea = () => {
       setBlogLoading(true);
 
       const response = await apiRequest({
-        url: `GetAllBlogs?page=${pageNumber}`,
+        url: `blogs?page=${pageNumber}`,
         method: "GET",
       });
 
