@@ -6,6 +6,7 @@ export type OnboardingRoleId =
 
 export interface OnboardingQuestion {
   id: string;
+  professionalQuestionId?: number;
   prompt: string;
   options: string[];
   allowMultiple?: boolean;

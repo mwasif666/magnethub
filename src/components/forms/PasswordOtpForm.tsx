@@ -113,7 +113,7 @@ const PasswordOtpForm = () => {
         return;
       }
 
-      localStorage.setItem("code", response.code);
+      if(response.code) localStorage.setItem("code", response.code);
       setMessageType("success");
       setMessage("OTP resent successfully. Please check your email.");
     } catch {

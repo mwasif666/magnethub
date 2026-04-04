@@ -16,7 +16,6 @@ import Stepper from "@mui/material/Stepper";
 import Link from "next/link";
 import SimpleBar from "simplebar-react";
 import { useSearchParams } from "next/navigation";
-import { submitStripePayment } from "@/lib/submitStripePayment";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { toast } from "react-toastify";
@@ -173,6 +172,133 @@ const formatCardNumber = (value: string) =>
 const sanitizeDigits = (value: string, maxLength: number) =>
   value.replace(/\D/g, "").slice(0, maxLength);
 
+const getStripeExpiryYear = (expYear: string) =>
+  expYear.length === 2 ? `20${expYear}` : expYear;
+
+const extractQuestionOptions = (rawQuestion: any): string[] => {
+  const source =
+    rawQuestion?.options ??
+    rawQuestion?.answer_options ??
+    rawQuestion?.choices ??
+    [];
+
+  if (!Array.isArray(source)) {
+    return [];
+  }
+
+  return source
+    .map((option: any) => {
+      if (typeof option === "string") {
+        return option;
+      }
+
+      return (
+        option?.label ??
+        option?.title ??
+        option?.name ??
+        option?.value ??
+        ""
+      );
+    })
+    .filter(Boolean);
+};
+
+const mapApiQuestion = (rawQuestion: any): OnboardingQuestion => ({
+  id: String(rawQuestion?.id ?? rawQuestion?.professional_question_id ?? ""),
+  professionalQuestionId: Number(
+    rawQuestion?.id ?? rawQuestion?.professional_question_id ?? 0
+  ),
+  prompt:
+    rawQuestion?.question ??
+    rawQuestion?.prompt ??
+    rawQuestion?.title ??
+    "",
+  options: extractQuestionOptions(rawQuestion),
+  allowMultiple: Boolean(
+    rawQuestion?.allow_multiple ?? rawQuestion?.is_multiple ?? false
+  ),
+  customOptionLabel:
+    rawQuestion?.custom_option_label ??
+    rawQuestion?.other_option_label ??
+    undefined,
+  customInputPlaceholder:
+    rawQuestion?.custom_input_placeholder ??
+    rawQuestion?.other_input_placeholder ??
+    undefined,
+  helperText: rawQuestion?.helper_text ?? undefined,
+});
+
+const extractApiQuestions = (payload: any): OnboardingQuestion[] => {
+  const questionList =
+    payload?.data?.questions ??
+    payload?.questions ??
+    payload?.data ??
+    payload;
+
+  if (!Array.isArray(questionList)) {
+    return [];
+  }
+
+  return questionList
+    .map(mapApiQuestion)
+    .filter((question) => question.id && question.prompt);
+};
+
+const persistAuthFromSignupComplete = (payload: any) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const user =
+    payload?.user ?? payload?.data?.user ?? payload?.data ?? null;
+  const token =
+    payload?.token ?? payload?._token ?? payload?.data?.token ?? null;
+  const role =
+    user?.role ?? payload?.type ?? payload?.data?.type ?? null;
+
+  if (user?.id) {
+    localStorage.setItem("user_id", JSON.stringify(user.id));
+  }
+
+  if (token) {
+    localStorage.setItem("token", token);
+  }
+
+  if (role) {
+    localStorage.setItem("role", role);
+  }
+};
+
+const normalizeExistingAnswer = (
+  question: OnboardingQuestion,
+  rawAnswer: any
+): QuestionAnswerState => {
+  if (Array.isArray(rawAnswer)) {
+    return {
+      selectedOptions: rawAnswer.map((value) => String(value)),
+      customValue: "",
+    };
+  }
+
+  const answerText = String(rawAnswer ?? "").trim();
+
+  if (!answerText) {
+    return { selectedOptions: [], customValue: "" };
+  }
+
+  if (question.allowMultiple) {
+    return {
+      selectedOptions: answerText.split(",").map((value) => value.trim()).filter(Boolean),
+      customValue: "",
+    };
+  }
+
+  return {
+    selectedOptions: [answerText],
+    customValue: "",
+  };
+};
+
 const OnboardingStepIcon = ({ active, completed, icon }: StepIconProps) => {
   const isHighlighted = Boolean(active || completed);
 
@@ -229,6 +355,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const [expandedPlanDescriptions, setExpandedPlanDescriptions] = useState<
     Record<string, boolean>
   >({});
+  const [apiQuestions, setApiQuestions] = useState<
+    Partial<Record<OnboardingRoleId, OnboardingQuestion[]>>
+  >({});
   const [questionAnswers, setQuestionAnswers] = useState<
     Record<string, QuestionAnswerState>
   >({});
@@ -243,13 +372,14 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const selectedRole = getOnboardingRole(selectedRoleId);
   const isBuyer = isBuyerRole(selectedRoleId);
   const selectedPlan = getPlanBySlug(selectedPlanSlug) ?? pricing_data[0];
-  const expiryDisplayValue = paymentState.expMonth
-    ? `${paymentState.expMonth}${
-        paymentState.expYear ? ` / ${paymentState.expYear.slice(-2)}` : ""
-      }`
-    : "";
-  const unansweredQuestions = selectedRole
-    ? selectedRole.questions.filter((question) => {
+  const activeQuestions =
+    (selectedRoleId ? apiQuestions[selectedRoleId] : undefined) ??
+    selectedRole?.questions ??
+    [];
+  const expiryDisplayValue = `${paymentState.expMonth}${
+    paymentState.expMonth.length === 2 ? "/" : ""
+  }${paymentState.expYear}`;
+  const unansweredQuestions = activeQuestions.filter((question) => {
         const answerState = questionAnswers[question.id];
 
         if (!answerState || answerState.selectedOptions.length === 0) {
@@ -264,8 +394,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         }
 
         return false;
-      })
-    : [];
+      });
   const stripePublishableKey =
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || STRIPE_TEST_PUBLISHABLE_KEY;
 
@@ -276,6 +405,106 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
     setSelectedPlanSlug(getDefaultPlanForRole(selectedRoleId));
   }, [selectedRoleId, planManuallySelected]);
+
+  useEffect(() => {
+    if (!selectedRoleId || apiQuestions[selectedRoleId]) {
+      return;
+    }
+
+    let isActive = true;
+
+    const loadRoleQuestions = async () => {
+      try {
+        const response = await apiRequest({
+          url: `professional-questions/${selectedRoleId}`,
+          method: "GET",
+        });
+
+        if (!isActive) {
+          return;
+        }
+
+        const questions = extractApiQuestions(response);
+
+        if (questions.length > 0) {
+          setApiQuestions((current) => ({
+            ...current,
+            [selectedRoleId]: questions,
+          }));
+        }
+      } catch {
+        // Keep local fallback questions when API questions are unavailable.
+      }
+    };
+
+    loadRoleQuestions();
+
+    return () => {
+      isActive = false;
+    };
+  }, [apiQuestions, selectedRoleId]);
+
+  useEffect(() => {
+    if (currentStep !== "questions" || activeQuestions.length === 0) {
+      return;
+    }
+
+    let isActive = true;
+
+    const loadSubmittedAnswers = async () => {
+      try {
+        const response = await apiRequest({
+          url: "professional-question-answers",
+          method: "GET",
+        });
+
+        if (!isActive) {
+          return;
+        }
+
+        const submittedAnswers =
+          response?.data?.answers ??
+          response?.answers ??
+          response?.data ??
+          response;
+
+        if (!Array.isArray(submittedAnswers)) {
+          return;
+        }
+
+        setQuestionAnswers((current) => {
+          const nextState = { ...current };
+
+          submittedAnswers.forEach((item: any) => {
+            const question = activeQuestions.find(
+              (entry) =>
+                entry.professionalQuestionId ===
+                Number(item?.professional_question_id ?? item?.id ?? 0)
+            );
+
+            if (!question || nextState[question.id]) {
+              return;
+            }
+
+            nextState[question.id] = normalizeExistingAnswer(
+              question,
+              item?.answer
+            );
+          });
+
+          return nextState;
+        });
+      } catch {
+        // Leave the form blank when no previous answers exist.
+      }
+    };
+
+    loadSubmittedAnswers();
+
+    return () => {
+      isActive = false;
+    };
+  }, [activeQuestions, currentStep]);
 
   useEffect(() => {
     const fullName = `${signupState.firstName} ${signupState.lastName}`.trim();
@@ -377,7 +606,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     setPaymentState((current) => ({
       ...current,
       expMonth: month,
-      expYear: yearSuffix ? `20${yearSuffix}` : "",
+      expYear: yearSuffix,
     }));
     clearFieldError("expMonth");
     clearFieldError("expYear");
@@ -446,7 +675,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     if (!/^(0[1-9]|1[0-2])$/.test(paymentState.expMonth)) {
       errors.expMonth = "Enter a valid month.";
     }
-    if (!/^20\d{2}$/.test(paymentState.expYear)) {
+    if (!/^\d{2}$/.test(paymentState.expYear)) {
       errors.expYear = "Enter a valid year.";
     }
 
@@ -619,6 +848,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           return;
         }
 
+        persistAuthFromSignupComplete(completeSignupResponse);
+
         setRedirectUrl(
           (completeSignupResponse as any).redirect
             ? `https://dash.magnatehub.au${
@@ -748,55 +979,86 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     try {
       setActionLoading("checkout");
 
-      if (selectedPlan.price === 0) {
-        setPaymentCompleted(true);
-        setRedirectUrl(DASHBOARD_URL);
-        toast.success(`${selectedPlan.title} selected.`);
-        setStep("questions");
+      const leadId = sessionStorage.getItem("mh-signup-lead-id");
+      const leadCode = sessionStorage.getItem("mh-signup-lead-code");
+
+      if (!leadId || !leadCode) {
+        toast.error("Signup session is missing lead details. Please restart signup.");
         return;
       }
 
-      if (!window.Stripe) {
-        toast.error("Stripe is still loading. Please try again in a moment.");
-        return;
-      }
+      const payload: Record<string, string | number> = {
+        lead_id: Number(leadId),
+        lead_code: leadCode,
+        plan_id: selectedPlan.id,
+      };
 
-      const stripeResponse = await new Promise<any>((resolve, reject) => {
-        window.Stripe?.createToken(
-          {
-            number: paymentState.cardNumber.replace(/\s/g, ""),
-            cvc: paymentState.cvc,
-            exp_month: paymentState.expMonth,
-            exp_year: paymentState.expYear,
-            name: paymentState.cardName.trim(),
-          },
-          (_status: number, response: any) => {
-            if (response?.error) {
-              reject(response.error.message);
-              return;
+      if (selectedPlan.price > 0) {
+        if (!window.Stripe) {
+          toast.error("Stripe is still loading. Please try again in a moment.");
+          return;
+        }
+
+        const stripeResponse = await new Promise<any>((resolve, reject) => {
+          window.Stripe?.createToken(
+            {
+              number: paymentState.cardNumber.replace(/\s/g, ""),
+              cvc: paymentState.cvc,
+              exp_month: paymentState.expMonth,
+              exp_year: getStripeExpiryYear(paymentState.expYear),
+              name: paymentState.cardName.trim(),
+            },
+            (_status: number, response: any) => {
+              if (response?.error) {
+                reject(response.error.message);
+                return;
+              }
+
+              resolve(response);
             }
+          );
+        });
 
-            resolve(response);
-          }
-        );
+        payload.stripe_token = stripeResponse.id;
+      }
+
+      const response = await apiRequest({
+        url: "signup/complete",
+        method: "POST",
+        data: payload,
       });
 
-      const response = await submitStripePayment({
-        stripeToken: stripeResponse.id,
-        planId: selectedPlan.id,
-        email: paymentState.email,
-        name: paymentState.name,
-        phone: paymentState.phone,
-        message: paymentState.message,
-      });
+      if ((response as any)?.error) {
+        toast.error((response as any)?.message || "Signup could not be completed.");
+        return;
+      }
+
+      persistAuthFromSignupComplete(response);
+
+      await apiRequest({
+        url: "signup/lead/delete",
+        method: "POST",
+        data: {
+          lead_id: Number(leadId),
+          lead_code: leadCode,
+        },
+      }).catch(() => null);
+
+      sessionStorage.removeItem("mh-signup-lead-id");
+      sessionStorage.removeItem("mh-signup-lead-code");
+      sessionStorage.removeItem("mh-signup-verification-token");
 
       setRedirectUrl(
-        response?.redirect
-          ? `https://dash.magnatehub.au${response.redirect}`
+        (response as any)?.redirect
+          ? `https://dash.magnatehub.au${(response as any).redirect}`
           : DASHBOARD_URL
       );
       setPaymentCompleted(true);
-      toast.success("Payment completed successfully.");
+      toast.success(
+        selectedPlan.price > 0
+          ? "Payment completed successfully."
+          : `${selectedPlan.title} selected successfully.`
+      );
       setStep("questions");
     } catch (error: any) {
       toast.error(
@@ -882,13 +1144,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     }
 
     const payload = {
-      role_id: selectedRole.id,
-      role: selectedRole.label,
-      plan_slug: selectedPlan.slug,
-      plan_title: selectedPlan.title,
-      answers: selectedRole.questions.map((question) => ({
-        id: question.id,
-        question: question.prompt,
+      answers: activeQuestions.map((question) => ({
+        professional_question_id: question.professionalQuestionId,
         answer: formatQuestionAnswer(question, getQuestionAnswerState(question.id)),
       })),
     };
@@ -903,16 +1160,21 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       sessionStorage.setItem("mh-onboarding-plan", selectedPlan.slug || "");
       sessionStorage.setItem("mh-onboarding-role", selectedRole.id);
 
-      const questionEndpoint =
-        process.env.NEXT_PUBLIC_ONBOARDING_QUESTION_ENDPOINT;
-
-      if (questionEndpoint) {
-        await apiRequest({
-          url: questionEndpoint,
-          method: "POST",
-          data: payload,
-        });
+      if (
+        payload.answers.length === 0 ||
+        payload.answers.some((answer) => !answer.professional_question_id)
+      ) {
+        toast.error(
+          "Professional questions could not be loaded correctly. Please refresh and try again."
+        );
+        return;
       }
+
+      await apiRequest({
+        url: "professional-question-answers",
+        method: "POST",
+        data: payload,
+      });
 
       toast.success("Onboarding complete. Redirecting to your dashboard.");
 
@@ -1428,8 +1690,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
                     className={`${styles.input} ${styles.checkoutInput}`}
                     value={expiryDisplayValue}
                     onChange={(event) => updateExpiryValue(event.target.value)}
-                    placeholder="MM / YY"
+                    placeholder="MM/YY"
                     inputMode="numeric"
+                    maxLength={5}
                   />
                   <p className={styles.error}>
                     {fieldErrors.expMonth || fieldErrors.expYear}
@@ -1570,7 +1833,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       <div className={styles.messageBox}>{PRE_DASHBOARD_MESSAGE}</div>
 
       <div className={styles.questionList}>
-        {selectedRole?.questions.map((question, index) => (
+        {activeQuestions.map((question, index) => (
           <div key={question.id} className={styles.questionCard}>
             <div className={styles.questionHeader}>
               <span className={styles.questionNumber}>{index + 1}</span>
@@ -1776,7 +2039,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
                 <div className={styles.contentBody}>
                   {currentStep === "role" && renderRoleStep()}
-                  {currentStep === "signup" && renderSignupStep()}
+                  {currentStep === "signup" && renderQuestionsStep()}
                   {currentStep === "otp" && renderOtpStep()}
                   {currentStep === "plan" && renderPlanStep()}
                   {currentStep === "checkout" && renderCheckoutStep()}

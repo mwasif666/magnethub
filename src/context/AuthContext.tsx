@@ -145,6 +145,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       method: "GET",
       baseURL: BACKEND_ORIGIN,
       withCredentials: true,
+      withXSRFToken: true,
       skipAuth: true,
     });
 
@@ -157,6 +158,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       baseURL: BACKEND_ORIGIN,
       data: payload,
       withCredentials: true,
+      withXSRFToken: true,
       skipAuth: true,
     });
     if (!res.error) {

@@ -7,8 +7,10 @@ const api = axios.create({
   baseURL: WEBSITE_API_BASE_URL,
   headers: {
     Accept: "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   },
   withCredentials: true,
+  withXSRFToken: true,
   xsrfCookieName: "XSRF-TOKEN",
   xsrfHeaderName: "X-XSRF-TOKEN",
 });
@@ -38,6 +40,7 @@ interface ApiRequestProps {
   baseURL?: string | null;
   headers?: Record<string, string>;
   withCredentials?: boolean;
+  withXSRFToken?: boolean;
   skipAuth?: boolean;
 }
 
@@ -48,6 +51,7 @@ export const apiRequest = async ({
   baseURL = null,
   headers = {},
   withCredentials,
+  withXSRFToken,
   skipAuth = false,
 }: ApiRequestProps) => {
   try {
@@ -56,6 +60,7 @@ export const apiRequest = async ({
       method,
       baseURL: baseURL || api.defaults.baseURL,
       withCredentials: withCredentials ?? api.defaults.withCredentials,
+      withXSRFToken: withXSRFToken ?? true,
       ...(skipAuth ? { skipAuth: true } : {}),
       headers: {
         ...headers,
