@@ -44,15 +44,14 @@ const ForgotPasswordFindForm = () => {
       formData.append("email", data.email);
 
       const response = (await apiRequest({
-        url: "Raising/Find",
+        url: "password/forgot",
         method: "POST",
         data: formData,
       })) as ForgotPasswordResponse;
 
       if (!response?.error) {
-        toast.success("Token sent successfully", { position: "top-center" });
-        localStorage.removeItem("code");
-        localStorage.setItem("code", response.code || "");
+        localStorage.removeItem("verify_email");
+        localStorage.setItem("verify_email", data.email);
         reset();
         router.push("/verify-reset-code");
         return;

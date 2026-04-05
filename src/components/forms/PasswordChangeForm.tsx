@@ -46,13 +46,23 @@ const PasswordChangeForm = () => {
     try {
       setLoading(true);
 
-      const code = localStorage.getItem("code") || "";
+      const email = localStorage.getItem("verify_email") || "";
+      const verificationToken = localStorage.getItem("verification_token") || "";
+      
+      if (!email || !verificationToken) {
+        toast.error("Missing email or verification token. Please try again.", {
+          position: "top-center",
+        });
+        return;
+      }
       const formData = new FormData();
-      formData.append("code", code);
+      formData.append("email", email);
       formData.append("password", data.password);
+      formData.append("password_confirmation", data.confirmPassword);
+      formData.append("verification_token", verificationToken);
 
       const response = (await apiRequest({
-        url: "Raising/Forgot/Change/Password",
+        url: "password/reset",
         method: "POST",
         data: formData,
       })) as PasswordChangeResponse;
@@ -62,7 +72,7 @@ const PasswordChangeForm = () => {
           position: "top-center",
         });
         reset();
-        router.push("/");
+        router.push("/login");
         return;
       }
 

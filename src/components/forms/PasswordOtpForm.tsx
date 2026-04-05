@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "@/api/axiosInstance";
 import { useState } from "react";
+import { get } from "http";
 
 interface OtpData {
   otp: string;
@@ -16,6 +17,7 @@ interface PasswordOtpResponse {
   error?: boolean;
   message?: string;
   code?: string;
+  data?: any;
 }
 
 const schema = yup.object({
@@ -43,31 +45,31 @@ const PasswordOtpForm = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<MessageType>("info");
 
-  const getCode = () => {
-    const code = localStorage.getItem("code");
-    if (!code) {
+  const getEmail = () => {
+    const email = localStorage.getItem("verify_email");
+    if (!email) {
       setMessageType("error");
       setMessage("Something went wrong. Please try again.");
       return;
     }
 
-    return code;
+    return email;
   };
 
   const onSubmit = async (data: OtpData) => {
-    const code = getCode();
-    if (!code) return;
+    const email = getEmail();
+    if (!email) return;
 
     const formData = new FormData();
-    formData.append("otp", data.otp);
-    formData.append("code", code);
+    formData.append("email_verification_code", data.otp);
+    formData.append("email", email);
 
     try {
       setOtpVerifyLoading(true);
       setMessage(null);
 
       const response = (await apiRequest({
-        url: "Raising/Forgot/Check/Otp",
+        url: "password/verify-code",
         method: "POST",
         data: formData,
       })) as PasswordOtpResponse;
@@ -80,8 +82,10 @@ const PasswordOtpForm = () => {
 
       setMessageType("success");
       setMessage("OTP verified successfully!");
+      localStorage.removeItem("verification_token");
+      localStorage.setItem("verification_token", response.data.verification_token || "");
       router.push("/change-password");
-    } catch {
+    } catch(error) {
       setMessageType("error");
       setMessage("Something went wrong. Please try again.");
     } finally {
@@ -90,11 +94,11 @@ const PasswordOtpForm = () => {
   };
 
   const handleResend = async () => {
-    const code = getCode();
-    if (!code) return;
+    const email  = getEmail();
+    if (!email) return;
 
     const formData = new FormData();
-    formData.append("code", code);
+    formData.append("email", email);
 
     try {
       setOtpResendLoading(true);
@@ -102,7 +106,7 @@ const PasswordOtpForm = () => {
       setMessage("Generating OTP...");
 
       const response = (await apiRequest({
-        url: "Raising/Resend/Otp",
+        url: "password/resend-code",
         method: "POST",
         data: formData,
       })) as PasswordOtpResponse;
@@ -112,8 +116,6 @@ const PasswordOtpForm = () => {
         setMessage(response.message || "Failed to resend OTP");
         return;
       }
-
-      if(response.code) localStorage.setItem("code", response.code);
       setMessageType("success");
       setMessage("OTP resent successfully. Please check your email.");
     } catch {

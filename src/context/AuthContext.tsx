@@ -101,9 +101,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const storeDataInLS = (res: any) => {
-    const user = res?.user || res?.data?.user || res?.data;
-    const nextToken = res?.token || res?._token || res?.data?.token || null;
-    const nextRole = user?.role || res?.type || res?.data?.type || null;
+    console.log(res);
+    
+    const user = res?.data?.user;
+    const nextToken = res?.data?.token || null;
+    const nextRole = res?.data?.role || null;
 
     if (!res.error && user?.id) {
       if (typeof window !== "undefined") {
@@ -125,16 +127,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setRole(nextRole);
       setIsAuthenticated(true);
     }
-  };
-
-  const storeDataISession = (res: sessionResponse) => {
-     sessionStorage.setItem("raising_id", JSON.stringify(res.raising_id));
-     sessionStorage.setItem("name", JSON.stringify(res.name));
-     sessionStorage.setItem("email", JSON.stringify(res.email));
-     sessionStorage.setItem("profile", JSON.stringify(res.profile));
-     sessionStorage.setItem("type", JSON.stringify(res.type));
-     sessionStorage.setItem("plan_type", JSON.stringify(res.plan_type));
-     sessionStorage.setItem("plan_expiry", JSON.stringify(res.plan_expiry));
   };
 
   const loginUser = async (
@@ -194,13 +186,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.removeItem("user_id");
       localStorage.removeItem("token");
       localStorage.removeItem("role");
-      sessionStorage.removeItem("raising_id");
-      sessionStorage.removeItem("name");
-      sessionStorage.removeItem("email");
-      sessionStorage.removeItem("profile");
-      sessionStorage.removeItem("type");
-      sessionStorage.removeItem("plan_type");
-      sessionStorage.removeItem("plan_expiry");
       setUserId("");
       setToken(null);
       setRole(null);

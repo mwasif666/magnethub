@@ -6,21 +6,19 @@ import {
   onboardingRoleConfigs,
   OnboardingQuestion,
   OnboardingRoleId,
-  PRE_DASHBOARD_MESSAGE,
 } from "@/data/OnboardingQuestions";
 import pricing_data from "@/data/PricingData";
-import Box from "@mui/material/Box";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Stepper from "@mui/material/Stepper";
-import Link from "next/link";
-import SimpleBar from "simplebar-react";
 import { useSearchParams } from "next/navigation";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { toast } from "react-toastify";
-import type { StepIconProps } from "@mui/material/StepIcon";
 import type { Swiper as SwiperType } from "swiper";
+import OnboardingSidebar from "./flow/OnboardingSidebar";
+import CheckoutStep from "./flow/steps/CheckoutStep";
+import OtpStep from "./flow/steps/OtpStep";
+import PlanStep from "./flow/steps/PlanStep";
+import QuestionsStep from "./flow/steps/QuestionsStep";
+import RoleStep from "./flow/steps/RoleStep";
+import SignupStep from "./flow/steps/SignupStep";
 import styles from "./OnboardingFlow.module.css";
 
 type StepId = "role" | "signup" | "otp" | "plan" | "checkout" | "questions";
@@ -68,15 +66,6 @@ interface QuestionAnswerState {
   selectedOptions: string[];
   customValue: string;
 }
-
-const STEP_ORDER: StepId[] = [
-  "role",
-  "signup",
-  "otp",
-  "plan",
-  "checkout",
-  "questions",
-];
 
 const STEP_CONTENT: Record<
   StepId,
@@ -244,31 +233,6 @@ const extractApiQuestions = (payload: any): OnboardingQuestion[] => {
     .filter((question) => question.id && question.prompt);
 };
 
-const persistAuthFromSignupComplete = (payload: any) => {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  const user =
-    payload?.user ?? payload?.data?.user ?? payload?.data ?? null;
-  const token =
-    payload?.token ?? payload?._token ?? payload?.data?.token ?? null;
-  const role =
-    user?.role ?? payload?.type ?? payload?.data?.type ?? null;
-
-  if (user?.id) {
-    localStorage.setItem("user_id", JSON.stringify(user.id));
-  }
-
-  if (token) {
-    localStorage.setItem("token", token);
-  }
-
-  if (role) {
-    localStorage.setItem("role", role);
-  }
-};
-
 const normalizeExistingAnswer = (
   question: OnboardingQuestion,
   rawAnswer: any
@@ -297,35 +261,6 @@ const normalizeExistingAnswer = (
     selectedOptions: [answerText],
     customValue: "",
   };
-};
-
-const OnboardingStepIcon = ({ active, completed, icon }: StepIconProps) => {
-  const isHighlighted = Boolean(active || completed);
-
-  return (
-    <Box
-      sx={{
-        width: 34,
-        height: 34,
-        borderRadius: "10px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: isHighlighted
-          ? "linear-gradient(90deg, #5a00ff 0%, #7d12ff 100%)"
-          : "rgba(255, 255, 255, 0.24)",
-        color: "#fff",
-        fontSize: "14px",
-        fontWeight: 700,
-        lineHeight: 1,
-        boxShadow: isHighlighted
-          ? "0 10px 24px rgba(95, 20, 255, 0.24)"
-          : "none",
-      }}
-    >
-      {icon}
-    </Box>
-  );
 };
 
 const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
@@ -847,9 +782,6 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           });
           return;
         }
-
-        persistAuthFromSignupComplete(completeSignupResponse);
-
         setRedirectUrl(
           (completeSignupResponse as any).redirect
             ? `https://dash.magnatehub.au${
@@ -1032,8 +964,6 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         toast.error((response as any)?.message || "Signup could not be completed.");
         return;
       }
-
-      persistAuthFromSignupComplete(response);
 
       await apiRequest({
         url: "signup/lead/delete",
@@ -1245,671 +1175,137 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     ? [
         {
           key: "role",
-          number: 1,
           label: "ROLE",
-          isActive: currentStep === "role",
-          isComplete: false,
         },
         {
           key: "account",
-          number: 2,
           label: "CREATE ACCOUNT",
-          isActive: currentStep === "signup" || currentStep === "otp",
-          isComplete: currentStep === "questions",
         },
         {
           key: "questions",
-          number: 3,
           label: "QUESTIONS",
-          isActive: currentStep === "questions",
-          isComplete: false,
         },
       ]
     : [
         {
           key: "role",
-          number: 1,
           label: "ROLE",
-          isActive: currentStep === "role",
-          isComplete: false,
         },
         {
           key: "account",
-          number: 2,
           label: "CREATE ACCOUNT",
-          isActive: currentStep === "signup" || currentStep === "otp",
-          isComplete:
-            currentStep === "plan" ||
-            currentStep === "checkout" ||
-            currentStep === "questions",
         },
         {
           key: "plan",
-          number: 3,
           label: "PLAN",
-          isActive: currentStep === "plan",
-          isComplete: currentStep === "checkout" || currentStep === "questions",
         },
         {
           key: "checkout",
-          number: 4,
           label: "CHECKOUT",
-          isActive: currentStep === "checkout",
-          isComplete: currentStep === "questions",
         },
         {
           key: "questions",
-          number: 5,
           label: "QUESTIONS",
-          isActive: currentStep === "questions",
-          isComplete: false,
         },
       ];
 
-  const renderRoleStep = () => (
-    <>
-      <div className={styles.roleChoiceGrid}>
-        {onboardingRoleConfigs.map((role) => {
-          const isActive = selectedRoleId === role.id;
+  const renderStep = () => {
+    if (currentStep === "role") {
+      return (
+        <RoleStep
+          selectedRoleId={selectedRoleId}
+          onSelectRole={setSelectedRoleId}
+          onContinue={handleContinueFromRole}
+        />
+      );
+    }
 
-          return (
-            <button
-              key={role.id}
-              type="button"
-              className={`${styles.roleChoiceButton} ${
-                isActive ? styles.roleChoiceButtonActive : ""
-              }`}
-              onClick={() => setSelectedRoleId(role.id)}
-            >
-              {role.label}
-            </button>
-          );
-        })}
-      </div>
-      <div className={styles.roleFooterActions}>
-        <button
-          type="button"
-          className={`${styles.primaryButton} ${styles.rolePrimaryButton}`}
-          onClick={handleContinueFromRole}
-        >
-          Next
-        </button>
-      </div>
-       <div className={styles.roleBackRow}>
-        <Link href="/login" className={styles.secondaryButton}>
-          Back to login
-        </Link>
-      </div>
-    </>
-  );
-
-  const renderSignupStep = () => (
-    <form
-      onSubmit={handleSignupSubmit}
-      className={styles.signupForm}
-      autoComplete="off"
-    >
-      <input
-        type="text"
-        name="fake_username"
-        autoComplete="username"
-        tabIndex={-1}
-        className={styles.autofillTrap}
+    if (currentStep === "signup") {
+      return (
+         <QuestionsStep
+        activeQuestions={activeQuestions}
+        questionAnswers={questionAnswers}
+        unansweredQuestions={unansweredQuestions}
+        fieldErrors={fieldErrors}
+        actionLoading={actionLoading}
+        onSelectQuestion={handleQuestionSelect}
+        onCustomValueChange={handleQuestionCustomValueChange}
+        onFinish={handleFinishOnboarding}
       />
-      <input
-        type="password"
-        name="fake_password"
-        autoComplete="current-password"
-        tabIndex={-1}
-        className={styles.autofillTrap}
-      />
-      <div className={`${styles.formGrid} ${styles.signupFormGrid}`}>
-        <div className={styles.field}>
-          <label className={`${styles.label} ${styles.signupLabel}`}>
-            First name
-          </label>
-          <input
-            className={`${styles.input} ${styles.signupInputGhost}`}
-            name="register_first_name"
-            autoComplete="off"
-            value={signupState.firstName}
-            onChange={(event) =>
-              updateSignupField("firstName", event.target.value)
-            }
-            placeholder="John"
-          />
-          <p className={styles.error}>{fieldErrors.firstName}</p>
-        </div>
+        // <SignupStep
+        //   signupState={signupState}
+        //   fieldErrors={fieldErrors}
+        //   actionLoading={actionLoading}
+        //   onSubmit={handleSignupSubmit}
+        //   onUpdateField={updateSignupField}
+        // />
+      );
+    }
 
-        <div className={styles.field}>
-          <label className={`${styles.label} ${styles.signupLabel}`}>
-            Last name
-          </label>
-          <input
-            className={`${styles.input} ${styles.signupInputGhost}`}
-            name="register_last_name"
-            autoComplete="off"
-            value={signupState.lastName}
-            onChange={(event) =>
-              updateSignupField("lastName", event.target.value)
-            }
-            placeholder="Doe"
-          />
-          <p className={styles.error}>{fieldErrors.lastName}</p>
-        </div>
-
-        <div className={`${styles.field} ${styles.fieldFull}`}>
-          <label className={`${styles.label} ${styles.signupLabel}`}>
-            Email address
-          </label>
-          <input
-            className={`${styles.input} ${styles.signupInputSolid}`}
-            type="email"
-            name="register_email"
-            autoComplete="off"
-            value={signupState.email}
-            onChange={(event) => updateSignupField("email", event.target.value)}
-            placeholder="john@example.com"
-          />
-          <p className={styles.error}>{fieldErrors.email}</p>
-        </div>
-
-        <div className={styles.field}>
-          <label className={`${styles.label} ${styles.signupLabel}`}>
-            Password
-          </label>
-          <input
-            className={`${styles.input} ${styles.signupInputSolid}`}
-            type="password"
-            name="register_password"
-            autoComplete="new-password"
-            value={signupState.password}
-            onChange={(event) =>
-              updateSignupField("password", event.target.value)
-            }
-            placeholder="Minimum 6 characters"
-          />
-          <p className={styles.error}>{fieldErrors.password}</p>
-        </div>
-
-        <div className={styles.field}>
-          <label className={`${styles.label} ${styles.signupLabel}`}>
-            Confirm password
-          </label>
-          <input
-            className={`${styles.input} ${styles.signupInputSolid}`}
-            type="password"
-            name="register_confirm_password"
-            autoComplete="new-password"
-            value={signupState.confirmPassword}
-            onChange={(event) =>
-              updateSignupField("confirmPassword", event.target.value)
-            }
-            placeholder="Re-type password"
-          />
-          <p className={styles.error}>{fieldErrors.confirmPassword}</p>
-        </div>
-      </div>
-
-      <div className={styles.inlineFooter}>
-        <span>Already have an account?</span>
-        <Link href="/login" className={styles.inlineLink}>
-          Log in
-        </Link>
-      </div>
-
-      <div className={styles.actionRow}>
-        <button
-          type="submit"
-          className={`${styles.primaryButton} ${styles.signupPrimaryButton}`}
-          disabled={actionLoading === "signup"}
-        >
-          {actionLoading === "signup" ? "Creating account..." : "Create account"}
-        </button>
-      </div>
-    </form>
-  );
-
-  const renderOtpStep = () => (
-    <form onSubmit={handleVerifyOtp}>
-      <div className={styles.otpWrap}>
-        <input
-          ref={otpInputRef}
-          className={styles.otpHiddenInput}
-          value={otpCode}
-          onChange={(event) => {
-            setOtpCode(sanitizeDigits(event.target.value, OTP_LENGTH));
+    if (currentStep === "otp") {
+      return (
+        <OtpStep
+          otpCode={otpCode}
+          resendCountdown={resendCountdown}
+          fieldErrors={fieldErrors}
+          otpMessage={otpMessage}
+          actionLoading={actionLoading}
+          otpInputRef={otpInputRef}
+          onSubmit={handleVerifyOtp}
+          onOtpChange={(value) => {
+            setOtpCode(value);
             clearFieldError("otp");
           }}
-          inputMode="numeric"
-          maxLength={OTP_LENGTH}
+          onResend={handleResendOtp}
         />
+      );
+    }
 
-        <div
-          className={styles.otpBoxRow}
-          onClick={() => otpInputRef.current?.focus()}
-          role="presentation"
-        >
-          {Array.from({ length: OTP_LENGTH }).map((_, index) => (
-            <div key={index} className={styles.otpBox}>
-              {otpCode[index] || ""}
-            </div>
-          ))}
-        </div>
+    if (currentStep === "plan") {
+      return (
+        <PlanStep
+          selectedPlan={selectedPlan}
+          selectedRole={selectedRole}
+          expandedPlanDescriptions={expandedPlanDescriptions}
+          planSwiperRef={planSwiperRef}
+          onSelectPlan={handlePlanSelect}
+          onPlanCardKeyDown={handlePlanCardKeyDown}
+          onToggleDescription={togglePlanDescription}
+          onContinue={handlePlanContinue}
+        />
+      );
+    }
 
-        <p className={styles.otpTimer}>
-          00:{String(resendCountdown).padStart(2, "0")}
-        </p>
-        <p className={styles.error}>{fieldErrors.otp}</p>
-      </div>
+    if (currentStep === "checkout") {
+      return (
+        <CheckoutStep
+          selectedPlan={selectedPlan}
+          paymentState={paymentState}
+          expiryDisplayValue={expiryDisplayValue}
+          fieldErrors={fieldErrors}
+          actionLoading={actionLoading}
+          onSubmit={handleCheckoutSubmit}
+          onUpdateField={updatePaymentField}
+          onUpdateExpiryValue={updateExpiryValue}
+          formatCardNumber={formatCardNumber}
+          sanitizeDigits={sanitizeDigits}
+        />
+      );
+    }
 
-      {otpMessage && (
-        <div className={`${styles.messageBox} ${styles[`message${otpMessage.tone}`]}`}>
-          {otpMessage.text}
-        </div>
-      )}
-
-      <div className={styles.inlineFooter}>
-        <span>Didn't receive the code?</span>
-        <button
-          type="button"
-          className={styles.linkButton}
-          onClick={handleResendOtp}
-          disabled={actionLoading === "otp" || resendCountdown > 0}
-        >
-          {actionLoading === "otp" ? "Please wait..." : "Resend"}
-        </button>
-      </div>
-
-      <div className={styles.actionRow}>
-        <button
-          type="submit"
-          className={styles.primaryButton}
-          disabled={actionLoading === "otp"}
-        >
-          {actionLoading === "otp" ? "Verifying..." : "Verify and continue"}
-        </button>
-      </div>
-    </form>
-  );
-
-  const renderPlanStep = () => (
-    <>
-      <div className={styles.planToolbar}>
-        <p className={styles.planToolbarText}>Swipe to compare plans and pick the best fit.</p>
-        {pricing_data.length > 1 && (
-          <div className={styles.planNav}>
-            <button
-              type="button"
-              className={styles.planNavButton}
-              onClick={() => planSwiperRef.current?.slidePrev()}
-              aria-label="Show previous plans"
-            >
-              <i className="fa-solid fa-arrow-left-long" />
-            </button>
-            <button
-              type="button"
-              className={styles.planNavButton}
-              onClick={() => planSwiperRef.current?.slideNext()}
-              aria-label="Show next plans"
-            >
-              <i className="fa-solid fa-arrow-right-long" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className={styles.planGrid}>
-        <Swiper
-          className={styles.planSwiper}
-          spaceBetween={16}
-          slidesPerView={1.18}
-          watchOverflow={true}
-          breakpoints={{
-            576: { slidesPerView: 1.35 },
-            768: { slidesPerView: 1.9 },
-            1200: { slidesPerView: 2.35 },
-          }}
-          onSwiper={(swiper) => {
-            planSwiperRef.current = swiper;
-          }}
-        >
-          {pricing_data.map((plan) => {
-            const planKey = plan.slug || String(plan.id);
-            const isActive = plan.slug === selectedPlan.slug;
-            const isRecommended = selectedRole?.recommendedPlanSlug === plan.slug;
-            const isExpanded = Boolean(expandedPlanDescriptions[planKey]);
-            const shouldShowToggle = plan.desc.trim().length > 140;
-
-            return (
-              <SwiperSlide key={plan.id} className={styles.planSlide}>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className={`${styles.planCard} ${isActive ? styles.planCardActive : ""}`}
-                  onClick={() => handlePlanSelect(plan.slug || "")}
-                  onKeyDown={(event) =>
-                    handlePlanCardKeyDown(event, plan.slug || "")
-                  }
-                >
-                  <div className={styles.planHeader}>
-                    <div>
-                      <h3 className={styles.planTitle}>{plan.title}</h3>
-                      <p className={styles.planPrice}>
-                        ${plan.price}
-                        <span>{plan.price === 0 ? " / free" : " / once off"}</span>
-                      </p>
-                    </div>
-                    {isRecommended && (
-                      <span className={styles.recommendedTag}>Recommended</span>
-                    )}
-                  </div>
-
-                  <div className={styles.planDescriptionWrap}>
-                    <p
-                      className={`${styles.planDescription} ${
-                        !isExpanded ? styles.planDescriptionCollapsed : ""
-                      }`}
-                    >
-                      {plan.desc.trim()}
-                    </p>
-                    {shouldShowToggle && (
-                      <button
-                        type="button"
-                        className={styles.readMoreButton}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          togglePlanDescription(planKey);
-                        }}
-                      >
-                        {isExpanded ? "Read less" : "Read more"}
-                      </button>
-                    )}
-                  </div>
-
-                  <SimpleBar autoHide={true} className={styles.planListScroll}>
-                    <ul className={styles.planList}>
-                      {plan.list.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </SimpleBar>
-                </div>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      </div>
-
-      <div className={styles.actionRow}>
-        <button
-          type="button"
-          className={styles.primaryButton}
-          onClick={handlePlanContinue}
-        >
-          Continue to checkout
-        </button>
-      </div>
-    </>
-  );
-
-  const renderCheckoutStep = () => (
-    <form onSubmit={handleCheckoutSubmit}>
-      <div className={styles.checkoutGrid}>
-        <div className={styles.checkoutFormPanel}>
-          {selectedPlan.price > 0 && (
-            <div className={styles.checkoutSection}>
-              <div className={styles.checkoutSectionHeader}>
-                <h3 className={styles.checkoutSectionTitle}>
-                  Payment information
-                </h3>
-                <span className={styles.checkoutSecurityNote}>
-                  Secured by Stripe
-                </span>
-              </div>
-
-              <div className={styles.checkoutPaymentGrid}>
-                <div className={`${styles.field} ${styles.checkoutFieldWide}`}>
-                  <input
-                    className={`${styles.input} ${styles.checkoutInput}`}
-                    value={paymentState.cardNumber}
-                    onChange={(event) =>
-                      updatePaymentField(
-                        "cardNumber",
-                        formatCardNumber(event.target.value)
-                      )
-                    }
-                    placeholder="Card number"
-                    inputMode="numeric"
-                  />
-                  <p className={styles.error}>{fieldErrors.cardNumber}</p>
-                </div>
-
-                <div className={styles.field}>
-                  <input
-                    className={`${styles.input} ${styles.checkoutInput}`}
-                    value={expiryDisplayValue}
-                    onChange={(event) => updateExpiryValue(event.target.value)}
-                    placeholder="MM/YY"
-                    inputMode="numeric"
-                    maxLength={5}
-                  />
-                  <p className={styles.error}>
-                    {fieldErrors.expMonth || fieldErrors.expYear}
-                  </p>
-                </div>
-
-                <div className={styles.field}>
-                  <input
-                    className={`${styles.input} ${styles.checkoutInput}`}
-                    value={paymentState.cardName}
-                    onChange={(event) =>
-                      updatePaymentField("cardName", event.target.value)
-                    }
-                    placeholder="Name on card"
-                  />
-                  <p className={styles.error}>{fieldErrors.cardName}</p>
-                </div>
-
-                <div className={styles.field}>
-                  <input
-                    className={`${styles.input} ${styles.checkoutInput}`}
-                    value={paymentState.cvc}
-                    onChange={(event) =>
-                      updatePaymentField(
-                        "cvc",
-                        sanitizeDigits(event.target.value, 4)
-                      )
-                    }
-                    placeholder="CVV"
-                    inputMode="numeric"
-                  />
-                  <p className={styles.error}>{fieldErrors.cvc}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className={styles.checkoutSection}>
-            <h3 className={styles.checkoutSectionTitle}>Billing information</h3>
-            <div className={styles.formGrid}>
-              <div className={styles.field}>
-                <label className={styles.label}>Full name</label>
-                <input
-                  className={`${styles.input} ${styles.checkoutInput}`}
-                  value={paymentState.name}
-                  onChange={(event) =>
-                    updatePaymentField("name", event.target.value)
-                  }
-                  placeholder="John Doe"
-                />
-                <p className={styles.error}>{fieldErrors.name}</p>
-              </div>
-
-              <div className={styles.field}>
-                <label className={styles.label}>Email address</label>
-                <input
-                  className={`${styles.input} ${styles.checkoutInput}`}
-                  type="email"
-                  value={paymentState.email}
-                  onChange={(event) =>
-                    updatePaymentField("email", event.target.value)
-                  }
-                  placeholder="john@example.com"
-                />
-                <p className={styles.error}>{fieldErrors.email}</p>
-              </div>
-
-              <div className={`${styles.field} ${styles.fieldFull}`}>
-                <label className={styles.label}>Phone number</label>
-                <input
-                  className={`${styles.input} ${styles.checkoutInput}`}
-                  value={paymentState.phone}
-                  onChange={(event) =>
-                    updatePaymentField("phone", event.target.value)
-                  }
-                  placeholder="+61 400 000 000"
-                />
-                <p className={styles.error}>{fieldErrors.phone}</p>
-              </div>
-
-              <div className={`${styles.field} ${styles.fieldFull}`}>
-                <label className={styles.label}>Message</label>
-                <textarea
-                  className={`${styles.textarea} ${styles.checkoutTextarea}`}
-                  value={paymentState.message}
-                  onChange={(event) =>
-                    updatePaymentField("message", event.target.value)
-                  }
-                  placeholder="Any additional details you want the team to know..."
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.checkoutNotice}>
-            {selectedPlan.price === 0
-              ? "Free plan selected. No card details are required. Continue to the final setup questions."
-              : "Payment is processed securely through Stripe. After a successful payment, you will continue to the onboarding questions."}
-          </div>
-
-          <div className={`${styles.actionRow} ${styles.checkoutActionRow}`}>
-            <button
-              type="submit"
-              className={`${styles.primaryButton} ${styles.checkoutPrimaryButton}`}
-              disabled={actionLoading === "checkout"}
-            >
-              {actionLoading === "checkout"
-                ? "Processing..."
-                : selectedPlan.price === 0
-                ? "Continue to questions"
-                : `Pay $${selectedPlan.price} and continue`}
-            </button>
-          </div>
-        </div>
-
-        <aside className={styles.checkoutSummaryPanel}>
-          <div className={styles.summaryPanel}>
-            <span className={styles.summaryEyebrow}>Selected plan</span>
-            <h3 className={styles.summaryTitle}>{selectedPlan.title}</h3>
-            <p className={styles.summaryAmount}>${selectedPlan.price}</p>
-            <p className={styles.summaryText}>{selectedPlan.desc.trim()}</p>
-
-            <ul className={styles.summaryList}>
-              {selectedPlan.list.slice(0, 5).map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-
-            <div className={styles.secureBadge}>Secure Stripe tokenised payment</div>
-          </div>
-        </aside>
-      </div>
-    </form>
-  );
-
-  const renderQuestionsStep = () => (
-    <>
-      <div className={styles.messageBox}>{PRE_DASHBOARD_MESSAGE}</div>
-
-      <div className={styles.questionList}>
-        {activeQuestions.map((question, index) => (
-          <div key={question.id} className={styles.questionCard}>
-            <div className={styles.questionHeader}>
-              <span className={styles.questionNumber}>{index + 1}</span>
-              <div>
-                <h3 className={styles.questionTitle}>{question.prompt}</h3>
-                {question.helperText && (
-                  <p className={styles.questionHelper}>{question.helperText}</p>
-                )}
-              </div>
-            </div>
-
-            <div className={styles.optionGrid}>
-              {question.options.map((option) => {
-                const answerState = getQuestionAnswerState(question.id);
-                const isActive = answerState.selectedOptions.includes(option);
-
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    className={`${styles.optionButton} ${
-                      isActive ? styles.optionButtonActive : ""
-                    }`}
-                    onClick={() => handleQuestionSelect(question, option)}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
-            </div>
-
-            {question.customOptionLabel &&
-              getQuestionAnswerState(question.id).selectedOptions.includes(
-                question.customOptionLabel
-              ) && (
-                <div className={styles.questionCustomField}>
-                  <input
-                    className={styles.input}
-                    value={getQuestionAnswerState(question.id).customValue}
-                    onChange={(event) =>
-                      handleQuestionCustomValueChange(question.id, event.target.value)
-                    }
-                    placeholder={
-                      question.customInputPlaceholder || "Enter your answer"
-                    }
-                  />
-                </div>
-              )}
-
-            <p className={styles.error}>{fieldErrors[question.id]}</p>
-          </div>
-        ))}
-      </div>
-
-      <p className={styles.helperText}>
-        {unansweredQuestions.length === 0
-          ? "All questions answered. You can finish onboarding."
-          : `${unansweredQuestions.length} question${
-              unansweredQuestions.length > 1 ? "s are" : " is"
-            } still pending.`}
-      </p>
-
-      <div className={styles.actionRow}>
-        <button
-          type="button"
-          className={styles.primaryButton}
-          onClick={handleFinishOnboarding}
-          disabled={actionLoading === "questions"}
-        >
-          {actionLoading === "questions"
-            ? "Finalising..."
-            : "Finish and open dashboard"}
-        </button>
-      </div>
-    </>
-  );
+    return (
+      <QuestionsStep
+        activeQuestions={activeQuestions}
+        questionAnswers={questionAnswers}
+        unansweredQuestions={unansweredQuestions}
+        fieldErrors={fieldErrors}
+        actionLoading={actionLoading}
+        onSelectQuestion={handleQuestionSelect}
+        onCustomValueChange={handleQuestionCustomValueChange}
+        onFinish={handleFinishOnboarding}
+      />
+    );
+  };
 
   const currentStepContent = STEP_CONTENT[currentStep];
   const shellClassName = `${styles.shell} ${
@@ -1928,105 +1324,17 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         <div className="row justify-content-center">
           <div className="col-xl-11 col-lg-11">
             <div className={shellClassName}>
-              <aside className={styles.sidebar}>
-                <span className={styles.brand}>Magnate Hub Onboarding</span>
-                <h2 className={styles.sidebarTitle}>
-                  Create, verify, choose your package, and launch.
-                </h2>
-                <p className={styles.sidebarText}>
-                  The flow follows the sequence you requested: role, signup, OTP,
-                  plan selection, checkout, then role-based dashboard questions.
-                </p>
-
-                {showStepper && (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      mb: "28px",
-                      overflowX: { xs: "auto", md: "visible" },
-                      pb: { xs: "4px", md: 0 },
-                      scrollbarWidth: "none",
-                      "&::-webkit-scrollbar": {
-                        display: "none",
-                      },
-                      "& .MuiStepper-root": {
-                        width: { xs: "620px", md: "100%" },
-                      },
-                      "& .MuiStep-root": {
-                        px: 0,
-                      },
-                      "& .MuiStepLabel-root": {
-                        alignItems: "center",
-                      },
-                      "& .MuiStepLabel-alternativeLabel": {
-                        alignItems: "center",
-                      },
-                      "& .MuiStepLabel-labelContainer": {
-                        mt: "14px",
-                      },
-                      "& .MuiStepLabel-label": {
-                        mt: "0 !important",
-                        color: "rgba(255, 255, 255, 0.92)",
-                        fontSize: "12px",
-                        fontWeight: 700,
-                        lineHeight: 1.35,
-                        letterSpacing: "0.08em",
-                        textAlign: "center",
-                        textTransform: "uppercase",
-                        whiteSpace: "nowrap",
-                      },
-                      "& .MuiStepLabel-label.Mui-active, & .MuiStepLabel-label.Mui-completed":
-                        {
-                          color: "#fff",
-                        },
-                      "& .MuiStepConnector-root": {
-                        top: "17px",
-                        left: "calc(-50% + 28px)",
-                        right: "calc(50% + 28px)",
-                      },
-                      "& .MuiStepConnector-line": {
-                        borderTopWidth: "2px",
-                        borderColor: "rgba(255, 255, 255, 0.22)",
-                      },
-                      "& .MuiStepConnector-root.Mui-active .MuiStepConnector-line, & .MuiStepConnector-root.Mui-completed .MuiStepConnector-line":
-                        {
-                          borderColor: "#7d12ff",
-                        },
-                    }}
-                  >
-                    <Stepper activeStep={displayStepIndex} alternativeLabel>
-                      {displaySteps.map((step, index) => (
-                        <Step
-                          key={step.key}
-                          completed={displayStepIndex > index}
-                        >
-                          <StepLabel StepIconComponent={OnboardingStepIcon}>
-                            {step.label}
-                          </StepLabel>
-                        </Step>
-                      ))}
-                    </Stepper>
-                  </Box>
-                )}
-
-                <div className={styles.summaryCard}>
-                  <div className={styles.summaryRow}>
-                    <span>Role</span>
-                    <strong>{selectedRole?.label || "Not selected"}</strong>
-                  </div>
-                  <div className={styles.summaryRow}>
-                    <span>Email</span>
-                    <strong>{signupState.email || "Pending"}</strong>
-                  </div>
-                  <div className={styles.summaryRow}>
-                    <span>Plan</span>
-                    <strong>
-                      {selectedPlan.title}{" "}
-                      {selectedPlan.price === 0 ? "(Free)" : `($${selectedPlan.price})`}
-                    </strong>
-                  </div>
-                </div>
-              </aside>
+              <OnboardingSidebar
+                displayStepIndex={displayStepIndex}
+                displaySteps={displaySteps}
+                showStepper={showStepper}
+                summary={{
+                  roleLabel: selectedRole?.label || "Not selected",
+                  email: signupState.email || "Pending",
+                  planTitle: selectedPlan.title,
+                  planPrice: selectedPlan.price,
+                }}
+              />
 
               <div className={styles.content}>
                 <div className={styles.contentHeader}>
@@ -2037,14 +1345,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
                   </p>
                 </div>
 
-                <div className={styles.contentBody}>
-                  {currentStep === "role" && renderRoleStep()}
-                  {currentStep === "signup" && renderQuestionsStep()}
-                  {currentStep === "otp" && renderOtpStep()}
-                  {currentStep === "plan" && renderPlanStep()}
-                  {currentStep === "checkout" && renderCheckoutStep()}
-                  {currentStep === "questions" && renderQuestionsStep()}
-                </div>
+                <div className={styles.contentBody}>{renderStep()}</div>
 
                 {showBackButton && (
                   <div className={styles.footerActions}>

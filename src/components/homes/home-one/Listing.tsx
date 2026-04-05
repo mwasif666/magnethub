@@ -14,8 +14,6 @@ import Wishlist from "@/svg/home-one/Wishlist";
 import Loading from "@/components/loading/Loading";
 import Location from "@/svg/home-one/Location";
 import Pagination from "@/components/pagination/Pagination";
-import "swiper/css";
-
 type ListingItem = {
   id: number;
   url: string;
@@ -30,6 +28,7 @@ type ListingItem = {
   location_name?: string;
   price?: string | number;
   premium?: string | number;
+  images?: string[];
 };
 
 type CategoryItem = {
@@ -419,7 +418,7 @@ const ListingCard = ({
       >
         <Image
           className="tg-card-border w-100"
-          src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
+          src={`https://dash.magnatehub.au${item.images && item.images[0]}`}
           alt={item?.name || "Project listing image"}
           width={250}
           height={250}
