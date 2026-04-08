@@ -743,13 +743,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         return;
       }
 
-      const leadId =
-        (createLeadResponse as any).lead?.id ||
-        (createLeadResponse as any).data?.lead?.id;
-      const leadCode =
-        (createLeadResponse as any).lead?.code ||
-        (createLeadResponse as any).data?.lead?.code ||
-        "";
+      const leadId = (createLeadResponse as any).data?.lead?.id;
+      const leadCode = (createLeadResponse as any).data?.lead?.code || "";
 
       if (!leadId || !leadCode) {
         setOtpMessage({
@@ -1222,23 +1217,13 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
     if (currentStep === "signup") {
       return (
-         <QuestionsStep
-        activeQuestions={activeQuestions}
-        questionAnswers={questionAnswers}
-        unansweredQuestions={unansweredQuestions}
-        fieldErrors={fieldErrors}
-        actionLoading={actionLoading}
-        onSelectQuestion={handleQuestionSelect}
-        onCustomValueChange={handleQuestionCustomValueChange}
-        onFinish={handleFinishOnboarding}
-      />
-        // <SignupStep
-        //   signupState={signupState}
-        //   fieldErrors={fieldErrors}
-        //   actionLoading={actionLoading}
-        //   onSubmit={handleSignupSubmit}
-        //   onUpdateField={updateSignupField}
-        // />
+        <SignupStep
+          signupState={signupState}
+          fieldErrors={fieldErrors}
+          actionLoading={actionLoading}
+          onSubmit={handleSignupSubmit}
+          onUpdateField={updateSignupField}
+        />
       );
     }
 

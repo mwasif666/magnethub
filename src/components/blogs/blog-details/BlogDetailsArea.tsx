@@ -26,6 +26,7 @@ interface BlogDetail {
   writter_name?: string;
   date?: string;
   time?: string;
+  image?: string;
 }
 
 const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
@@ -89,7 +90,7 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
                           className={styles.heroImage}
                           width={1200}
                           height={550}
-                          src={`https://dash.magnatehub.au/uploads/blog/card/${blogDetailData?.card}`}
+                          src={`${blogDetailData?.image}`}
                           alt={blogDetailData?.name || "blog"}
                           onError={(e) => {
                             e.currentTarget.src =

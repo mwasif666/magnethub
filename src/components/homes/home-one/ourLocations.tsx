@@ -13,6 +13,7 @@ type LocationItem = {
   location_id: number | string;
   card?: string;
   name?: string;
+  image?: string;
 };
 
 const swiperOptions = {
@@ -185,7 +186,7 @@ const OurLocation: React.FC = () => {
                         <div className="tg-location-thumb tg-round-25">
                           <Image
                             className="w-100 tg-round-25"
-                            src={`https://dash.magnatehub.au/storage/uploads/location/card/${item?.card}`}
+                            src={`${item?.image}`}
                             alt="location"
                             width={400}
                             height={300}
@@ -200,7 +201,7 @@ const OurLocation: React.FC = () => {
                         <div className="tg-location-content tg-location-su-content">
                           <div className="content">
                             <h3 className="tg-location-title mb-5">
-                              <Link href="/tour-grid-1">{item?.name}</Link>
+                              <Link href="#">{item?.name}</Link>
                             </h3>
                           </div>
                         </div>

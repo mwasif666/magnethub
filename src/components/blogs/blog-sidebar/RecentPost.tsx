@@ -12,6 +12,7 @@ interface RecentBlog {
   card: string;
   name: string;
   date?: string;
+  image?: string;
 }
 
 const RecentPost = () => {
@@ -66,7 +67,7 @@ const RecentPost = () => {
             >
               <div className={styles.thumbWrapper}>
                 <Image
-                  src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
+                  src={`${item.image}`}
                   width={80}
                   height={80}
                   alt={item.name}

@@ -46,7 +46,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
     try {
       setSimilarLoading(true);
       const response = await apiRequest({
-        url: `projects/similar?project_id=${id}`,
+        url: `GetSimilarProjects?project_id=${id}`,
         method: "GET",
       });
       setSimilarListing(response.data);
@@ -65,6 +65,8 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   }, [id]);
 
   const parseImage = (Image: string) => {
+    console.log(Image);
+    
     if (Image) {
       return JSON.parse(Image);
     }
@@ -128,7 +130,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const getCompanyLogoUrl = (logo: string) => {
     if (!logo) return "";
     if (logo.startsWith("http://") || logo.startsWith("https://")) return logo;
-    return `https://dash.magnatehub.au/uploads/raising/company_logo/${logo}`;
+    return `https://dash.magnatehub.au${logo}`;
   };
 
   return (
@@ -153,9 +155,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         <h5 className={styles.host}>
                           <i className="fa-solid fa-user me-2"></i>
                           <span>Hosted By:</span>{" "}
-                          {listing?.user_first_name +
-                            " " +
-                            listing?.user_last_name || "N/A"}
+                          {listing?.name || "N/A"}
                         </h5>
                         {listing?.category_name && (
                           <p className={styles.categoryDesign}>
@@ -255,7 +255,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             marginBottom: "-6px",
                           }}
                         >
-                          MGH-{new Date().getFullYear()}-{listing?.project_id}
+                          MGH-{new Date().getFullYear()}-{listing?.id}
                         </p>
                       </div>
                       <div
@@ -282,7 +282,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                   <div className={`card p-3 mb-3 ${styles.hero_img}`}>
                     <Image
                       className={`w-100 rounded ${styles.listingImage}`}
-                      src={`https://dash.magnatehub.au/uploads/project/card/${listing?.card}`}
+                      src={`https://dash.magnatehub.au${listing?.title_image}`}
                       alt="Project Image"
                       width={500}
                       height={500}
@@ -294,7 +294,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                     />
 
                     <div className="d-flex gap-2 mt-3 flex-wrap">
-                      {parseImage(listing?.images || "").map(
+                      {listing?.images &&listing?.images.map(
                         (img: string, i: number) => (
                           <div
                             key={i}
@@ -307,7 +307,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             }}
                           >
                             <Image
-                              src={`https://dash.magnatehub.au/uploads/project/images/${img}`}
+                              src={`https://dash.magnatehub.au${img}`}
                               alt="Sub Image"
                               width={150}
                               height={120}

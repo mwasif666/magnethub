@@ -34,6 +34,7 @@ type ListingItem = {
 type CategoryItem = {
   name: string;
   card?: string;
+  image?: string;
 };
 
 type RootState = {
@@ -158,8 +159,10 @@ const Listing = ({
 
   const showImageAccordingToCategory = (category: string) => {
     const getImage = categoryData?.find((x) => x.name === category);
-    if (getImage?.card) {
-      return getImage?.card;
+
+    if (getImage?.image) {
+      const fileName = getImage.image.split("/").pop();
+      return fileName;
     }
   };
 
@@ -173,7 +176,7 @@ const Listing = ({
       window.localStorage.setItem("categoryName", item.category_name);
     }
     router.push(
-      `/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(imageUrl)}`,
+      `/detail?url=${item.url}&id=${item.id}&category=${encodeURIComponent(imageUrl)}`,
     );
   };
 
@@ -367,15 +370,13 @@ const ListingCard = ({
 }: ListingCardProps) => {
   const isFranchiseBooker = String(item?.user_type) === "4";
   const companyName = item?.user_company_name?.trim() || "";
-  const companyLogoUrl = item?.user_company_logo?.trim()
-    ? `https://dash.magnatehub.au/uploads/raising/company_logo/${item.user_company_logo}`
-    : "";
+  const companyLogoUrl = item?.user_company_logo?.trim() ? `https://dash.magnatehub.au${item.user_company_logo}` : "";
   const companyInitials = getCompanyInitials(companyName);
   const hasCompanyName = Boolean(companyName);
   const verificationSource = item?.user_company_name?.trim() || "partner";
   const verificationBadgeText = `verified by ${truncateText(verificationSource, 15)}`;
   const verificationBadgeTitle = `verified by ${verificationSource}`;
-  const listingCode = `MGH-${new Date().getFullYear()}-${item.project_id}`;
+  const listingCode = `MGH-${new Date().getFullYear()}-${item.id}`;
 
   return (
     <div

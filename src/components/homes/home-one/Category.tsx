@@ -14,6 +14,7 @@ type CategoryItem = {
   card?: string;
   name: string;
   total?: number | string;
+  image?: string;
 };
 
 const setting = {
@@ -167,7 +168,7 @@ const Category = () => {
                         <div className="tg-location-thumb tg-round-25">
                           <Image
                             className="w-100 tg-round-25"
-                            src={`https://dash.magnatehub.au/uploads/category/card/${item?.card}`}
+                            src={`${item?.image}`}
                             alt="categories"
                             width={400}
                             height={300}

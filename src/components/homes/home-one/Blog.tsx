@@ -21,6 +21,7 @@ type BlogType = {
   date: string;
   time: string;
   page: string;
+  title_image: string;
 };
 
 const Blog = ({ style }: PropTypes) => {
@@ -110,7 +111,7 @@ const Blog = ({ style }: PropTypes) => {
                         className="w-100"
                         width={150}
                         height={300}
-                        src={`https://dash.magnatehub.au/uploads/blog/card/${item.card}`}
+                        src={`${item.title_image}`}
                         alt={item?.name || "blog"}
                         onError={(e) => {
                           e.currentTarget.src =
