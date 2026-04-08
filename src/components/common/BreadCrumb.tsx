@@ -10,6 +10,7 @@ interface DataType {
   isCallFrom?: string;
 }
 const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
+  console.log("BreadCrumb props:", { sub_title, title, category, isCallFrom });
   const [catName, setCatName] = useState(title || "default-category");
   const listingDetailTitle =
     isCallFrom === "listingDetail" && title !== "Listing Details" ? title : catName;
@@ -27,7 +28,7 @@ const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
       style={{
         backgroundImage:
           isCallFrom === "listingDetail"
-            ? `url(https://dash.magnatehub.au/uploads/category/card/${category})`
+            ? `url(https://dash.magnatehub.au/storage/uploads/categories/categories/${category})`
             : `url(/assets/img/banner/banner.png)`,
       }}
     >
