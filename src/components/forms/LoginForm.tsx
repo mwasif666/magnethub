@@ -20,6 +20,7 @@ interface LoginResponse {
   message?: string;
   code?: string;
   link?: string;
+  redirect?:string;
 }
 
 const schema = yup.object({
@@ -79,13 +80,7 @@ const LoginForm = () => {
       localStorage.removeItem("code");
       reset();
 
-      if (response?.link) {
-        window.open(
-          "https://dash.magnatehub.au/dashboard/professionals",
-          "_blank"
-        );
-      }
-
+      if (response?.redirect) window.open(response.redirect,"_blank");
       router.push("/");
     } catch (error: unknown) {
       console.error("Login error:", error);

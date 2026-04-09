@@ -29,6 +29,7 @@ type ListingItem = {
   price?: string | number;
   premium?: string | number;
   images?: string[];
+  title_image: string;
 };
 
 type CategoryItem = {
@@ -419,7 +420,7 @@ const ListingCard = ({
       >
         <Image
           className="tg-card-border w-100"
-          src={`https://dash.magnatehub.au${item.images && item.images[0]}`}
+          src={`https://dash.magnatehub.au${item.title_image}`}
           alt={item?.name || "Project listing image"}
           width={250}
           height={250}

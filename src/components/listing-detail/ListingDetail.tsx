@@ -484,7 +484,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                       className={styles.chatButton}
                       onClick={() =>
                         openChatWithSeller(
-                          listing.raising_id,
+                          listing.user_id,
                           listing.project_id,
                         )
                       }

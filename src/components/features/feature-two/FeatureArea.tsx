@@ -73,7 +73,7 @@ const HomeStyleListingCard = ({
   const isFranchiseBooker = String(item?.user_type) === "4";
   const companyName = item?.user_company_name?.trim() || "";
   const companyLogoUrl = item?.user_company_logo?.trim()
-    ? `https://dash.magnatehub.au/uploads/raising/company_logo/${item.user_company_logo}`
+    ? `https://dash.magnatehub.au${item.user_company_logo}`
     : "";
   const companyInitials = getCompanyInitials(companyName);
   const hasCompanyName = Boolean(companyName);
@@ -122,7 +122,7 @@ const HomeStyleListingCard = ({
       >
         <Image
           className="tg-card-border w-100"
-          src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
+          src={`https://dash.magnatehub.au${item.title_image}`}
           alt={item?.name || "Project listing image"}
           width={250}
           height={250}
@@ -461,7 +461,7 @@ const ListViewListingCard = ({
       <div className="tg-listing-card-thumb fix mb-25 p-relative">
         <Image
           className="tg-card-border w-100"
-          src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
+          src={`https://dash.magnatehub.au${item.title_image}`}
           alt={item?.name || "Project listing image"}
           width={250}
           height={250}
@@ -642,8 +642,10 @@ const FeatureArea = ({
 
   const showImageAccordingToCategory = (category: string) => {
     const getImage = categoryData?.find((x) => x.name === category);
-    if (getImage?.card) {
-      return getImage?.card;
+
+    if (getImage?.image) {
+      const fileName = getImage.image.split("/").pop();
+      return fileName;
     }
   };
 
@@ -654,7 +656,7 @@ const FeatureArea = ({
     }
     const imageUrl = showImageAccordingToCategory(item?.category_name);
     router.push(
-      `/detail?url=${item.url}&id=${item.project_id}&category=${imageUrl}`,
+      `/detail?url=${item.url}&id=${item.id}&category=${imageUrl}`,
     );
   };
 
@@ -695,7 +697,7 @@ const FeatureArea = ({
                         {isListView ? (
                           <ListViewListingCard
                             item={item}
-                            detailHref={`/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(
+                            detailHref={`/detail?url=${item.url}&id=${item.id}&category=${encodeURIComponent(
                               showImageAccordingToCategory(item.category_name) || "",
                             )}`}
                             isInWishlist={isInWishlist(item.id)}
@@ -705,7 +707,7 @@ const FeatureArea = ({
                         ) : (
                           <HomeStyleListingCard
                             item={item}
-                            detailHref={`/detail?url=${item.url}&id=${item.project_id}&category=${encodeURIComponent(
+                            detailHref={`/detail?url=${item.url}&id=${item.id}&category=${encodeURIComponent(
                               showImageAccordingToCategory(item.category_name) || "",
                             )}`}
                             isInWishlist={isInWishlist(item.id)}

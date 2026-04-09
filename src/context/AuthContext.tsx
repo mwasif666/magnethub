@@ -101,11 +101,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const storeDataInLS = (res: any) => {
-    console.log(res);
-    
-    const user = res?.data?.user;
-    const nextToken = res?.data?.token || null;
-    const nextRole = res?.data?.role || null;
+    const user = res?.user;
+    const nextToken = res?.token || null;
+    const nextRole = res?.role || null;
 
     if (!res.error && user?.id) {
       if (typeof window !== "undefined") {
