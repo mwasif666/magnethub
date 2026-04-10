@@ -140,6 +140,10 @@
   margin-bottom: 22px;
 }
 
+.contentHeaderCentered {
+  text-align: center;
+}
+
 .eyebrow {
   display: none;
 }
@@ -813,6 +817,11 @@
   gap: 18px;
 }
 
+.checkoutGridCentered {
+  grid-template-columns: minmax(0, 860px);
+  justify-content: center;
+}
+
 .checkoutFormPanel,
 .checkoutSummaryPanel {
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -904,13 +913,29 @@
 }
 
 .checkoutActionRow {
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
 }
 
 .checkoutPrimaryButton {
+  width: auto;
   min-width: 250px;
   min-height: 42px;
   font-size: 13px;
+}
+
+.checkoutTermsLink {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.checkoutTermsLink:hover,
+.checkoutTermsLink:focus,
+.checkoutTermsLink:active {
+  color: #fff;
 }
 
 .messageBox {
@@ -1088,6 +1113,22 @@
   .primaryButton {
     width: 100%;
     min-width: 0;
+  }
+
+  .checkoutActionRow {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .checkoutPrimaryButton,
+  .checkoutTermsLink {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .checkoutTermsLink {
+    display: inline-flex;
+    justify-content: center;
   }
 }
 

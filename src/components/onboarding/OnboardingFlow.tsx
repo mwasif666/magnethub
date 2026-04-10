@@ -97,9 +97,8 @@ const STEP_CONTENT: Record<
   },
   checkout: {
     eyebrow: "Step 5 of 6",
-    title: "Checkout",
-    description:
-      "Review your selected plan and complete the payment if required. Once finished, your account will be ready for setup.",
+    title: "",
+    description:"",
   },
   questions: {
     eyebrow: "Step 6 of 6",
@@ -110,8 +109,7 @@ const STEP_CONTENT: Record<
 };
 
 const DASHBOARD_URL = "https://dash.magnatehub.au/dashboard/professionals";
-const STRIPE_TEST_PUBLISHABLE_KEY =
-  "pk_test_51MNU17FLKdDrx0HlvOHo2FL7A2WgPTHhoF39uLjJ85HE9MzIcdfVg7538L663FmEPKf2zHRE344l4cUhekQS8Il700Ai0b51y2";
+const STRIPE_TEST_PUBLISHABLE_KEY = "pk_test_51MNU17FLKdDrx0HlvOHo2FL7A2WgPTHhoF39uLjJ85HE9MzIcdfVg7538L663FmEPKf2zHRE344l4cUhekQS8Il700Ai0b51y2";
 const OTP_LENGTH = 6;
 
 const initialSignupState: SignupState = {
@@ -520,7 +518,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       option === question.customOptionLabel ? answerState.customValue.trim() : option
     );
 
-    return question.allowMultiple ? normalizedOptions : normalizedOptions[0] ?? "";
+    return question.allowMultiple
+      ? normalizedOptions.filter(Boolean).join(", ")
+      : normalizedOptions[0] ?? "";
   };
 
   const updateSignupField = (field: keyof SignupState, value: string) => {
@@ -1322,7 +1322,11 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
               />
 
               <div className={styles.content}>
-                <div className={styles.contentHeader}>
+                <div
+                  className={`${styles.contentHeader} ${
+                    currentStep === "checkout" ? styles.contentHeaderCentered : ""
+                  }`}
+                >
                   <p className={styles.eyebrow}>{currentStepContent.eyebrow}</p>
                   <h1 className={styles.title}>{currentStepContent.title}</h1>
                   <p className={styles.description}>

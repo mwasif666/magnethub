@@ -30,19 +30,22 @@ const QuestionsStep = ({
               <span className={styles.questionNumber}>{index + 1}</span>
               <div>
                 <h3 className={styles.questionTitle}>{question.prompt}</h3>
-                {question.helperText && (
-                  <p className={styles.questionHelper}>{question.helperText}</p>
+                {(question.helperText || question.allowMultiple) && (
+                  <p className={styles.questionHelper}>
+                    {question.helperText ||
+                      (question.allowMultiple ? "Select all that apply." : "")}
+                  </p>
                 )}
               </div>
             </div>
 
             <div className={styles.optionGrid}>
-              {question.options.map((option) => {
+              {question.options.map((option,index) => {
                 const isActive = answerState.selectedOptions.includes(option);
 
                 return (
                   <button
-                    key={option}
+                    key={index}
                     type="button"
                     className={`${styles.optionButton} ${
                       isActive ? styles.optionButtonActive : ""

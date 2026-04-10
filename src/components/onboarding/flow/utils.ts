@@ -154,7 +154,11 @@ export const mapApiQuestion = (rawQuestion: any): OnboardingQuestion => ({
     "",
   options: extractQuestionOptions(rawQuestion),
   allowMultiple: Boolean(
-    rawQuestion?.allow_multiple ?? rawQuestion?.is_multiple ?? false
+    rawQuestion?.allow_multiple ??
+      rawQuestion?.is_multiple ??
+      (rawQuestion?.type === "multi_choice" ||
+        rawQuestion?.question_type === "multi_choice") ??
+      false
   ),
   customOptionLabel:
     rawQuestion?.custom_option_label ??
@@ -164,15 +168,16 @@ export const mapApiQuestion = (rawQuestion: any): OnboardingQuestion => ({
     rawQuestion?.custom_input_placeholder ??
     rawQuestion?.other_input_placeholder ??
     undefined,
-  helperText: rawQuestion?.helper_text ?? undefined,
+  helperText:
+    rawQuestion?.helper_text ??
+    (rawQuestion?.type === "multi_choice" ||
+    rawQuestion?.question_type === "multi_choice"
+      ? "Select all that apply."
+      : undefined),
 });
 
 export const extractApiQuestions = (payload: any): OnboardingQuestion[] => {
-  const questionList =
-    payload?.data?.questions ??
-    payload?.questions ??
-    payload?.data ??
-    payload;
+  const questionList = payload?.data?.questions;
 
   if (!Array.isArray(questionList)) {
     return [];
@@ -181,29 +186,6 @@ export const extractApiQuestions = (payload: any): OnboardingQuestion[] => {
   return questionList
     .map(mapApiQuestion)
     .filter((question) => question.id && question.prompt);
-};
-
-export const persistAuthFromSignupComplete = (payload: any) => {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  const user = payload?.user ?? payload?.data?.user ?? payload?.data ?? null;
-  const token =
-    payload?.token ?? payload?._token ?? payload?.data?.token ?? null;
-  const role = user?.role ?? payload?.type ?? payload?.data?.type ?? null;
-
-  if (user?.id) {
-    localStorage.setItem("user_id", JSON.stringify(user.id));
-  }
-
-  if (token) {
-    localStorage.setItem("token", token);
-  }
-
-  if (role) {
-    localStorage.setItem("role", role);
-  }
 };
 
 export const normalizeExistingAnswer = (
