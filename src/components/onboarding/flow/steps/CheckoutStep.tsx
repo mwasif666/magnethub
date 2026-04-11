@@ -159,23 +159,6 @@ const CheckoutStep = ({
           </button>
         </div>
       </div>
-
-      <aside className={styles.checkoutSummaryPanel}>
-        <div className={styles.summaryPanel}>
-          <span className={styles.summaryEyebrow}>Selected plan</span>
-          <h3 className={styles.summaryTitle}>{selectedPlan.title}</h3>
-          <p className={styles.summaryAmount}>${selectedPlan.price}</p>
-          <p className={styles.summaryText}>{selectedPlan.desc.trim()}</p>
-
-          <ul className={styles.summaryList}>
-            {selectedPlan.list.slice(0, 5).map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-
-          <div className={styles.secureBadge}>Secure Stripe tokenised payment</div>
-        </div>
-      </aside>
     </div>
   </form>
 );

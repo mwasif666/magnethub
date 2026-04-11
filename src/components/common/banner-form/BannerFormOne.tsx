@@ -182,20 +182,19 @@ const BannerFormOne = ({
 
   useEffect(() => {
     setLoading(true);
-
     Promise.all([getCategories(), getLocations()])
       .then(([catRes, locRes]) => {
         setCategories(
           catRes?.data?.map((c: any) => ({
             label: c.name,
-            value: c.category_id,
+            value: c.id,
           })) || []
         );
 
         setLocations(
           locRes?.data?.map((l: any) => ({
             label: l.name,
-            value: l.location_id,
+            value: l.id,
           })) || []
         );
       })

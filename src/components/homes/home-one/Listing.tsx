@@ -118,11 +118,11 @@ const Listing = ({
     const wishlistItem: Product = {
       id: item.id,
       title: item.name,
-      thumb: item.card,
+      thumb: item.title_image?.[0] || "",
       price: Number(item.price || 0),
       name: item.name,
       location_name: item.location_name || "",
-      card: item.card,
+      title_image: item.title_image?.[0] || "",
       category_name: item.category_name,
     };
 
@@ -369,9 +369,9 @@ const ListingCard = ({
   handleAddToWishlist,
   redirectUser,
 }: ListingCardProps) => {
-  const isFranchiseBooker = String(item?.user_type) === "4";
+  const isFranchiseBooker = String(item?.user_type) === "broker";
   const companyName = item?.user_company_name?.trim() || "";
-  const companyLogoUrl = item?.user_company_logo?.trim() ? `https://dash.magnatehub.au${item.user_company_logo}` : "";
+  const companyLogoUrl = item?.user_company_logo?.trim() ? item.user_company_logo : "";
   const companyInitials = getCompanyInitials(companyName);
   const hasCompanyName = Boolean(companyName);
   const verificationSource = item?.user_company_name?.trim() || "partner";

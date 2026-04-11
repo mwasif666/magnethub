@@ -10,7 +10,7 @@ export interface Product {
    price: number;
    name:string;
    location_name:string;
-   card:String;
+   title_image:string;
    category_name:string;
 }
 

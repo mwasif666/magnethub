@@ -70,11 +70,9 @@ const HomeStyleListingCard = ({
   handleAddToWishlist,
   redirectUser,
 }: ListingCardSharedProps) => {
-  const isFranchiseBooker = String(item?.user_type) === "4";
+  const isFranchiseBooker = String(item?.user_type) === "broker";
   const companyName = item?.user_company_name?.trim() || "";
-  const companyLogoUrl = item?.user_company_logo?.trim()
-    ? `https://dash.magnatehub.au${item.user_company_logo}`
-    : "";
+  const companyLogoUrl = item?.user_company_logo?.trim()? item.user_company_logo: "";
   const companyInitials = getCompanyInitials(companyName);
   const hasCompanyName = Boolean(companyName);
   const verificationSource = item?.user_company_name?.trim() || "partner";

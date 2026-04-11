@@ -61,7 +61,7 @@ const WishlistArea = () => {
                         <tr key={item.id ?? i} onClick={() => redirectToDetail(item)} style={{cursor:'pointer'}}>
                           <td>
                             <Image
-                              src={`https://dash.magnatehub.au/uploads/project/card/${item.card}`}
+                              src={`https://dash.magnatehub.au${item.title_image}`}
                               alt={item?.name || "Project image"}
                               width={70}
                               height={70}
