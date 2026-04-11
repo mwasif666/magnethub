@@ -784,9 +784,11 @@
 
 .planListScroll {
   margin-top: auto;
+  height: 180px;
   max-height: 180px;
   width: 100%;
   padding-right: 4px;
+  overflow-y: auto;
 }
 
 .planList li,
@@ -913,14 +915,14 @@
 }
 
 .checkoutActionRow {
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 14px;
 }
 
 .checkoutPrimaryButton {
-  width: auto;
-  min-width: 250px;
+  width: 100%;
+  min-width: 0;
   min-height: 42px;
   font-size: 13px;
 }
@@ -1044,6 +1046,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   width: 60px;
   height: 54px;
   border: 1px solid rgba(255, 255, 255, 0.72);
@@ -1053,6 +1056,28 @@
   font-size: 22px;
   font-weight: 700;
   cursor: text;
+}
+
+.otpCaret {
+  display: inline-block;
+  width: 2px;
+  height: 24px;
+  margin-left: 2px;
+  border-radius: 999px;
+  background: #fff;
+  animation: otpCaretBlink 1s step-end infinite;
+}
+
+@keyframes otpCaretBlink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .otpTimer {

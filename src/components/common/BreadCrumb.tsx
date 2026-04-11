@@ -10,7 +10,6 @@ interface DataType {
   isCallFrom?: string;
 }
 const BreadCrumb = ({ sub_title, title, category, isCallFrom }: DataType) => {
-  console.log("BreadCrumb props:", { sub_title, title, category, isCallFrom });
   const [catName, setCatName] = useState(title || "default-category");
   const listingDetailTitle =
     isCallFrom === "listingDetail" && title !== "Listing Details" ? title : catName;

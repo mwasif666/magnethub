@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { apiRequest } from "@/api/axiosInstance";
 import Loading from "@/components/loading/Loading";
 import { useRouter } from "next/navigation";
+import blogListStyles from "../../blogs/blog-one/BlogArea.module.css";
 
 interface PropTypes {
   style: boolean;
@@ -14,14 +14,26 @@ interface PropTypes {
 type BlogType = {
   id: string;
   name: string;
-  card: string;
-  title: string;
-  thumb: string;
-  tag: string;
-  date: string;
-  time: string;
-  page: string;
-  title_image: string;
+  card?: string;
+  title?: string;
+  thumb?: string;
+  tag?: string;
+  date?: string;
+  time?: string;
+  page?: string;
+  url: string;
+  title_image?: string | null;
+  image?: string | null;
+  category?:
+    | string
+    | {
+        id?: number | string;
+        name?: string;
+        slug?: string;
+      }
+    | null;
+  category_name?: string | null;
+  tags?: { id: number; name: string; slug?: string }[];
 };
 
 const Blog = ({ style }: PropTypes) => {
@@ -37,7 +49,15 @@ const Blog = ({ style }: PropTypes) => {
         method: "GET",
       });
 
-      setBlogs(res?.data?.data || []);
+      const payload = res?.data ?? res;
+      const nested = payload?.data ?? payload;
+      const blogRows = Array.isArray(nested)
+        ? nested
+        : Array.isArray(nested?.data)
+          ? nested.data
+          : [];
+
+      setBlogs(blogRows);
     } catch (error) {
       console.error(error);
       setBlogs([]);
@@ -94,7 +114,14 @@ const Blog = ({ style }: PropTypes) => {
 
         <div className="row">
           {!loading &&
-            blogs.slice(0, 3).map((item) => (
+            blogs.slice(0, 3).map((item: any) => {
+              const cardImage = item.title_image || item.image || "/assets/img/notfound/image_notfound.png";
+              const categoryLabel =
+                typeof item.category === "string"
+                  ? item.category
+                  : item.category?.name ?? item.category_name ?? "";
+              const tagList = Array.isArray(item.tags) ? item.tags : [];
+              return (
               <div
                 key={item.id}
                 className="col-xl-4 col-lg-6 col-md-6 wow fadeInLeft"
@@ -111,18 +138,33 @@ const Blog = ({ style }: PropTypes) => {
                         className="w-100"
                         width={150}
                         height={300}
-                        src={`${item.title_image}`}
+                        src={cardImage}
                         alt={item?.name || "blog"}
+                        unoptimized
                         onError={(e) => {
                           e.currentTarget.src =
-                            "assets/img/notfound/image_notfound.png";
+                            "/assets/img/notfound/image_notfound.png";
                         }}
                       />
                     </span>
-                    {/* <span className="tg-blog-tag p-absolute">{item.tag}</span> */}
                   </div>
 
                   <div className="tg-blog-content p-relative">
+                      <div className={blogListStyles.cardTaxonomy}>
+                        {categoryLabel && (
+                          <span className={blogListStyles.categoryBadge}>
+                            {categoryLabel}
+                          </span>
+                        )}
+                        {tagList && tagList.length > 0 && tagList.map((tag: any) => (
+                          <span
+                            key={tag.id}
+                            className={blogListStyles.tagChip}
+                          >
+                            {tag.name}
+                          </span> 
+                        ))}
+                      </div>
                     <h3 className="tg-blog-title mb-15">
                       <span
                         onClick={() => redirectToBlogDetail(item)}
@@ -153,7 +195,8 @@ const Blog = ({ style }: PropTypes) => {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
         </div>
       </div>
     </div>

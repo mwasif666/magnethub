@@ -16,7 +16,7 @@ const CheckoutStep = ({
   sanitizeDigits,
 }: CheckoutStepProps) => (
   <form onSubmit={onSubmit}>
-    <div className={styles.checkoutGrid}>
+    <div className={`${styles.checkoutGrid} ${styles.checkoutGridCentered}`}>
       <div className={styles.checkoutFormPanel}>
         {selectedPlan.price > 0 && (
           <div className={styles.checkoutSection}>

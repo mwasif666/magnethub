@@ -1,12 +1,12 @@
 "use client";
 
-import SimpleBar from "simplebar-react";
+import SimpleBar from "simplebar-react"
 import { Swiper, SwiperSlide } from "swiper/react";
-import pricing_data from "@/data/PricingData";
 import type { PlanStepProps, PricingItem } from "../types";
 import styles from "../../OnboardingFlow.module.css";
 
 const PlanStep = ({
+  plans,
   selectedPlan,
   selectedRole,
   expandedPlanDescriptions,
@@ -17,11 +17,11 @@ const PlanStep = ({
   onContinue,
 }: PlanStepProps) => (
   <>
-    <div className={styles.planToolbar}>
-      <p className={styles.planToolbarText}>
-        Swipe to compare plans and pick the best fit.
-      </p>
-      {pricing_data.length > 1 && (
+    {plans.length > 1 && (
+      <div className={styles.planToolbar}>
+        <p className={styles.planToolbarText}>
+          Swipe to compare plans and pick the best fit.
+        </p>
         <div className={styles.planNav}>
           <button
             type="button"
@@ -40,8 +40,8 @@ const PlanStep = ({
             <i className="fa-solid fa-arrow-right-long" />
           </button>
         </div>
-      )}
-    </div>
+      </div>
+    )}
 
     <div className={styles.planGrid}>
       <Swiper
@@ -58,7 +58,7 @@ const PlanStep = ({
           planSwiperRef.current = swiper;
         }}
       >
-        {(pricing_data as PricingItem[]).map((plan) => {
+        {plans.map((plan: PricingItem) => {
           const planKey = plan.slug || String(plan.id);
           const isActive = plan.slug === selectedPlan.slug;
           const isRecommended = selectedRole?.recommendedPlanSlug === plan.slug;
@@ -113,7 +113,7 @@ const PlanStep = ({
                   )}
                 </div>
 
-                <SimpleBar autoHide={true} className={styles.planListScroll}>
+                <SimpleBar autoHide={false} className={styles.planListScroll}>
                   <ul className={styles.planList}>
                     {plan.list.map((item) => (
                       <li key={item}>{item}</li>

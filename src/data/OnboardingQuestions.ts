@@ -9,6 +9,7 @@ export interface OnboardingQuestion {
   professionalQuestionId?: number;
   prompt: string;
   options: string[];
+  optionIdsByLabel?: Record<string, number>;
   allowMultiple?: boolean;
   customOptionLabel?: string;
   customInputPlaceholder?: string;

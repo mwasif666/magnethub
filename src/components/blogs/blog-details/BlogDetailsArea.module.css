@@ -104,6 +104,66 @@
   }
 }
 
+.taxonomyRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.categoryBadge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(86, 12, 227, 0.12);
+  color: #560ce3;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+a.categoryBadge:hover {
+  background: rgba(86, 12, 227, 0.2);
+  color: #3b07a5;
+}
+
+.tagChip {
+  display: inline-block;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+a.tagChip:hover {
+  border-color: #560ce3;
+  color: #560ce3;
+  background: rgba(86, 12, 227, 0.06);
+}
+
+.articleTitle {
+  font-size: 1.65rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 14px;
+}
+
+@media (max-width: 767.98px) {
+  .articleTitle {
+    font-size: 1.35rem;
+  }
+}
+
 .metaRow {
   display: flex;
   flex-wrap: wrap;

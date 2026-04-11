@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Comment from "./Comment";
 import BlogForm from "@/components/forms/BlogForm";
-import BlogSidebar from "../blog-sidebar";
+import RecentPost from "../blog-sidebar/RecentPost";
 import { useEffect, useState } from "react";
 import { apiRequest } from "@/api/axiosInstance";
 import Loading from "@/components/loading/Loading";
@@ -24,9 +24,21 @@ interface BlogDetail {
   name?: string;
   description?: string;
   writter_name?: string;
+  writer_name?: string;
   date?: string;
   time?: string;
-  image?: string;
+  image?: string | null;
+  title_image?: string | null;
+  images?: string[];
+  category?:
+    | string
+    | {
+        id?: number | string;
+        name?: string;
+        slug?: string;
+      }
+    | null;
+  tags?: { id: number; name: string; slug?: string }[];
 }
 
 const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
@@ -44,10 +56,14 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
         method: "GET",
       });
 
-      const blog = (response.data?.blog || {}) as BlogDetail;
-      const comments = Array.isArray(response.data?.comments)
-        ? response.data.comments
-        : [];
+      const payload = response?.data ?? response;
+      const nested = payload?.data ?? payload;
+      const blog = (nested?.blog ?? nested ?? {}) as BlogDetail;
+      const comments = Array.isArray(nested?.comments)
+        ? nested.comments
+        : Array.isArray(payload?.comments)
+          ? payload.comments
+          : [];
 
       setBlogDetailData(blog);
       setBlogCommentData(comments);
@@ -67,8 +83,27 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
     typeof rawBlogId === "string"
       ? parseInt(rawBlogId, 10)
       : typeof rawBlogId === "number"
-      ? rawBlogId
+        ? rawBlogId
+        : null;
+
+
+  const heroImageSrc =
+    blogDetailData.title_image ||
+    blogDetailData.image ||
+    "/assets/img/notfound/image_notfound.png";
+  const categoryLabel =
+    typeof blogDetailData.category === "string"
+      ? blogDetailData.category
+      : blogDetailData.category?.name ?? "";
+  const categoryIdForLink =
+    typeof blogDetailData.category === "object" &&
+    blogDetailData.category !== null &&
+    "id" in blogDetailData.category
+      ? Number((blogDetailData.category as { id?: number }).id)
       : null;
+  const tagList = Array.isArray(blogDetailData.tags) ? blogDetailData.tags : [];
+  const writerName =
+    blogDetailData.writer_name ?? blogDetailData.writter_name ?? "";
 
   return (
     <div className={styles.blogDetailsArea}>
@@ -90,22 +125,54 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
                           className={styles.heroImage}
                           width={1200}
                           height={550}
-                          src={`${blogDetailData?.image}`}
+                          src={heroImageSrc}
                           alt={blogDetailData?.name || "blog"}
+                          unoptimized
                           onError={(e) => {
                             e.currentTarget.src =
-                              "assets/img/notfound/image_notfound.png";
+                              "/assets/img/notfound/image_notfound.png";
                           }}
                         />
                         <div className={styles.thumbOverlay} />
                       </div>
                     </div>
                   <div className={styles.contentWrapper}>
-                    {(blogDetailData.writter_name ||
-                      blogDetailData.date ||
-                      blogDetailData.time) && (
+                    {(categoryLabel || tagList.length > 0) && (
+                      <div className={styles.taxonomyRow}>
+                        {categoryLabel ? (
+                          categoryIdForLink != null &&
+                          Number.isFinite(categoryIdForLink) ? (
+                            <Link
+                              href={`/blogs?category_id=${categoryIdForLink}&page=1`}
+                              className={styles.categoryBadge}
+                            >
+                              {categoryLabel}
+                            </Link>
+                          ) : (
+                            <span className={styles.categoryBadge}>
+                              {categoryLabel}
+                            </span>
+                          )
+                        ) : null}
+                        {tagList.map((tg) => (
+                          <Link
+                            key={tg.id}
+                            href={`/blogs?tag_id=${tg.id}&page=1`}
+                            className={styles.tagChip}
+                          >
+                            {tg.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+
+                    {blogDetailData.name && (
+                      <h1 className={styles.articleTitle}>{blogDetailData.name}</h1>
+                    )}
+
+                    {(writerName || blogDetailData.date || blogDetailData.time) && (
                       <div className={styles.metaRow}>
-                        {blogDetailData.writter_name && (
+                        {writerName && (
                           <span className={styles.metaItem}>
                             <span className={styles.metaIcon}>
                               <svg
@@ -121,7 +188,7 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
                                 />
                               </svg>
                             </span>
-                            <span>{blogDetailData.writter_name}</span>
+                            <span>{writerName}</span>
                           </span>
                         )}
 
@@ -218,7 +285,7 @@ const BlogDetailsArea = ({ id, url }: BlogDetailsProps) => {
 
           <div className="col-xl-3 col-lg-4">
             <div className={styles.sidebarWrapper}>
-              <BlogSidebar />
+              <RecentPost />
             </div>
           </div>
         </div>

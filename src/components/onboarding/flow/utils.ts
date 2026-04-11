@@ -43,9 +43,8 @@ export const STEP_CONTENT: Record<StepId, StepContent> = {
   },
   checkout: {
     eyebrow: "Step 5 of 6",
-    title: "Checkout",
-    description:
-      "Review your selected plan and complete the payment if required. Once finished, your account will be ready for setup.",
+    title: "",
+    description: "",
   },
   questions: {
     eyebrow: "Step 6 of 6",
@@ -95,6 +94,18 @@ export const isBuyerRole = (roleId?: OnboardingRoleId | null) =>
 export const getPlanBySlug = (slug?: string | null): PricingItem | undefined =>
   (pricing_data as PricingItem[]).find((item) => item.slug === slug);
 
+export const getPlansForRole = (roleId?: OnboardingRoleId | null) => {
+  const role = getOnboardingRole(roleId);
+
+  if (!role || role.availablePlanSlugs.length === 0) {
+    return pricing_data as PricingItem[];
+  }
+
+  return (pricing_data as PricingItem[]).filter((item) =>
+    role.availablePlanSlugs.includes(item.slug || "")
+  );
+};
+
 export const getApiErrorMessage = (error: any, fallback: string) =>
   error?.response?.data?.message ||
   error?.data?.message ||
@@ -114,33 +125,67 @@ export const sanitizeDigits = (value: string, maxLength: number) =>
 export const getStripeExpiryYear = (expYear: string) =>
   expYear.length === 2 ? `20${expYear}` : expYear;
 
-export const extractQuestionOptions = (rawQuestion: any): string[] => {
+export const getQuestionOptionLabel = (option: any) => {
+  if (typeof option === "string") {
+    return option;
+  }
+
+  return String(
+    option?.label ??
+      option?.title ??
+      option?.name ??
+      option?.option ??
+      option?.answer ??
+      option?.answer_text ??
+      option?.value ??
+      ""
+  );
+};
+
+export const getQuestionOptionId = (option: any) => {
+  const id =
+    option?.id ??
+    option?.professional_question_option_id ??
+    option?.question_option_id ??
+    option?.answer_option_id ??
+    option?.option_id;
+
+  return Number.isFinite(Number(id)) ? Number(id) : undefined;
+};
+
+export const getRawQuestionOptions = (rawQuestion: any) => {
   const source =
     rawQuestion?.options ??
     rawQuestion?.answer_options ??
+    rawQuestion?.question_options ??
+    rawQuestion?.professional_question_options ??
     rawQuestion?.choices ??
     [];
 
-  if (!Array.isArray(source)) {
-    return [];
-  }
+  return Array.isArray(source) ? source : [];
+};
 
-  return source
-    .map((option: any) => {
-      if (typeof option === "string") {
-        return option;
+export const extractQuestionOptions = (rawQuestion: any): string[] =>
+  getRawQuestionOptions(rawQuestion)
+    .map(getQuestionOptionLabel)
+    .filter(Boolean);
+
+export const extractQuestionOptionIds = (
+  rawQuestion: any
+): Record<string, number> =>
+  getRawQuestionOptions(rawQuestion).reduce(
+    (optionIdsByLabel: Record<string, number>, option: any) => {
+      const label = getQuestionOptionLabel(option);
+      const id = getQuestionOptionId(option);
+
+      if (label && id !== undefined) {
+        optionIdsByLabel[label] = id;
       }
 
-      return (
-        option?.label ??
-        option?.title ??
-        option?.name ??
-        option?.value ??
-        ""
-      );
-    })
-    .filter(Boolean);
-};
+      return optionIdsByLabel;
+    },
+    {}
+  );
 
 export const mapApiQuestion = (rawQuestion: any): OnboardingQuestion => ({
   id: String(rawQuestion?.id ?? rawQuestion?.professional_question_id ?? ""),
@@ -153,6 +198,7 @@ export const mapApiQuestion = (rawQuestion: any): OnboardingQuestion => ({
     rawQuestion?.title ??
     "",
   options: extractQuestionOptions(rawQuestion),
+  optionIdsByLabel: extractQuestionOptionIds(rawQuestion),
   allowMultiple: Boolean(
     rawQuestion?.allow_multiple ??
       rawQuestion?.is_multiple ??
@@ -177,7 +223,8 @@ export const mapApiQuestion = (rawQuestion: any): OnboardingQuestion => ({
 });
 
 export const extractApiQuestions = (payload: any): OnboardingQuestion[] => {
-  const questionList = payload?.data?.questions;
+  const questionList =
+    payload?.data?.questions ?? payload?.questions ?? payload?.data ?? payload;
 
   if (!Array.isArray(questionList)) {
     return [];
@@ -193,8 +240,17 @@ export const normalizeExistingAnswer = (
   rawAnswer: any
 ): QuestionAnswerState => {
   if (Array.isArray(rawAnswer)) {
+    const optionLabelsById = Object.fromEntries(
+      Object.entries(question.optionIdsByLabel ?? {}).map(([label, id]) => [
+        String(id),
+        label,
+      ])
+    );
+
     return {
-      selectedOptions: rawAnswer.map((value) => String(value)),
+      selectedOptions: rawAnswer.map(
+        (value) => optionLabelsById[String(value)] ?? String(value)
+      ),
       customValue: "",
     };
   }
@@ -219,4 +275,142 @@ export const normalizeExistingAnswer = (
     selectedOptions: [answerText],
     customValue: "",
   };
+};
+
+export const getQuestionAnswerState = (
+  questionAnswers: Record<string, QuestionAnswerState>,
+  questionId: string
+): QuestionAnswerState =>
+  questionAnswers[questionId] ?? { selectedOptions: [], customValue: "" };
+
+/**
+ * API shape per answer (see professional-question-answers POST):
+ * { professional_question_id, selected_option_ids: number[] } or { answer_text } for free text.
+ */
+export const formatQuestionAnswerPayload = (
+  question: OnboardingQuestion,
+  answerState: QuestionAnswerState
+): { selected_option_ids: number[] } | { answer_text: string } => {
+  const customAnswer =
+    question.customOptionLabel &&
+    answerState.selectedOptions.includes(question.customOptionLabel)
+      ? answerState.customValue.trim()
+      : "";
+
+  if (customAnswer) {
+    return { answer_text: customAnswer };
+  }
+
+  const selectedOptionIds = answerState.selectedOptions
+    .map((option) => question.optionIdsByLabel?.[option])
+    .map((id) => (id !== undefined ? Number(id) : NaN))
+    .filter((id): id is number => Number.isFinite(id));
+
+  if (selectedOptionIds.length > 0) {
+    return { selected_option_ids: selectedOptionIds };
+  }
+
+  const normalizedOptions = answerState.selectedOptions.map((option) =>
+    option === question.customOptionLabel ? answerState.customValue.trim() : option
+  );
+
+  return {
+    answer_text: question.allowMultiple
+      ? normalizedOptions.filter(Boolean).join(", ")
+      : normalizedOptions[0] ?? "",
+  };
+};
+
+export const getUnansweredQuestions = (
+  activeQuestions: OnboardingQuestion[],
+  questionAnswers: Record<string, QuestionAnswerState>
+) =>
+  activeQuestions.filter((question) => {
+    const answerState = questionAnswers[question.id];
+
+    if (!answerState || answerState.selectedOptions.length === 0) {
+      return true;
+    }
+
+    if (
+      question.customOptionLabel &&
+      answerState.selectedOptions.includes(question.customOptionLabel)
+    ) {
+      return !answerState.customValue.trim();
+    }
+
+    return false;
+  });
+
+export const validateSignupState = (signupState: SignupState) => {
+  const errors: Record<string, string> = {};
+
+  if (!signupState.firstName.trim()) {
+    errors.firstName = "First name is required.";
+  }
+  if (!signupState.lastName.trim()) {
+    errors.lastName = "Last name is required.";
+  }
+  if (!signupState.email.trim()) {
+    errors.email = "Email is required.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupState.email.trim())) {
+    errors.email = "Enter a valid email address.";
+  }
+  if (!signupState.password) {
+    errors.password = "Password is required.";
+  } else if (signupState.password.length < 6) {
+    errors.password = "Password must be at least 6 characters.";
+  }
+  if (!signupState.confirmPassword) {
+    errors.confirmPassword = "Please confirm your password.";
+  } else if (signupState.confirmPassword !== signupState.password) {
+    errors.confirmPassword = "Passwords must match.";
+  }
+
+  return errors;
+};
+
+export const validatePaymentState = (
+  paymentState: PaymentState,
+  selectedPlan: PricingItem
+) => {
+  const errors: Record<string, string> = {};
+
+  if (!paymentState.name.trim()) {
+    errors.name = "Full name is required.";
+  }
+  if (!paymentState.email.trim()) {
+    errors.email = "Email is required.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paymentState.email.trim())) {
+    errors.email = "Enter a valid email address.";
+  }
+  if (!paymentState.phone.trim()) {
+    errors.phone = "Phone number is required.";
+  }
+
+  if (selectedPlan.price === 0) {
+    return errors;
+  }
+
+  const cleanCardNumber = paymentState.cardNumber.replace(/\s/g, "");
+
+  if (!paymentState.cardName.trim()) {
+    errors.cardName = "Name on card is required.";
+  }
+  if (!cleanCardNumber) {
+    errors.cardNumber = "Card number is required.";
+  } else if (!/^\d{16}$/.test(cleanCardNumber)) {
+    errors.cardNumber = "Card number must be 16 digits.";
+  }
+  if (!/^\d{3,4}$/.test(paymentState.cvc)) {
+    errors.cvc = "Enter a valid CVC.";
+  }
+  if (!/^(0[1-9]|1[0-2])$/.test(paymentState.expMonth)) {
+    errors.expMonth = "Enter a valid month.";
+  }
+  if (!/^\d{2}$/.test(paymentState.expYear)) {
+    errors.expYear = "Enter a valid year.";
+  }
+
+  return errors;
 };

@@ -93,6 +93,7 @@ export interface OtpStepProps {
 }
 
 export interface PlanStepProps {
+  plans: PricingItem[];
   selectedPlan: PricingItem;
   selectedRole: { recommendedPlanSlug?: string } | null | undefined;
   expandedPlanDescriptions: Record<string, boolean>;

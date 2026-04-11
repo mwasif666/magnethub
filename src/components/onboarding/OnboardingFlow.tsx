@@ -3,13 +3,13 @@
 import { apiRequest } from "@/api/axiosInstance";
 import {
   getOnboardingRole,
-  onboardingRoleConfigs,
-  OnboardingQuestion,
-  OnboardingRoleId,
+  type OnboardingQuestion,
+  type OnboardingRoleId,
 } from "@/data/OnboardingQuestions";
 import pricing_data from "@/data/PricingData";
-import { useSearchParams } from "next/navigation";
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import type { FormEvent, KeyboardEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import type { Swiper as SwiperType } from "swiper";
 import OnboardingSidebar from "./flow/OnboardingSidebar";
@@ -19,249 +19,99 @@ import PlanStep from "./flow/steps/PlanStep";
 import QuestionsStep from "./flow/steps/QuestionsStep";
 import RoleStep from "./flow/steps/RoleStep";
 import SignupStep from "./flow/steps/SignupStep";
+import type {
+  InlineMessage,
+  OnboardingFlowProps,
+  PaymentState,
+  QuestionAnswerState,
+  SignupState,
+  StepId,
+} from "./flow/types";
+import {
+  DASHBOARD_URL,
+  OTP_LENGTH,
+  STEP_CONTENT,
+  STRIPE_TEST_PUBLISHABLE_KEY,
+  extractApiQuestions,
+  formatCardNumber,
+  formatQuestionAnswerPayload,
+  getApiErrorMessage,
+  getDefaultPlanForRole,
+  getPlanBySlug,
+  getPlansForRole,
+  getQuestionAnswerState,
+  getStripeExpiryYear,
+  getUnansweredQuestions,
+  initialPaymentState,
+  initialSignupState,
+  isBuyerRole,
+  isValidRoleId,
+  sanitizeDigits,
+  validatePaymentState,
+  validateSignupState,
+} from "./flow/utils";
 import styles from "./OnboardingFlow.module.css";
 
-type StepId = "role" | "signup" | "otp" | "plan" | "checkout" | "questions";
-type MessageTone = "info" | "success" | "error";
-
-interface PricingItem {
-  id: number;
-  slug?: string;
-  title: string;
-  desc: string;
-  price: number;
-  list: string[];
-}
-
-interface OnboardingFlowProps {
-  defaultPlanSlug?: string;
-}
-
-interface SignupState {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-interface PaymentState {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-  cardName: string;
-  cardNumber: string;
-  cvc: string;
-  expMonth: string;
-  expYear: string;
-}
-
-interface InlineMessage {
-  tone: MessageTone;
-  text: string;
-}
-
-interface QuestionAnswerState {
-  selectedOptions: string[];
-  customValue: string;
-}
-
-const STEP_CONTENT: Record<
-  StepId,
-  { eyebrow: string; title: string; description: string }
-> = {
-  role: {
-    eyebrow: "Step 1 of 6",
-    title: "Select Role",
-    description:
-      "Choose the role that best describes how you will use Magnate Hub. This helps us customize your experience from the start.",
-  },
-  signup: {
-    eyebrow: "Step 2 of 6",
-    title: "Create Your Account",
-    description:
-      "Create your Magnate Hub account by entering your details. We'll email you a verification code before your account is created.",
-  },
-  otp: {
-    eyebrow: "Step 3 of 6",
-    title: "Verify Your Email",
-    description:
-      "Enter the verification code sent to your email. Once it's confirmed, we'll create your signup lead and unlock plan selection.",
-  },
-  plan: {
-    eyebrow: "Step 4 of 6",
-    title: "Select a Plan",
-    description:
-      "Choose the plan that best fits your needs. You can review features and select the option that works best for you.",
-  },
-  checkout: {
-    eyebrow: "Step 5 of 6",
-    title: "",
-    description:"",
-  },
-  questions: {
-    eyebrow: "Step 6 of 6",
-    title: "Personalize Your Dashboard",
-    description:
-      "Answer a few quick questions so we can tailor your dashboard and features to match your goals.",
-  },
-};
-
-const DASHBOARD_URL = "https://dash.magnatehub.au/dashboard/professionals";
-const STRIPE_TEST_PUBLISHABLE_KEY = "pk_test_51MNU17FLKdDrx0HlvOHo2FL7A2WgPTHhoF39uLjJ85HE9MzIcdfVg7538L663FmEPKf2zHRE344l4cUhekQS8Il700Ai0b51y2";
-const OTP_LENGTH = 6;
-
-const initialSignupState: SignupState = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-};
-
-const initialPaymentState: PaymentState = {
-  name: "",
-  email: "",
-  phone: "",
-  message: "",
-  cardName: "",
-  cardNumber: "",
-  cvc: "",
-  expMonth: "",
-  expYear: "",
-};
-
-const isValidRoleId = (value?: string | null): value is OnboardingRoleId =>
-  onboardingRoleConfigs.some((role) => role.id === value);
-
-const getDefaultPlanForRole = (roleId?: OnboardingRoleId | null) =>
-  getOnboardingRole(roleId)?.recommendedPlanSlug ?? "free_plan";
-
-const isBuyerRole = (roleId?: OnboardingRoleId | null) => roleId === "buyer";
-
-const getPlanBySlug = (slug?: string | null): PricingItem | undefined =>
-  pricing_data.find((item) => item.slug === slug);
-
-const getApiErrorMessage = (error: any, fallback: string) =>
-  error?.response?.data?.message ||
-  error?.data?.message ||
-  error?.message ||
-  fallback;
-
-const formatCardNumber = (value: string) =>
-  value
-    .replace(/\D/g, "")
-    .slice(0, 16)
-    .replace(/(.{4})/g, "$1 ")
-    .trim();
-
-const sanitizeDigits = (value: string, maxLength: number) =>
-  value.replace(/\D/g, "").slice(0, maxLength);
-
-const getStripeExpiryYear = (expYear: string) =>
-  expYear.length === 2 ? `20${expYear}` : expYear;
-
-const extractQuestionOptions = (rawQuestion: any): string[] => {
-  const source =
-    rawQuestion?.options ??
-    rawQuestion?.answer_options ??
-    rawQuestion?.choices ??
-    [];
-
-  if (!Array.isArray(source)) {
-    return [];
-  }
-
-  return source
-    .map((option: any) => {
-      if (typeof option === "string") {
-        return option;
-      }
-
-      return (
-        option?.label ??
-        option?.title ??
-        option?.name ??
-        option?.value ??
-        ""
-      );
-    })
-    .filter(Boolean);
-};
-
-const mapApiQuestion = (rawQuestion: any): OnboardingQuestion => ({
-  id: String(rawQuestion?.id ?? rawQuestion?.professional_question_id ?? ""),
-  professionalQuestionId: Number(
-    rawQuestion?.id ?? rawQuestion?.professional_question_id ?? 0
-  ),
-  prompt:
-    rawQuestion?.question ??
-    rawQuestion?.prompt ??
-    rawQuestion?.title ??
-    "",
-  options: extractQuestionOptions(rawQuestion),
-  allowMultiple: Boolean(
-    rawQuestion?.allow_multiple ?? rawQuestion?.is_multiple ?? false
-  ),
-  customOptionLabel:
-    rawQuestion?.custom_option_label ??
-    rawQuestion?.other_option_label ??
-    undefined,
-  customInputPlaceholder:
-    rawQuestion?.custom_input_placeholder ??
-    rawQuestion?.other_input_placeholder ??
-    undefined,
-  helperText: rawQuestion?.helper_text ?? undefined,
-});
-
-const extractApiQuestions = (payload: any): OnboardingQuestion[] => {
-  const questionList =
-    payload?.data?.questions ??
-    payload?.questions ??
-    payload?.data ??
-    payload;
-
-  if (!Array.isArray(questionList)) {
-    return [];
-  }
-
-  return questionList
-    .map(mapApiQuestion)
-    .filter((question) => question.id && question.prompt);
-};
-
-const normalizeExistingAnswer = (
-  question: OnboardingQuestion,
-  rawAnswer: any
-): QuestionAnswerState => {
-  if (Array.isArray(rawAnswer)) {
-    return {
-      selectedOptions: rawAnswer.map((value) => String(value)),
-      customValue: "",
-    };
-  }
-
-  const answerText = String(rawAnswer ?? "").trim();
-
-  if (!answerText) {
-    return { selectedOptions: [], customValue: "" };
-  }
-
-  if (question.allowMultiple) {
-    return {
-      selectedOptions: answerText.split(",").map((value) => value.trim()).filter(Boolean),
-      customValue: "",
-    };
-  }
-
+/** signup/complete returns { data: { token, user, ... } } (shape from apiRequest). */
+const extractSignupUserAndToken = (apiBody: any) => {
+  const data = apiBody?.data ?? apiBody;
+  const user = data?.user;
+  const token = data?.token;
   return {
-    selectedOptions: [answerText],
-    customValue: "",
+    userId:
+      user?.id != null && !Number.isNaN(Number(user.id))
+        ? Number(user.id)
+        : null,
+    token: typeof token === "string" ? token : null,
   };
 };
 
+const persistOnboardingAuth = (
+  apiBody: any,
+  setUserId: (id: number | null) => void,
+) => {
+  const { userId, token } = extractSignupUserAndToken(apiBody);
+  if (userId != null) {
+    setUserId(userId);
+    sessionStorage.setItem("mh-onboarding-user-id", String(userId));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user_id", JSON.stringify(userId));
+    }
+  }
+  if (token && typeof window !== "undefined") {
+    sessionStorage.setItem("token", token);
+    localStorage.setItem("token", token);
+  }
+};
+
+const resolveOnboardingUserId = (stateId: number | null): number | null => {
+  if (stateId != null && Number.isFinite(stateId)) {
+    return stateId;
+  }
+  if (typeof window === "undefined") {
+    return null;
+  }
+  const fromSession = sessionStorage.getItem("mh-onboarding-user-id");
+  if (fromSession) {
+    const n = Number(fromSession);
+    return Number.isFinite(n) ? n : null;
+  }
+  const raw = localStorage.getItem("user_id");
+  if (!raw) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    const n = Number(parsed);
+    return Number.isFinite(n) ? n : null;
+  } catch {
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  }
+};
+
 const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const requestedPlan = searchParams.get("plan");
   const requestedRole = searchParams.get("role");
@@ -273,14 +123,16 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     getDefaultPlanForRole(initialRoleId);
 
   const [currentStep, setCurrentStep] = useState<StepId>("role");
-  const [selectedRoleId, setSelectedRoleId] =
-    useState<OnboardingRoleId | null>(initialRoleId);
+  const [selectedRoleId, setSelectedRoleId] = useState<OnboardingRoleId | null>(
+    initialRoleId,
+  );
   const [selectedPlanSlug, setSelectedPlanSlug] =
     useState<string>(initialPlanSlug);
   const [planManuallySelected, setPlanManuallySelected] = useState(
-    Boolean(requestedPlan || defaultPlanSlug)
+    Boolean(requestedPlan || defaultPlanSlug),
   );
-  const [signupState, setSignupState] = useState<SignupState>(initialSignupState);
+  const [signupState, setSignupState] =
+    useState<SignupState>(initialSignupState);
   const [paymentState, setPaymentState] =
     useState<PaymentState>(initialPaymentState);
   const [otpCode, setOtpCode] = useState("");
@@ -299,12 +151,21 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const [otpMessage, setOtpMessage] = useState<InlineMessage | null>(null);
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(DASHBOARD_URL);
+  /** Set when signup/complete returns so question POST can send user_id. */
+  const [onboardingUserId, setOnboardingUserId] = useState<number | null>(null);
   const otpInputRef = useRef<HTMLInputElement | null>(null);
   const planSwiperRef = useRef<SwiperType | null>(null);
 
   const selectedRole = getOnboardingRole(selectedRoleId);
   const isBuyer = isBuyerRole(selectedRoleId);
-  const selectedPlan = getPlanBySlug(selectedPlanSlug) ?? pricing_data[0];
+  const availablePlans = getPlansForRole(selectedRoleId);
+  const selectedPlan =
+    availablePlans.find((item) => item.slug === selectedPlanSlug) ??
+    availablePlans.find(
+      (item) => item.slug === selectedRole?.recommendedPlanSlug,
+    ) ??
+    availablePlans[0] ??
+    pricing_data[0];
   const activeQuestions =
     (selectedRoleId ? apiQuestions[selectedRoleId] : undefined) ??
     selectedRole?.questions ??
@@ -312,37 +173,34 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const expiryDisplayValue = `${paymentState.expMonth}${
     paymentState.expMonth.length === 2 ? "/" : ""
   }${paymentState.expYear}`;
-  const unansweredQuestions = activeQuestions.filter((question) => {
-        const answerState = questionAnswers[question.id];
-
-        if (!answerState || answerState.selectedOptions.length === 0) {
-          return true;
-        }
-
-        if (
-          question.customOptionLabel &&
-          answerState.selectedOptions.includes(question.customOptionLabel)
-        ) {
-          return !answerState.customValue.trim();
-        }
-
-        return false;
-      });
+  const unansweredQuestions = getUnansweredQuestions(
+    activeQuestions,
+    questionAnswers,
+  );
   const stripePublishableKey =
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || STRIPE_TEST_PUBLISHABLE_KEY;
 
   useEffect(() => {
-    if (!selectedRoleId || planManuallySelected) {
+    if (!selectedRoleId) {
       return;
     }
 
-    setSelectedPlanSlug(getDefaultPlanForRole(selectedRoleId));
-  }, [selectedRoleId, planManuallySelected]);
+    const rolePlans = getPlansForRole(selectedRoleId);
+    const selectedPlanIsAvailable = rolePlans.some(
+      (item) => item.slug === selectedPlanSlug,
+    );
+
+    if (!planManuallySelected || !selectedPlanIsAvailable) {
+      setSelectedPlanSlug(getDefaultPlanForRole(selectedRoleId));
+    }
+  }, [planManuallySelected, selectedPlanSlug, selectedRoleId]);
 
   useEffect(() => {
-    if (!selectedRoleId || apiQuestions[selectedRoleId]) {
+    if (!selectedRoleId) {
       return;
     }
+
+    setQuestionAnswers({});
 
     let isActive = true;
 
@@ -375,69 +233,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     return () => {
       isActive = false;
     };
-  }, [apiQuestions, selectedRoleId]);
-
-  useEffect(() => {
-    if (currentStep !== "questions" || activeQuestions.length === 0) {
-      return;
-    }
-
-    let isActive = true;
-
-    const loadSubmittedAnswers = async () => {
-      try {
-        const response = await apiRequest({
-          url: "professional-question-answers",
-          method: "GET",
-        });
-
-        if (!isActive) {
-          return;
-        }
-
-        const submittedAnswers =
-          response?.data?.answers ??
-          response?.answers ??
-          response?.data ??
-          response;
-
-        if (!Array.isArray(submittedAnswers)) {
-          return;
-        }
-
-        setQuestionAnswers((current) => {
-          const nextState = { ...current };
-
-          submittedAnswers.forEach((item: any) => {
-            const question = activeQuestions.find(
-              (entry) =>
-                entry.professionalQuestionId ===
-                Number(item?.professional_question_id ?? item?.id ?? 0)
-            );
-
-            if (!question || nextState[question.id]) {
-              return;
-            }
-
-            nextState[question.id] = normalizeExistingAnswer(
-              question,
-              item?.answer
-            );
-          });
-
-          return nextState;
-        });
-      } catch {
-        // Leave the form blank when no previous answers exist.
-      }
-    };
-
-    loadSubmittedAnswers();
-
-    return () => {
-      isActive = false;
-    };
-  }, [activeQuestions, currentStep]);
+  }, [selectedRoleId]);
 
   useEffect(() => {
     const fullName = `${signupState.firstName} ${signupState.lastName}`.trim();
@@ -507,21 +303,8 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     });
   };
 
-  const getQuestionAnswerState = (questionId: string): QuestionAnswerState =>
-    questionAnswers[questionId] ?? { selectedOptions: [], customValue: "" };
-
-  const formatQuestionAnswer = (
-    question: OnboardingQuestion,
-    answerState: QuestionAnswerState
-  ) => {
-    const normalizedOptions = answerState.selectedOptions.map((option) =>
-      option === question.customOptionLabel ? answerState.customValue.trim() : option
-    );
-
-    return question.allowMultiple
-      ? normalizedOptions.filter(Boolean).join(", ")
-      : normalizedOptions[0] ?? "";
-  };
+  const getCurrentQuestionAnswerState = (questionId: string) =>
+    getQuestionAnswerState(questionAnswers, questionId);
 
   const updateSignupField = (field: keyof SignupState, value: string) => {
     setSignupState((current) => ({ ...current, [field]: value }));
@@ -547,76 +330,6 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     clearFieldError("expYear");
   };
 
-  const validateSignup = () => {
-    const errors: Record<string, string> = {};
-
-    if (!signupState.firstName.trim()) {
-      errors.firstName = "First name is required.";
-    }
-    if (!signupState.lastName.trim()) {
-      errors.lastName = "Last name is required.";
-    }
-    if (!signupState.email.trim()) {
-      errors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupState.email.trim())) {
-      errors.email = "Enter a valid email address.";
-    }
-    if (!signupState.password) {
-      errors.password = "Password is required.";
-    } else if (signupState.password.length < 6) {
-      errors.password = "Password must be at least 6 characters.";
-    }
-    if (!signupState.confirmPassword) {
-      errors.confirmPassword = "Please confirm your password.";
-    } else if (signupState.confirmPassword !== signupState.password) {
-      errors.confirmPassword = "Passwords must match.";
-    }
-
-    return errors;
-  };
-
-  const validatePayment = () => {
-    const errors: Record<string, string> = {};
-
-    if (!paymentState.name.trim()) {
-      errors.name = "Full name is required.";
-    }
-    if (!paymentState.email.trim()) {
-      errors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paymentState.email.trim())) {
-      errors.email = "Enter a valid email address.";
-    }
-    if (!paymentState.phone.trim()) {
-      errors.phone = "Phone number is required.";
-    }
-
-    if (selectedPlan.price === 0) {
-      return errors;
-    }
-
-    const cleanCardNumber = paymentState.cardNumber.replace(/\s/g, "");
-
-    if (!paymentState.cardName.trim()) {
-      errors.cardName = "Name on card is required.";
-    }
-    if (!cleanCardNumber) {
-      errors.cardNumber = "Card number is required.";
-    } else if (!/^\d{16}$/.test(cleanCardNumber)) {
-      errors.cardNumber = "Card number must be 16 digits.";
-    }
-    if (!/^\d{3,4}$/.test(paymentState.cvc)) {
-      errors.cvc = "Enter a valid CVC.";
-    }
-    if (!/^(0[1-9]|1[0-2])$/.test(paymentState.expMonth)) {
-      errors.expMonth = "Enter a valid month.";
-    }
-    if (!/^\d{2}$/.test(paymentState.expYear)) {
-      errors.expYear = "Enter a valid year.";
-    }
-
-    return errors;
-  };
-
   const handleContinueFromRole = () => {
     if (!selectedRoleId) {
       toast.error("Please select a role to continue.");
@@ -635,7 +348,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       return;
     }
 
-    const errors = validateSignup();
+    const errors = validateSignupState(signupState);
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       return;
@@ -658,7 +371,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       }
 
       if ((response as any).error) {
-        toast.error((response as any).message || "Unable to send verification code.");
+        toast.error(
+          (response as any).message || "Unable to send verification code.",
+        );
         return;
       }
 
@@ -671,7 +386,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       setStep("otp");
     } catch (error: any) {
       toast.error(
-        getApiErrorMessage(error, "Something went wrong. Please try again.")
+        getApiErrorMessage(error, "Something went wrong. Please try again."),
       );
     } finally {
       setActionLoading(null);
@@ -707,11 +422,14 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       if ((verifyResponse as any).error) {
         setOtpMessage({
           tone: "error",
-          text: verifyResponse.message || "Invalid verification code. Please try again.",
+          text:
+            verifyResponse.message ||
+            "Invalid verification code. Please try again.",
         });
         return;
       }
-      const nextVerificationToken = (verifyResponse as any).data?.verification_token;
+      const nextVerificationToken = (verifyResponse as any).data
+        ?.verification_token;
 
       if (!nextVerificationToken) {
         setOtpMessage({
@@ -738,7 +456,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       if ((createLeadResponse as any).error) {
         setOtpMessage({
           tone: "error",
-          text: createLeadResponse.message || "Your email was verified, but we could not create the signup lead.",
+          text:
+            createLeadResponse.message ||
+            "Your email was verified, but we could not create the signup lead.",
         });
         return;
       }
@@ -754,7 +474,10 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         return;
       }
 
-      sessionStorage.setItem("mh-signup-verification-token", nextVerificationToken);
+      sessionStorage.setItem(
+        "mh-signup-verification-token",
+        nextVerificationToken,
+      );
       sessionStorage.setItem("mh-signup-lead-id", String(leadId));
       sessionStorage.setItem("mh-signup-lead-code", String(leadCode));
 
@@ -777,12 +500,16 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           });
           return;
         }
+        persistOnboardingAuth(
+          completeSignupResponse,
+          setOnboardingUserId,
+        );
         setRedirectUrl(
           (completeSignupResponse as any).redirect
             ? `https://dash.magnatehub.au${
                 (completeSignupResponse as any).redirect
               }`
-            : DASHBOARD_URL
+            : DASHBOARD_URL,
         );
         setPaymentCompleted(true);
         setOtpMessage({
@@ -805,7 +532,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         tone: "error",
         text: getApiErrorMessage(
           error,
-          "Unable to verify OTP. Please try again."
+          "Unable to verify OTP. Please try again.",
         ),
       });
     } finally {
@@ -868,7 +595,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
   const handlePlanCardKeyDown = (
     event: KeyboardEvent<HTMLDivElement>,
-    slug: string
+    slug: string,
   ) => {
     if (event.key !== "Enter" && event.key !== " ") {
       return;
@@ -886,7 +613,11 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   };
 
   const handlePlanContinue = () => {
-    if (!selectedPlan) {
+    const selectedPlanIsAvailable = availablePlans.some(
+      (plan) => plan.slug === selectedPlanSlug,
+    );
+
+    if (!selectedPlanSlug || !selectedPlanIsAvailable) {
       toast.error("Please choose a plan to continue.");
       return;
     }
@@ -897,7 +628,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   const handleCheckoutSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const errors = validatePayment();
+    const errors = validatePaymentState(paymentState, selectedPlan);
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       return;
@@ -910,7 +641,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       const leadCode = sessionStorage.getItem("mh-signup-lead-code");
 
       if (!leadId || !leadCode) {
-        toast.error("Signup session is missing lead details. Please restart signup.");
+        toast.error(
+          "Signup session is missing lead details. Please restart signup.",
+        );
         return;
       }
 
@@ -942,7 +675,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
               }
 
               resolve(response);
-            }
+            },
           );
         });
 
@@ -956,19 +689,13 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       });
 
       if ((response as any)?.error) {
-        toast.error((response as any)?.message || "Signup could not be completed.");
+        toast.error(
+          (response as any)?.message || "Signup could not be completed.",
+        );
         return;
       }
 
-      await apiRequest({
-        url: "signup/lead/delete",
-        method: "POST",
-        data: {
-          lead_id: Number(leadId),
-          lead_code: leadCode,
-        },
-      }).catch(() => null);
-
+      persistOnboardingAuth(response, setOnboardingUserId);
       sessionStorage.removeItem("mh-signup-lead-id");
       sessionStorage.removeItem("mh-signup-lead-code");
       sessionStorage.removeItem("mh-signup-verification-token");
@@ -976,25 +703,26 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
       setRedirectUrl(
         (response as any)?.redirect
           ? `https://dash.magnatehub.au${(response as any).redirect}`
-          : DASHBOARD_URL
+          : DASHBOARD_URL,
       );
       setPaymentCompleted(true);
       toast.success(
         selectedPlan.price > 0
           ? "Payment completed successfully."
-          : `${selectedPlan.title} selected successfully.`
+          : `${selectedPlan.title} selected successfully.`,
       );
       setStep("questions");
     } catch (error: any) {
-      toast.error(
-        getApiErrorMessage(error, "Payment could not be completed.")
-      );
+      toast.error(getApiErrorMessage(error, "Payment could not be completed."));
     } finally {
       setActionLoading(null);
     }
   };
 
-  const handleQuestionSelect = (question: OnboardingQuestion, answer: string) => {
+  const handleQuestionSelect = (
+    question: OnboardingQuestion,
+    answer: string,
+  ) => {
     setQuestionAnswers((current) => {
       const existing = current[question.id] ?? {
         selectedOptions: [],
@@ -1023,7 +751,10 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     clearFieldError(question.id);
   };
 
-  const handleQuestionCustomValueChange = (questionId: string, value: string) => {
+  const handleQuestionCustomValueChange = (
+    questionId: string,
+    value: string,
+  ) => {
     setQuestionAnswers((current) => {
       const existing = current[questionId] ?? {
         selectedOptions: [],
@@ -1056,66 +787,90 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
           unansweredQuestions.map((question) => [
             question.id,
             question.customOptionLabel &&
-            getQuestionAnswerState(question.id).selectedOptions.includes(
-              question.customOptionLabel
+            getCurrentQuestionAnswerState(question.id).selectedOptions.includes(
+              question.customOptionLabel,
             )
               ? "Please enter the custom value to continue."
               : "Please answer this question before continuing.",
-          ])
+          ]),
         ),
       }));
       toast.error("Please answer all questions before continuing.");
       return;
     }
 
+    const userId = resolveOnboardingUserId(onboardingUserId);
+    if (userId == null) {
+      toast.error("Your account session is missing. Please complete signup again before submitting answers.",);
+      return;
+    }
+
+    const answers = activeQuestions.map((question) => {
+      const state = getCurrentQuestionAnswerState(question.id);
+      const body = formatQuestionAnswerPayload(question, state);
+      return {
+        professional_question_id: Number(question.professionalQuestionId),
+        ...body,
+      };
+    });
+
     const payload = {
-      answers: activeQuestions.map((question) => ({
-        professional_question_id: question.professionalQuestionId,
-        answer: formatQuestionAnswer(question, getQuestionAnswerState(question.id)),
-      })),
+      user_id: userId,
+      answers,
     };
 
     try {
       setActionLoading("questions");
 
-      sessionStorage.setItem(
-        "mh-onboarding-answers",
-        JSON.stringify(payload.answers)
-      );
+      sessionStorage.setItem("mh-onboarding-answers",JSON.stringify(payload.answers),);
       sessionStorage.setItem("mh-onboarding-plan", selectedPlan.slug || "");
       sessionStorage.setItem("mh-onboarding-role", selectedRole.id);
 
+      const answerIsComplete = (a: (typeof answers)[number]) => {
+        if (!a.professional_question_id) {
+          return false;
+        }
+        if (
+          "selected_option_ids" in a &&
+          Array.isArray(a.selected_option_ids) &&
+          a.selected_option_ids.length > 0
+        ) {
+          return true;
+        }
+        if (
+          "answer_text" in a &&
+          typeof a.answer_text === "string" &&
+          a.answer_text.trim() !== ""
+        ) {
+          return true;
+        }
+        return false;
+      };
+
       if (
         payload.answers.length === 0 ||
-        payload.answers.some((answer) => !answer.professional_question_id)
+        payload.answers.some((answer) => !answerIsComplete(answer))
       ) {
         toast.error(
-          "Professional questions could not be loaded correctly. Please refresh and try again."
+          "Professional questions could not be loaded correctly. Please refresh and try again.",
         );
         return;
       }
-
       await apiRequest({
         url: "professional-question-answers",
         method: "POST",
         data: payload,
       });
-
-      toast.success("Onboarding complete. Redirecting to your dashboard.");
-
-      window.setTimeout(() => {
-        window.location.href = redirectUrl || DASHBOARD_URL;
-      }, 700);
+      toast.success("Onboarding complete, Now you can login to your dashboard.");
+      router.push(`/login`);
     } catch (error: any) {
       toast.warn(
         getApiErrorMessage(
           error,
-          "Responses were kept locally. Redirecting to dashboard."
-        )
+          "Responses were kept locally. Redirecting to dashboard.",
+        ),
       );
-      window.setTimeout(() => {
-        window.location.href = redirectUrl || DASHBOARD_URL;
-      }, 700);
+      // router.push(`/login`);
     } finally {
       setActionLoading(null);
     }
@@ -1147,25 +902,23 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     }
   };
 
-  const showBackButton =
-    currentStep !== "role" && !(currentStep === "questions" && paymentCompleted);
+  const showBackButton = currentStep !== "role" && !(currentStep === "questions" && paymentCompleted);
   const showStepper = currentStep !== "otp";
-  const displayStepIndex =
-    isBuyer
-      ? currentStep === "role"
-        ? 0
-        : currentStep === "signup" || currentStep === "otp"
-        ? 1
-        : 2
-      : currentStep === "role"
+  const displayStepIndex = isBuyer
+    ? currentStep === "role"
       ? 0
       : currentStep === "signup" || currentStep === "otp"
-      ? 1
-      : currentStep === "plan"
-      ? 2
-      : currentStep === "checkout"
-      ? 3
-      : 4;
+        ? 1
+        : 2
+    : currentStep === "role"
+      ? 0
+      : currentStep === "signup" || currentStep === "otp"
+        ? 1
+        : currentStep === "plan"
+          ? 2
+          : currentStep === "checkout"
+            ? 3
+            : 4;
   const displaySteps = isBuyer
     ? [
         {
@@ -1217,7 +970,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
 
     if (currentStep === "signup") {
       return (
-        <SignupStep
+      <SignupStep
           signupState={signupState}
           fieldErrors={fieldErrors}
           actionLoading={actionLoading}
@@ -1249,6 +1002,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     if (currentStep === "plan") {
       return (
         <PlanStep
+          plans={availablePlans}
           selectedPlan={selectedPlan}
           selectedRole={selectedRole}
           expandedPlanDescriptions={expandedPlanDescriptions}
@@ -1299,13 +1053,13 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
     currentStep === "checkout"
       ? styles.shellWide
       : currentStep === "otp"
-      ? styles.shellCompact
-      : ""
+        ? styles.shellCompact
+        : ""
   }`;
 
   return (
     <section className={styles.area}>
-      <div className="container " style={{marginTop:"5rem"}}>
+      <div className="container " style={{ marginTop: "5rem" }}>
         <div className="row justify-content-center">
           <div className="col-xl-11 col-lg-11">
             <div className={shellClassName}>
@@ -1324,7 +1078,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
               <div className={styles.content}>
                 <div
                   className={`${styles.contentHeader} ${
-                    currentStep === "checkout" ? styles.contentHeaderCentered : ""
+                    currentStep === "checkout"
+                      ? styles.contentHeaderCentered
+                      : ""
                   }`}
                 >
                   <p className={styles.eyebrow}>{currentStepContent.eyebrow}</p>

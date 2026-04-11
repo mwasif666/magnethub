@@ -65,8 +65,6 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   }, [id]);
 
   const parseImage = (Image: string) => {
-    console.log(Image);
-    
     if (Image) {
       return JSON.parse(Image);
     }

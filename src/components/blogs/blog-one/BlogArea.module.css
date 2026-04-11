@@ -139,6 +139,46 @@
   color: #560ce3;
 }
 
+.cardTaxonomy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.categoryBadge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(86, 12, 227, 0.12);
+  color: #560ce3;
+}
+
+.tagChip {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.emptyList {
+  text-align: center;
+  padding: 48px 20px;
+  color: #64748b;
+  font-size: 1rem;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px dashed rgba(86, 12, 227, 0.2);
+}
+
 .metaRow {
   display: flex;
   flex-wrap: wrap;
