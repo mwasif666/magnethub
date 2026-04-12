@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/context/AuthContext";
+import WishlistReduxSync from "@/components/common/WishlistReduxSync";
+import PageLoader from "@/components/common/PageLoader";
 import { Provider } from "react-redux";
 
 
@@ -45,7 +47,9 @@ export default function RootLayout({
       
 
       <body suppressHydrationWarning={true}>
+        <PageLoader />
         <Provider store={store}>
+          <WishlistReduxSync />
           <AuthProvider>{children}</AuthProvider>
         </Provider>
         <ToastContainer

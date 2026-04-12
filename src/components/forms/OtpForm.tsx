@@ -119,7 +119,7 @@ const OtpForm = () => {
 
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="col-lg-12 mb-25">
           <input
@@ -131,11 +131,7 @@ const OtpForm = () => {
           <p className="form_error">{errors.otp?.message}</p>
         </div>
 
-        {message && (
-          <p className={`form_message ${messageType}`}>
-            {message}
-          </p>
-        )}
+        {message && <p className={`form_message ${messageType}`}>{message}</p>}
 
         <div className="d-flex align-items-center justify-content-between mb-3">
           <span>Didn’t receive the OTP?</span>
@@ -186,7 +182,7 @@ const OtpForm = () => {
           background: none;
           border: none;
           color: white;
-          text-decoration: underline;
+          text-decoration: none;
           cursor: pointer;
           font-size: 14px;
           padding: 0;

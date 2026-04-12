@@ -512,10 +512,14 @@ textarea {
 }
 
 .underline-black {
-  background-image: linear-gradient(#072032, #072032),
-    linear-gradient(#072032, #072032);
-  background-size: 0 1px, 0 1px;
-  background-position: 100% 100%, 0 100%;
+  background-image:
+    linear-gradient(#072032, #072032), linear-gradient(#072032, #072032);
+  background-size:
+    0 1px,
+    0 1px;
+  background-position:
+    100% 100%,
+    0 100%;
   background-repeat: no-repeat;
   transition: background-size 0.3s linear;
   -webkit-transition: all 0.4s ease 0.3s 0s ease-out;
@@ -525,10 +529,14 @@ textarea {
   transition: all 0.4s ease 0.3s 0s ease-out;
 }
 .underline-black:hover {
-  background-image: linear-gradient(#072032, #072032),
-    linear-gradient(#072032, #072032);
-  background-size: 0 1px, 100% 1px;
-  background-position: 100% 100%, 0 100%;
+  background-image:
+    linear-gradient(#072032, #072032), linear-gradient(#072032, #072032);
+  background-size:
+    0 1px,
+    100% 1px;
+  background-position:
+    100% 100%,
+    0 100%;
   background-repeat: no-repeat;
   transition: background-size 0.3s linear;
   -webkit-transition: all 0.4s ease 0.3s 0s ease-out;
@@ -540,8 +548,12 @@ textarea {
 
 .underline-white {
   background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff);
-  background-size: 0 1px, 0 1px;
-  background-position: 100% 100%, 0 100%;
+  background-size:
+    0 1px,
+    0 1px;
+  background-position:
+    100% 100%,
+    0 100%;
   background-repeat: no-repeat;
   transition: background-size 0.3s linear;
   -webkit-transition: all 0.4s ease 0.3s 0s ease-out;
@@ -552,8 +564,12 @@ textarea {
 }
 .underline-white:hover {
   background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff);
-  background-size: 0 1px, 100% 1px;
-  background-position: 100% 100%, 0 100%;
+  background-size:
+    0 1px,
+    100% 1px;
+  background-position:
+    100% 100%,
+    0 100%;
   background-repeat: no-repeat;
   transition: background-size 0.3s linear;
   -webkit-transition: all 0.4s ease 0.3s 0s ease-out;
@@ -654,7 +670,9 @@ textarea {
 .tg-btn-switch-animation .btn-icon {
   margin-left: 6px;
   position: relative;
-  transition: opacity 0.4s 0.25s, transform 0.6s 0.25s;
+  transition:
+    opacity 0.4s 0.25s,
+    transform 0.6s 0.25s;
   transition-timing-function: cubic-bezier(0.1, 0.75, 0.25, 1);
   line-height: 0;
   z-index: 3;
@@ -754,12 +772,17 @@ textarea {
   position: absolute;
   inset: 0;
   background-size: 25px 25px;
-  background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+  background-position:
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%;
   background-repeat: no-repeat;
 }
 
 .loader:before {
-  background-image: radial-gradient(
+  background-image:
+    radial-gradient(
       farthest-side at top left,
       currentColor 96%,
       rgba(0, 0, 0, 0)
@@ -783,7 +806,8 @@ textarea {
 }
 
 .loader:after {
-  background-image: radial-gradient(
+  background-image:
+    radial-gradient(
       farthest-side at top left,
       rgba(0, 0, 0, 0) 94%,
       currentColor 96%
@@ -1833,9 +1857,15 @@ textarea {
   -ms-transform: translateY(calc(-100% - 80px));
   -o-transform: translateY(calc(-100% - 80px));
   transform: translateY(calc(-100% - 80px));
-  -webkit-transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  -moz-transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  -webkit-transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+  -moz-transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
   transition-delay: 0.5s;
 }
 .search__popup.search-opened {
@@ -2515,9 +2545,12 @@ textarea {
   -webkit-transform: scale(0.75) translateY(-21px);
   -ms-transform: scale(0.75) translateY(-21px);
   transform: scale(0.75) translateY(-21px);
-  -webkit-transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25),
+  -webkit-transition:
+    all 0.2s cubic-bezier(0.5, 0, 0, 1.25),
     opacity 0.15s ease-out;
-  transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
+  transition:
+    all 0.2s cubic-bezier(0.5, 0, 0, 1.25),
+    opacity 0.15s ease-out;
   z-index: 9;
   width: 100%;
 }
@@ -3719,7 +3752,7 @@ textarea {
   font-size: 18px;
   line-height: 22px;
 
-  text-decoration: underline;
+  text-decoration: none;
   text-decoration-skip-ink: none;
   color: var(--tg-common-white);
   font-family: var(--tg-ff-outfit);
@@ -8364,7 +8397,7 @@ textarea {
   font-weight: 700;
   font-size: 24px;
   text-transform: uppercase;
-  text-decoration: underline;
+  text-decoration: none;
   text-decoration-skip-ink: none;
   color: var(--tg-common-white);
   display: inline-block;
@@ -8503,12 +8536,12 @@ textarea {
 .tg-filter-clear {
   font-weight: 400;
   font-size: 13px;
-  text-decoration: underline;
+  text-decoration: none;
   text-decoration-skip-ink: none;
   color: var(--tg-grey-1);
 }
 .tg-filter-clear:hover {
-  text-decoration: underline;
+  text-decoration: none;
   text-decoration-skip-ink: none;
   color: var(--tg-theme-primary);
 }
@@ -8597,7 +8630,8 @@ textarea {
   border: 1px solid #c2c2c2;
   outline: none;
   flex: 0 0 auto;
-  box-shadow: inset 0 1px 4px 0 rgba(48, 54, 81, 0.06),
+  box-shadow:
+    inset 0 1px 4px 0 rgba(48, 54, 81, 0.06),
     0 1px 1px 0 rgba(48, 54, 81, 0.06);
   background: var(--tg-common-white);
   -webkit-transform: translateY(4px);
@@ -10538,7 +10572,7 @@ textarea {
   margin-bottom: 6px;
 }
 .tg-login-navigate a {
-  text-decoration: underline;
+  text-decoration: none;
   font-size: 15px;
 
   color: var(--tg-common-black);

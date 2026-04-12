@@ -1,6 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { apiRequest } from "@/api/axiosInstance";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import { apiRequest, BACKEND_ORIGIN } from "@/api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { ToastContainer } from "react-toastify";
@@ -122,6 +125,38 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const isInWishlist = (id: number) => {
     return wishlist.some((item: any) => item.id === id);
   };
+
+  const galleryUrls = useMemo(() => {
+    const urls: string[] = [];
+    const pushPath = (path: string | undefined | null) => {
+      if (!path || typeof path !== "string") return;
+      const full =
+        path.startsWith("http://") || path.startsWith("https://")
+          ? path
+          : `${BACKEND_ORIGIN}${path}`;
+      if (!urls.includes(full)) urls.push(full);
+    };
+
+    pushPath(listing?.title_image);
+
+    let extra = listing?.images;
+    if (typeof extra === "string") {
+      try {
+        extra = JSON.parse(extra);
+      } catch {
+        extra = [];
+      }
+    }
+    if (Array.isArray(extra)) {
+      extra.forEach((img: string) => pushPath(img));
+    }
+
+    return urls;
+  }, [listing]);
+
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+  const galleryPrevRef = useRef<HTMLButtonElement>(null);
+  const galleryNextRef = useRef<HTMLButtonElement>(null);
 
   const isFranchiseBooker = String(listing?.user_type) === "4";
 
@@ -278,49 +313,158 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                   </div>
 
                   <div className={`card p-3 mb-3 ${styles.hero_img}`}>
-                    <Image
-                      className={`w-100 rounded ${styles.listingImage}`}
-                      src={`https://dash.magnatehub.au${listing?.title_image}`}
-                      alt="Project Image"
-                      width={500}
-                      height={500}
-                      unoptimized
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "assets/img/notfound/image_notfound.png";
-                      }}
-                    />
-
-                    <div className="d-flex gap-2 mt-3 flex-wrap">
-                      {listing?.images &&listing?.images.map(
-                        (img: string, i: number) => (
-                          <div
-                            key={i}
-                            style={{
-                              width: "150px",
-                              height: "120px",
-                              overflow: "hidden",
-                              borderRadius: "10px",
-                              border: "1px solid #eee",
-                            }}
+                    {galleryUrls.length === 0 ? (
+                      <Image
+                        className={`w-100 rounded ${styles.listingImage}`}
+                        src="/assets/img/notfound/image_notfound.png"
+                        alt="No images"
+                        width={800}
+                        height={500}
+                        unoptimized
+                        style={{ objectFit: "cover", maxHeight: 480 }}
+                      />
+                    ) : galleryUrls.length === 1 ? (
+                      <Image
+                        className={`w-100 rounded ${styles.listingImage}`}
+                        src={galleryUrls[0]}
+                        alt="Project Image"
+                        width={800}
+                        height={500}
+                        unoptimized
+                        style={{ objectFit: "cover", maxHeight: 520 }}
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "/assets/img/notfound/image_notfound.png";
+                        }}
+                      />
+                    ) : (
+                      <div className={styles.galleryWrap} key={`gallery-${id}`}>
+                        <div
+                          className={`position-relative ${styles.galleryMain}`}
+                        >
+                          <button
+                            ref={galleryPrevRef}
+                            type="button"
+                            className={`${styles.imageNavButton} ${styles.galleryNavPrev}`}
+                            aria-label="Previous image"
                           >
-                            <Image
-                              src={`https://dash.magnatehub.au${img}`}
-                              alt="Sub Image"
-                              width={150}
-                              height={120}
-                              className="rounded"
-                              unoptimized
-                              style={{ objectFit: "cover" }}
-                              onError={(e) => {
-                                e.currentTarget.src =
-                                  "assets/img/notfound/image_notfound.png";
-                              }}
-                            />
-                          </div>
-                        ),
-                      )}
-                    </div>
+                            ‹
+                          </button>
+                          <button
+                            ref={galleryNextRef}
+                            type="button"
+                            className={`${styles.imageNavButton} ${styles.galleryNavNext}`}
+                            aria-label="Next image"
+                          >
+                            ›
+                          </button>
+                          <Swiper
+                            modules={[FreeMode, Navigation, Thumbs]}
+                            rewind
+                            spaceBetween={0}
+                            slidesPerView={1}
+                            onBeforeInit={(swiper) => {
+                              if (
+                                typeof swiper.params.navigation !== "boolean" &&
+                                swiper.params.navigation &&
+                                galleryPrevRef.current &&
+                                galleryNextRef.current
+                              ) {
+                                swiper.params.navigation.prevEl =
+                                  galleryPrevRef.current;
+                                swiper.params.navigation.nextEl =
+                                  galleryNextRef.current;
+                              }
+                            }}
+                            onSwiper={(swiper) => {
+                              if (
+                                typeof swiper.params.navigation !== "boolean" &&
+                                swiper.params.navigation &&
+                                galleryPrevRef.current &&
+                                galleryNextRef.current
+                              ) {
+                                swiper.params.navigation.prevEl =
+                                  galleryPrevRef.current;
+                                swiper.params.navigation.nextEl =
+                                  galleryNextRef.current;
+                                swiper.navigation.init();
+                                swiper.navigation.update();
+                              }
+                            }}
+                            thumbs={{
+                              swiper:
+                                thumbsSwiper && !thumbsSwiper.destroyed
+                                  ? thumbsSwiper
+                                  : undefined,
+                            }}
+                            className={styles.galleryMainSwiper}
+                          >
+                            {galleryUrls.map((src, i) => (
+                              <SwiperSlide key={`${src}-${i}`}>
+                                <div className={styles.gallerySlideInner}>
+                                  <Image
+                                    className={`w-100 rounded ${styles.listingImage}`}
+                                    src={src}
+                                    alt={`Project image ${i + 1}`}
+                                    width={900}
+                                    height={560}
+                                    unoptimized
+                                    style={{
+                                      objectFit: "cover",
+                                      maxHeight: 520,
+                                      width: "100%",
+                                      height: "auto",
+                                    }}
+                                    onError={(e) => {
+                                      e.currentTarget.src =
+                                        "/assets/img/notfound/image_notfound.png";
+                                    }}
+                                  />
+                                </div>
+                              </SwiperSlide>
+                            ))}
+                          </Swiper>
+                        </div>
+
+                        <Swiper
+                          onSwiper={setThumbsSwiper}
+                          spaceBetween={10}
+                          slidesPerView={4}
+                          freeMode
+                          watchSlidesProgress
+                          modules={[FreeMode, Thumbs]}
+                          breakpoints={{
+                            0: { slidesPerView: 3, spaceBetween: 8 },
+                            576: { slidesPerView: 4, spaceBetween: 10 },
+                            992: { slidesPerView: 5, spaceBetween: 12 },
+                          }}
+                          className={styles.galleryThumbs}
+                        >
+                          {galleryUrls.map((src, i) => (
+                            <SwiperSlide key={`thumb-${src}-${i}`}>
+                              <div className={styles.galleryThumbInner}>
+                                <Image
+                                  src={src}
+                                  alt={`Thumbnail ${i + 1}`}
+                                  width={160}
+                                  height={120}
+                                  unoptimized
+                                  style={{
+                                    objectFit: "cover",
+                                    width: "100%",
+                                    height: "100%",
+                                  }}
+                                  onError={(e) => {
+                                    e.currentTarget.src =
+                                      "/assets/img/notfound/image_notfound.png";
+                                  }}
+                                />
+                              </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      </div>
+                    )}
                   </div>
 
                   <div className={`card p-4 mb-4 ${styles.infoCard}`}>

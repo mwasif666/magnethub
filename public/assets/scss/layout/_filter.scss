@@ -87,11 +87,11 @@
   &-clear {
     font-weight: 400;
     font-size: 13px;
-    text-decoration: underline;
+    text-decoration: none;
     text-decoration-skip-ink: none;
     color: var(--tg-grey-1);
     &:hover {
-      text-decoration: underline;
+      text-decoration: none;
       text-decoration-skip-ink: none;
       color: var(--tg-theme-primary);
     }
@@ -170,7 +170,8 @@
   border: 1px solid #c2c2c2;
   outline: none;
   flex: 0 0 auto;
-  box-shadow: inset 0 1px 4px 0 rgba(48, 54, 81, 0.06),
+  box-shadow:
+    inset 0 1px 4px 0 rgba(48, 54, 81, 0.06),
     0 1px 1px 0 rgba(48, 54, 81, 0.06);
   background: var(--tg-common-white);
   @include transform(translateY(4px));

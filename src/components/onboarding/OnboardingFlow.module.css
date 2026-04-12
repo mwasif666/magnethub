@@ -179,7 +179,10 @@
   color: #1b1630;
   font-size: 12px;
   font-weight: 700;
-  transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    color 0.2s ease;
 }
 
 .roleChoiceButton:hover,
@@ -265,7 +268,9 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .planNavButton:hover,
@@ -334,7 +339,6 @@
   color: #fff;
   outline: none;
 }
-
 
 .roleCardActive,
 .planCardActive {
@@ -413,7 +417,7 @@
   font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .readMoreButton:hover,
@@ -484,7 +488,9 @@
   outline: none;
   appearance: none;
   -webkit-appearance: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .input {
@@ -661,7 +667,7 @@
   color: #fff;
   font-size: 12px;
   font-weight: 500;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .inlineLink:hover,
@@ -674,7 +680,7 @@
 .secondaryButton:focus,
 .secondaryButton:active {
   color: rgba(255, 255, 255, 0.92);
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -701,7 +707,9 @@
   border: 1px solid transparent;
   font-size: 14px;
   font-weight: 700;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .primaryButton {
@@ -931,7 +939,7 @@
   color: rgba(255, 255, 255, 0.9);
   font-size: 13px;
   font-weight: 600;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .checkoutTermsLink:hover,

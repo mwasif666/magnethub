@@ -118,12 +118,14 @@ const Listing = ({
     const wishlistItem: Product = {
       id: item.id,
       title: item.name,
-      thumb: item.title_image?.[0] || "",
+      thumb: item.title_image || "",
       price: Number(item.price || 0),
       name: item.name,
       location_name: item.location_name || "",
-      title_image: item.title_image?.[0] || "",
+      title_image: item.title_image || "",
       category_name: item.category_name,
+      url: item.url,
+      project_id: item.project_id,
     };
 
     dispatch(addToWishlist(wishlistItem));

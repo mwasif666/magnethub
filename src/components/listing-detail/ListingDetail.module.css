@@ -403,6 +403,75 @@
 .hero_img:hover img {
   transform: scale(1.02);
 }
+
+.galleryWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.galleryMain {
+  width: 100%;
+}
+
+.galleryMainSwiper {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.galleryMainSwiper :global(.swiper-slide) {
+  height: auto;
+}
+
+.gallerySlideInner {
+  width: 100%;
+  line-height: 0;
+}
+
+.galleryNavPrev {
+  left: 12px;
+}
+
+.galleryNavNext {
+  right: 12px;
+}
+
+.galleryThumbs {
+  width: 100%;
+  margin-top: 4px;
+  padding: 4px 2px 8px;
+}
+
+.galleryThumbs :global(.swiper-slide) {
+  width: auto;
+  height: auto;
+  opacity: 0.55;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.galleryThumbs :global(.swiper-slide-thumb-active) {
+  opacity: 1;
+  border-color: #560ce3;
+}
+
+.galleryThumbInner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
 .imageNavButton {
   position: absolute;
   top: 50%;

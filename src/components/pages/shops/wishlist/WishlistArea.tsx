@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -8,25 +8,177 @@ import {
   getWhistlistFromLocalStorage,
   removeFromWishlist,
 } from "@/redux/features/wishlistSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "@/redux/store";
 import { useCategoryNavigation } from "@/hooks/UseCategoryNavigation";
+import { apiRequest } from "@/api/axiosInstance";
+
+const DASHBOARD_ORIGIN = "https://dash.magnatehub.au";
+const FALLBACK_IMAGE = "/assets/img/notfound/image_notfound.png";
+
+const isValidImageValue = (image: string) => {
+  return Boolean(
+    image &&
+    image.length > 1 &&
+    image !== "undefined" &&
+    image !== "null" &&
+    image !== "[object Object]",
+  );
+};
+
+const getImageValue = (value: any) => {
+  if (!value) return "";
+
+  if (typeof value === "string") {
+    return value.trim();
+  }
+
+  if (typeof value === "object" && typeof value.src === "string") {
+    return value.src.trim();
+  }
+
+  return "";
+};
+
+const normalizeWishlistImageSrc = (image: string): string => {
+  const raw = image.trim();
+
+  if (!raw) {
+    return FALLBACK_IMAGE;
+  }
+
+  if (raw.startsWith("http://") || raw.startsWith("https://")) {
+    return raw;
+  }
+
+  if (raw.startsWith("/_next/") || raw.startsWith("/assets/")) {
+    return raw;
+  }
+
+  if (raw.startsWith("assets/")) {
+    return `/${raw}`;
+  }
+
+  const trimmed = raw.replace(/^\/+/, "");
+
+  if (trimmed.startsWith("uploads/") || trimmed.startsWith("storage/")) {
+    return `${DASHBOARD_ORIGIN}/${trimmed}`;
+  }
+
+  if (raw.startsWith("/")) {
+    return raw;
+  }
+
+  return `${DASHBOARD_ORIGIN}/uploads/project/card/${trimmed}`;
+};
+
+const getWishlistImageSrc = (item: any, overrideImage?: string): string => {
+  const image = [
+    overrideImage,
+    item?.title_image,
+    item?.thumb,
+    item?.card,
+    item?.image,
+  ]
+    .map(getImageValue)
+    .find(isValidImageValue);
+
+  return image ? normalizeWishlistImageSrc(image) : FALLBACK_IMAGE;
+};
+
+const getProjectFromResponse = (response: any) => {
+  return (
+    response?.data?.data?.[0] ||
+    response?.data?.[0] ||
+    response?.data ||
+    response?.[0] ||
+    null
+  );
+};
 
 const WishlistArea = () => {
   const dispatch = useDispatch();
-  const wishlist = useSelector(
-    (state: RootState) => state.wishlist.wishlist
-  );
+  const wishlist = useSelector((state: RootState) => state.wishlist.wishlist);
   const { redirectUser } = useCategoryNavigation();
+  const [wishlistHydrated, setWishlistHydrated] = useState(false);
+  const [imageOverrides, setImageOverrides] = useState<Record<string, string>>(
+    {},
+  );
 
   useEffect(() => {
     dispatch(getWhistlistFromLocalStorage());
+    setWishlistHydrated(true);
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!wishlistHydrated || wishlist.length === 0) return;
+
+    const itemsMissingImages = wishlist.filter((item: any) => {
+      const itemKey = String(item.id ?? item.project_id ?? "");
+      return (
+        itemKey &&
+        !imageOverrides[itemKey] &&
+        getWishlistImageSrc(item) === FALLBACK_IMAGE
+      );
+    });
+
+    if (itemsMissingImages.length === 0) return;
+
+    let isMounted = true;
+
+    const loadMissingImages = async () => {
+      const entries = await Promise.all(
+        itemsMissingImages.map(async (item: any) => {
+          try {
+            const projectId = item.project_id || item.id;
+            const response = await apiRequest({
+              url: `projects?id=${projectId}`,
+              method: "GET",
+            });
+            const project = getProjectFromResponse(response);
+            const image = getImageValue(
+              project?.title_image || project?.card || project?.image,
+            );
+
+            if (!isValidImageValue(image)) {
+              return null;
+            }
+
+            return [String(item.id ?? projectId), image] as const;
+          } catch (error) {
+            console.error("Error fetching wishlist image", error);
+            return null;
+          }
+        }),
+      );
+
+      if (!isMounted) return;
+
+      const nextOverrides = entries.reduce<Record<string, string>>(
+        (acc, entry) => {
+          if (entry) {
+            acc[entry[0]] = entry[1];
+          }
+          return acc;
+        },
+        {},
+      );
+
+      if (Object.keys(nextOverrides).length > 0) {
+        setImageOverrides((current) => ({ ...current, ...nextOverrides }));
+      }
+    };
+
+    loadMissingImages();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [imageOverrides, wishlist, wishlistHydrated]);
 
   const redirectToDetail = (item: any) => {
-    redirectUser(item)
-  } 
+    redirectUser(item);
+  };
 
   return (
     <>
@@ -34,8 +186,11 @@ const WishlistArea = () => {
         <div className="container">
           <div className="row">
             <div className="col-12">
-
-              {wishlist.length === 0 ? (
+              {!wishlistHydrated ? (
+                <div className="wishlist-loading" aria-busy="true">
+                  <p>Loading wishlist…</p>
+                </div>
+              ) : wishlist.length === 0 ? (
                 <div className="empty">
                   <h4>Your Wishlist is Empty</h4>
                   <p>Save your favorite listings to see them here.</p>
@@ -58,10 +213,19 @@ const WishlistArea = () => {
 
                     <tbody>
                       {wishlist.map((item, i) => (
-                        <tr key={item.id ?? i} onClick={() => redirectToDetail(item)} style={{cursor:'pointer'}}>
+                        <tr
+                          key={item.id ?? i}
+                          onClick={() => redirectToDetail(item)}
+                          style={{ cursor: "pointer" }}
+                        >
                           <td>
                             <Image
-                              src={`https://dash.magnatehub.au${item.title_image}`}
+                              src={getWishlistImageSrc(
+                                item,
+                                imageOverrides[
+                                  String(item.id ?? item.project_id ?? "")
+                                ],
+                              )}
                               alt={item?.name || "Project image"}
                               width={70}
                               height={70}
@@ -78,7 +242,7 @@ const WishlistArea = () => {
 
                           <td>
                             <span className="badge">
-                              {item.location_name ?? '-'}
+                              {item.location_name ?? "-"}
                             </span>
                           </td>
 
@@ -86,8 +250,13 @@ const WishlistArea = () => {
 
                           <td className="center">
                             <button
+                              type="button"
                               className="remove"
-                              onClick={() => dispatch(removeFromWishlist(item))}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                dispatch(removeFromWishlist(item));
+                              }}
                             >
                               ✕
                             </button>
@@ -98,7 +267,6 @@ const WishlistArea = () => {
                   </table>
                 </div>
               )}
-
             </div>
           </div>
         </div>
@@ -145,7 +313,7 @@ const WishlistArea = () => {
         .name {
           font-weight: 600;
           color: #222;
-          text-decoration: underline;
+          text-decoration: none;
         }
 
         .badge {
@@ -176,7 +344,9 @@ const WishlistArea = () => {
           font-size: 18px;
           cursor: pointer;
           color: #dc2626;
-          transition: transform 0.2s ease, color 0.2s ease;
+          transition:
+            transform 0.2s ease,
+            color 0.2s ease;
         }
 
         .remove:hover {
@@ -197,6 +367,12 @@ const WishlistArea = () => {
         .empty p {
           color: #6b7280;
           margin-bottom: 20px;
+        }
+
+        .wishlist-loading {
+          text-align: center;
+          padding: 48px 20px;
+          color: #6b7280;
         }
       `}</style>
     </>

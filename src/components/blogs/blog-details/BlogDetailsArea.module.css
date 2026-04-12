@@ -141,7 +141,10 @@ a.categoryBadge:hover {
   color: #475569;
   border: 1px solid rgba(15, 23, 42, 0.06);
   text-decoration: none;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
 a.tagChip:hover {
@@ -215,7 +218,7 @@ a.tagChip:hover {
 
 .bodyContent a {
   color: #560ce3;
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 3px;
 }
 
@@ -266,7 +269,10 @@ a.tagChip:hover {
   color: #560ce3;
   font-size: 0.78rem;
   border: 1px solid rgba(86, 12, 227, 0.12);
-  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
 }
 
 .shareIcon:hover {
@@ -308,7 +314,7 @@ a.tagChip:hover {
 .loginLink {
   color: #560ce3;
   font-weight: 600;
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 3px;
 }
 

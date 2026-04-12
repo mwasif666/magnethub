@@ -330,7 +330,7 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: none;
   padding: 0;
   transition: opacity 0.2s ease;
 }

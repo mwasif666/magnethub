@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { setLocalStorage, getLocalStorage } from "../../utils/localstorage";
-import { get } from "http";
 
 export interface Product {
    id: number;
@@ -12,14 +11,18 @@ export interface Product {
    location_name:string;
    title_image:string;
    category_name:string;
+   card?: string;
+   url?: string;
+   project_id?: string | number;
 }
 
 interface WishlistState {
    wishlist: Product[];
 }
 
+/** Always empty on both server and client first paint — load via getWhistlistFromLocalStorage in useEffect to avoid hydration mismatch. */
 const initialState: WishlistState = {
-   wishlist: getLocalStorage<Product>("wishlist") || [],
+   wishlist: [],
 };
 
 const wishlistSlice = createSlice({

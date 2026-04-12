@@ -83,9 +83,12 @@ const PasswordOtpForm = () => {
       setMessageType("success");
       setMessage("OTP verified successfully!");
       localStorage.removeItem("verification_token");
-      localStorage.setItem("verification_token", response.data.verification_token || "");
+      localStorage.setItem(
+        "verification_token",
+        response.data.verification_token || "",
+      );
       router.push("/change-password");
-    } catch(error) {
+    } catch (error) {
       setMessageType("error");
       setMessage("Something went wrong. Please try again.");
     } finally {
@@ -94,7 +97,7 @@ const PasswordOtpForm = () => {
   };
 
   const handleResend = async () => {
-    const email  = getEmail();
+    const email = getEmail();
     if (!email) return;
 
     const formData = new FormData();
@@ -207,7 +210,7 @@ const PasswordOtpForm = () => {
           color: rgba(255, 255, 255, 0.92);
           font-size: 12px;
           font-weight: 600;
-          text-decoration: underline;
+          text-decoration: none;
         }
 
         .mh-auth-text-button:disabled {
