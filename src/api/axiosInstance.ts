@@ -1,22 +1,7 @@
 import axios, { AxiosRequestConfig, Method } from "axios";
 
 export const BACKEND_ORIGIN = "https://dash.magnatehub.au";
-
-const WEBSITE_API_DIRECT_BASE = `${BACKEND_ORIGIN}/api/website/`;
-
-/** Browser uses same-origin proxy (see next.config rewrites). Server/build uses direct URL (no CORS). */
-function resolveWebsiteApiBaseUrl(): string {
-  const fromEnv = process.env.NEXT_PUBLIC_WEBSITE_API_BASE_URL;
-  if (fromEnv) {
-    return fromEnv.endsWith("/") ? fromEnv : `${fromEnv}/`;
-  }
-  if (typeof window !== "undefined") {
-    return "/magnatehub-api/";
-  }
-  return WEBSITE_API_DIRECT_BASE;
-}
-
-export const WEBSITE_API_BASE_URL = resolveWebsiteApiBaseUrl();
+export const WEBSITE_API_BASE_URL = `${BACKEND_ORIGIN}/api/website/`;
 
 const api = axios.create({
   baseURL: WEBSITE_API_BASE_URL,

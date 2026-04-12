@@ -1,17 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export",
-
-  /** Same-origin proxy so browser calls avoid CORS (dev server + hosts that honor rewrites). */
-  async rewrites() {
-    return [
-      {
-        source: "/magnatehub-api/:path*",
-        destination: "https://dash.magnatehub.au/api/website/:path*",
-      },
-    ];
-  },
+  output: 'export',
 
   /* config options here */
   eslint: {
