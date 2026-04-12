@@ -57,10 +57,9 @@ const BlogForm = ({ blogId }: BlogFormProps) => {
       }
 
       await apiRequest({
-        url: "/blogs/comment",
+        url: `blogs/${blogId}/comment`,
         method: "POST",
         data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
       });
 
       toast.success("Comment submitted!", { position: "top-center" });
