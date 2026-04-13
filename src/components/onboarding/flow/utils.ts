@@ -106,11 +106,45 @@ export const getPlansForRole = (roleId?: OnboardingRoleId | null) => {
   );
 };
 
-export const getApiErrorMessage = (error: any, fallback: string) =>
-  error?.response?.data?.message ||
-  error?.data?.message ||
-  error?.message ||
-  fallback;
+const normalizeApiErrorMessage = (message: any): string | undefined => {
+  if (typeof message === "string") {
+    return message.trim() || undefined;
+  }
+
+  if (Array.isArray(message)) {
+    return message.map(normalizeApiErrorMessage).filter(Boolean).join(" ");
+  }
+
+  if (message && typeof message === "object") {
+    return Object.values(message)
+      .map(normalizeApiErrorMessage)
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  return undefined;
+};
+
+export const getApiErrorMessage = (error: any, fallback: string) => {
+  const responseData = error?.response?.data;
+  const directData = error?.data;
+
+  const message =
+    normalizeApiErrorMessage(responseData?.errors) ||
+    normalizeApiErrorMessage(responseData?.message) ||
+    normalizeApiErrorMessage(responseData?.error) ||
+    normalizeApiErrorMessage(directData?.errors) ||
+    normalizeApiErrorMessage(directData?.message) ||
+    normalizeApiErrorMessage(directData?.error) ||
+    normalizeApiErrorMessage(error?.errors) ||
+    normalizeApiErrorMessage(error?.message) ||
+    normalizeApiErrorMessage(error?.error) ||
+    normalizeApiErrorMessage(responseData) ||
+    normalizeApiErrorMessage(directData) ||
+    normalizeApiErrorMessage(error);
+
+  return message || fallback;
+};
 
 export const formatCardNumber = (value: string) =>
   value
