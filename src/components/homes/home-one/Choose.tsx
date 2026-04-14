@@ -45,20 +45,20 @@ const Choose = () => {
                   easy to take your business to the next level.
                 </p>
               </div>
-              <div className="tg-chose-list-wrap">
+              {/* <div className="tg-chose-list-wrap">
                 <div
                   className="tg-chose-btn wow fadeInUp"
                   data-wow-delay=".8s"
                   data-wow-duration=".9s"
                 >
-                  <Link
-                    href="/about"
-                    className="tg-btn tg-btn-switch-animation"
-                  >
-                    <Button text="More About us" />
-                  </Link>
+                    <Link
+                      href="/about"
+                      className="tg-btn tg-btn-switch-animation"
+                    >
+                      <Button text="More About us" />
+                    </Link>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

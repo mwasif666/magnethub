@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import styles from "./BlogSidebarFilters.module.css";
 
 export type BlogTagRow = {
@@ -14,7 +15,18 @@ type TagsProps = {
   onSelect: (id: number | null) => void;
 };
 
+const VISIBLE_TAG_LIMIT = 10;
+
 const Tags = ({ tags, activeTagId, onSelect }: TagsProps) => {
+  const [showAllTags, setShowAllTags] = useState(false);
+  const activeTagIndex = tags.findIndex((tag) => tag.id === activeTagId);
+  const shouldShowAllTags =
+    showAllTags || activeTagIndex >= VISIBLE_TAG_LIMIT;
+  const visibleTags = shouldShowAllTags
+    ? tags
+    : tags.slice(0, VISIBLE_TAG_LIMIT);
+  const canShowMore = tags.length > VISIBLE_TAG_LIMIT && !shouldShowAllTags;
+
   return (
     <div className={`${styles.filterBox} ${styles.mb30}`}>
       <h5 className={styles.sidebarTitle}>Tags</h5>
@@ -31,7 +43,7 @@ const Tags = ({ tags, activeTagId, onSelect }: TagsProps) => {
           >
             All
           </button>
-          {tags.map((tag) => {
+          {visibleTags.map((tag) => {
             const isActive = activeTagId === tag.id;
             return (
               <button
@@ -46,6 +58,15 @@ const Tags = ({ tags, activeTagId, onSelect }: TagsProps) => {
               </button>
             );
           })}
+          {canShowMore && (
+            <button
+              type="button"
+              className={styles.showMoreButton}
+              onClick={() => setShowAllTags(true)}
+            >
+              Show more
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -82,7 +82,6 @@ const Process = () => {
             <div className="row justify-content-center">
               <div className="col-xl-8 col-lg-9 col-md-10">
                 <div className="tg-chose-section-title text-center mb-50">
-                  <h5 className="tg-section-subtitle mb-15">Investor</h5>
 
                   <h2 className="mb-15 ">Investment Opportunities</h2>
 

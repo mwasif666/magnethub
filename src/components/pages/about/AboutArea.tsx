@@ -62,7 +62,7 @@ const AboutArea = () => {
                   you can confidently trade your business online, unlocking a
                   world of opportunities.
                 </p>
-                <div
+                {/* <div
                   className="tg-chose-btn wow fadeInUp"
                   data-wow-delay=".8s"
                   data-wow-duration=".9s"
@@ -73,7 +73,7 @@ const AboutArea = () => {
                   >
                     <Button text="More About Us" />
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

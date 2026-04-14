@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const storeDataInLS = (res: any) => {
     const user = res?.user;
     const nextToken = res?.token || null;
-    const nextRole = res?.role || null;
+    const nextRole = res?.user?.role || null;
 
     if (!res.error && user?.id) {
       if (typeof window !== "undefined") {
@@ -117,6 +117,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         if (nextRole) {
           localStorage.setItem("role", nextRole);
+        }
+
+        if(user) {
+          localStorage.setItem("user", JSON.stringify(user));
         }
       }
 

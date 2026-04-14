@@ -129,6 +129,24 @@
   color: #fff;
 }
 
+.showMoreButton {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid rgba(86, 12, 227, 0.3);
+  color: #560ce3;
+  background: rgba(86, 12, 227, 0.06);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.showMoreButton:hover {
+  background: rgba(86, 12, 227, 0.12);
+  border-color: #560ce3;
+}
+
 .emptyHint {
   font-size: 0.85rem;
   color: #94a3b8;

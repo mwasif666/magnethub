@@ -201,7 +201,7 @@ const OurLocation: React.FC = () => {
                         <div className="tg-location-content tg-location-su-content">
                           <div className="content">
                             <h3 className="tg-location-title mb-5">
-                              <Link href="#">{item?.name}</Link>
+                              {item?.name}
                             </h3>
                           </div>
                         </div>

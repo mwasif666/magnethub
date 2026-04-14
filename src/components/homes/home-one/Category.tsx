@@ -182,7 +182,7 @@ const Category = () => {
                         <div className="tg-location-content tg-location-su-content">
                           <div className="content">
                             <h3 className="tg-location-title mb-5">
-                              <Link href="/tour-grid-1">{item.name}</Link>
+                             {item.name}
                             </h3>
                             <span className="tg-location-su-duration">
                               {item.total}

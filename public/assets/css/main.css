@@ -1233,8 +1233,8 @@ textarea {
   );
 }
 .scroll__top:hover {
-  background: var(--tg-theme-secondary);
-  color: var(--tg-common-white);
+  background: var(--tg-common-white);
+  color: var(--tg-theme-primary);
 }
 
 /*=============================

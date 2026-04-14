@@ -182,8 +182,6 @@ const HeaderOne = () => {
                               </div>
                             )}
                           </div>
-
-                          {/* ✅ Wishlist icon next to logged-in button too */}
                           <Link
                             href="/wishlist"
                             className="tg-btn-header"
