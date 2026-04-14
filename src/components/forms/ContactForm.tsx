@@ -20,7 +20,7 @@ const schema = yup
     phone: yup
       .string()
       .required("Phone number is required")
-      .matches(/^[0-9]+$/, "Phone number must be numeric"),
+      .matches(/^\+?[0-9]+$/, "Phone number can include an optional +"),
     message: yup.string().required("Message is required"),
   })
   .required();
@@ -84,7 +84,7 @@ const ContactForm = () => {
         <div className="col-lg-12 mb-25">
           <input
             className="input"
-            type="text"
+            type="tel"
             {...register("phone")}
             placeholder="Phone Number"
           />
