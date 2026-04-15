@@ -8,6 +8,7 @@ import styles from "./BuyNow.module.css";
 import pricing_data from "@/data/PricingData";
 import Loading from "../loading/Loading";
 import { submitStripePayment } from "@/lib/submitStripePayment";
+import { STRIPE_TEST_PUBLISHABLE_KEY } from "../onboarding/flow/utils";
 
 interface BuyNowProps {
   slug: string;
@@ -95,7 +96,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (window.Stripe) {
-        window.Stripe.setPublishableKey(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+        window.Stripe.setPublishableKey(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || STRIPE_TEST_PUBLISHABLE_KEY);
         clearInterval(interval);
       }
     }, 500);

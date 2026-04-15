@@ -188,7 +188,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         <h5 className={styles.host}>
                           <i className="fa-solid fa-user me-2"></i>
                           <span>Hosted By:</span>{" "}
-                          {listing?.name || "N/A"}
+                          {listing?.user_first_name + " " + listing?.user_last_name || "N/A"}
                         </h5>
                         {listing?.category_name && (
                           <p className={styles.categoryDesign}>
