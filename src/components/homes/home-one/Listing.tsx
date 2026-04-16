@@ -72,6 +72,17 @@ const formatListingPrice = (price?: string | number) => {
   }).format(Number(price || 0));
 };
 
+const sortListingsNewestFirst = <T extends { id?: number | string; project_id?: number | string }>(
+  items: T[],
+) => {
+  return [...items].sort((a, b) => {
+    const aValue = Number(a.project_id ?? a.id ?? 0);
+    const bValue = Number(b.project_id ?? b.id ?? 0);
+
+    return bValue - aValue;
+  });
+};
+
 const truncateText = (value: string, limit: number) => {
   if (value.length <= limit) {
     return value;
@@ -133,7 +144,7 @@ const Listing = ({
 
   useEffect(() => {
     if (listing && listing.length > 0) {
-      setData(listing);
+      setData(sortListingsNewestFirst(listing));
       setLoading(false);
     } else {
       setData([]);
@@ -345,6 +356,16 @@ const Listing = ({
             transform 0.2s ease;
         }
 
+        .home-premium-listing-profile-name {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(0);
+          transition:
+            opacity 0.18s ease,
+            visibility 0.18s ease,
+            transform 0.18s ease;
+        }
+
         @media (hover: hover) and (pointer: fine) {
           .home-premium-listing-wishlist {
             opacity: 0;
@@ -358,6 +379,12 @@ const Listing = ({
             visibility: visible;
             pointer-events: auto;
             transform: translate(0, 0);
+          }
+
+          .home-premium-listing-card:hover .home-premium-listing-profile-name {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
           }
         }
       `}</style>
@@ -373,12 +400,12 @@ const ListingCard = ({
 }: ListingCardProps) => {
   const isFranchiseBooker = String(item?.user_type) === "broker";
   const companyName = item?.user_company_name?.trim() || "";
-  const companyLogoUrl = item?.user_company_logo?.trim() ? item.user_company_logo : "";
+  const companyLogoUrl = item?.user_company_logo?.trim()
+    ? item.user_company_logo
+    : "";
   const companyInitials = getCompanyInitials(companyName);
   const hasCompanyName = Boolean(companyName);
   const verificationSource = item?.user_company_name?.trim() || "partner";
-  const verificationBadgeText = `verified by ${truncateText(verificationSource, 15)}`;
-  const verificationBadgeTitle = `verified by ${verificationSource}`;
   const listingCode = `MGH-${new Date().getFullYear()}-${item.id}`;
 
   return (
@@ -420,6 +447,67 @@ const ListingCard = ({
           borderRadius: "24px",
         }}
       >
+        {isFranchiseBooker && (
+          <div
+            className="home-premium-listing-profile"
+            style={{
+              position: "absolute",
+              left: "16px",
+              top: "12px",
+              zIndex: 8,
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            <span
+              style={{
+                position: "relative",
+                width: "38px",
+                height: "38px",
+                borderRadius: "999px",
+                overflow: "hidden",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flex: "0 0 auto",
+                background: "linear-gradient(135deg, #6d4cff 0%, #3d73ff 100%)",
+                boxShadow: "0 10px 22px rgba(70, 62, 180, 0.22)",
+              }}
+            >
+              <Image
+                src={companyLogoUrl || "/assets/company-profile.png"}
+                alt={companyName || "Company profile"}
+                fill
+                unoptimized
+                style={{ objectFit: "cover" }}
+              />
+            </span>
+
+            {hasCompanyName && (
+              <span
+                className="home-premium-listing-profile-name"
+                title={companyName}
+                style={{
+                  maxWidth: "180px",
+                  padding: "6px 12px",
+                  borderRadius: "999px",
+                  background: "rgba(15,23,42,0.96)",
+                  color: "#f9fafb",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  lineHeight: 1.1,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {companyName}
+              </span>
+            )}
+          </div>
+        )}
+
         <Image
           className="tg-card-border w-100"
           src={`https://dash.magnatehub.au${item.title_image}`}
@@ -450,6 +538,8 @@ const ListingCard = ({
           className="tg-listing-item-wishlist home-premium-listing-wishlist"
           style={{
             position: "absolute",
+            top: "12px",
+            right: "16px",
             zIndex: 7,
           }}
         >
@@ -509,6 +599,32 @@ const ListingCard = ({
         >
           {item.category_name}
         </span>
+
+        {isFranchiseBooker && (
+          <span
+            style={{
+              position: "absolute",
+              right: "16px",
+              bottom: "16px",
+              zIndex: 6,
+              padding: "4px 10px",
+              borderRadius: "999px",
+              background:
+                "linear-gradient(180deg, rgba(22, 163, 74, 0.95) 0%, rgba(16, 185, 129, 0.95) 100%)",
+              border: "1px solid rgba(22, 163, 74, 0.95)",
+              color: "#ecfdf3",
+              fontSize: "10px",
+              fontWeight: 700,
+              lineHeight: 1.1,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              boxShadow: "0 10px 22px rgba(22, 163, 74, 0.33)",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            verified
+          </span>
+        )}
       </div>
 
       <div
@@ -520,100 +636,6 @@ const ListingCard = ({
           padding: "20px 8px 6px",
         }}
       >
-        <div
-          style={{
-            minHeight: "67px",
-            marginBottom: "14px",
-            paddingBottom: "14px",
-            borderBottom: isFranchiseBooker
-              ? "1px solid rgba(126, 108, 255, 0.12)"
-              : "1px solid transparent",
-          }}
-        >
-          {isFranchiseBooker && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: hasCompanyName ? "space-between" : "flex-start",
-                gap: "10px",
-                minHeight: "52px",
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minHeight: "34px",
-                  padding: "0 14px",
-                  borderRadius: "999px",
-                  border: "1px solid rgba(108, 92, 231, 0.20)",
-                  background:
-                    "linear-gradient(180deg, rgba(123, 97, 255, 0.16) 0%, rgba(123, 97, 255, 0.08) 100%)",
-                  color: "#5b34e6",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  whiteSpace: "nowrap",
-                  flex: "0 0 auto",
-                }}
-              >
-                Verified Partner
-              </span>
-              {companyName ? (
-                <span
-                  title={companyName}
-                  style={{
-                    flex: 1,
-                    minWidth: 0,
-                    color: "#4126c6",
-                    fontSize: "16px",
-                    fontWeight: 700,
-                    lineHeight: 1.2,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {companyName}
-                </span>
-              ) : null}
-
-              <span
-                style={{
-                  position: "relative",
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "999px",
-                  overflow: "hidden",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flex: "0 0 auto",
-                  background: "linear-gradient(135deg, #6d4cff 0%, #3d73ff 100%)",
-                  color: "#fff",
-                  fontSize: "12px",
-                  fontWeight: 800,
-                  boxShadow: "0 10px 22px rgba(70, 62, 180, 0.22)",
-                  marginLeft: hasCompanyName ? "0" : "auto",
-                }}
-              >
-                {companyLogoUrl ? (
-                  <Image
-                    src={companyLogoUrl}
-                    alt={companyName}
-                    fill
-                    unoptimized
-                    style={{ objectFit: "cover" }}
-                  />
-                ) : (
-                  companyInitials
-                )}
-              </span>
-            </div>
-          )}
-        </div>
-
         <div
           style={{
             display: "flex",
@@ -636,7 +658,6 @@ const ListingCard = ({
           >
             {listingCode}
           </p>
-
         </div>
 
         <h4

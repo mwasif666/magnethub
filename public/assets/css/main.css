@@ -5562,8 +5562,8 @@ textarea {
   border-radius: 24px 24px 0px 0px;
 }
 .tg-listing-su-card-item .tg-listing-item-wishlist a {
-  top: 30px;
-  right: 36px;
+  top: 0px;
+  right: 05px;
   width: 36px;
   height: 36px;
   z-index: 2;
