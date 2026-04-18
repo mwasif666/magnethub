@@ -156,14 +156,15 @@ const Blog = ({ style }: PropTypes) => {
                             {categoryLabel}
                           </span>
                         )}
-                        {tagList && tagList.length > 0 && tagList.map((tag: any) => (
+                        {tagList && tagList.length > 0 && tagList.slice(0,3).map((tag: any) => (
                           <span
                             key={tag.id}
                             className={blogListStyles.tagChip}
                           >
-                            {tag.name}
+                            {tag.name} 
                           </span> 
                         ))}
+                        {tagList.length > 3 && "...."}
                       </div>
                     <h3 className="tg-blog-title mb-15">
                       <span

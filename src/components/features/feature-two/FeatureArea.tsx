@@ -13,6 +13,7 @@ import Image from "next/image";
 import Location from "@/svg/home-one/Location";
 import Link from "next/link";
 import { apiRequest } from "@/api/axiosInstance";
+import ListingStatusBadges from "@/components/listing/ListingStatusBadges";
 
 type FeatureAreaProps = {
   listing: any[];
@@ -312,6 +313,10 @@ const HomeStyleListingCard = ({
           padding: "20px 8px 6px",
         }}
       >
+        <ListingStatusBadges
+          item={item as unknown as Record<string, unknown>}
+          uniformCardSlot
+        />
         <div
           style={{
             display: "flex",
@@ -512,6 +517,10 @@ const ListViewListingCard = ({
       </div>
 
       <div className="tg-listing-card-content">
+        <ListingStatusBadges
+          item={item as unknown as Record<string, unknown>}
+          uniformCardSlot
+        />
         <h4
           className="tg-listing-card-title mb-10"
           onClick={() => redirectUser(item)}

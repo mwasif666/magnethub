@@ -65,6 +65,9 @@ interface DataType {
    language?: string;
    destination?: string;
    duration?: string;
+   under_offer?: string | number;
+   urgent_sale?: string | number;
+   multiple_locations?: string | number;
 }
 
 const shop_data: DataType[] = [
@@ -81,6 +84,7 @@ const shop_data: DataType[] = [
       category: "Hotel",
       amenities: "Accepts Credit Cards",
       language: "English",
+      urgent_sale: 0,
    },
    {
       id: 2,
@@ -97,6 +101,7 @@ const shop_data: DataType[] = [
       category: "Resort",
       amenities: "Car Parking",
       language: "Spanish",
+      under_offer: 0,
    },
    {
       id: 3,

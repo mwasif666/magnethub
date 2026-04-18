@@ -10,6 +10,7 @@ import { addToWishlist } from "@/redux/features/wishlistSlice";
 import FeatureTop from "./FeatureTop"
 import FeatureSidebar from "./FeatureSidebar";
 import ReactPaginate from "react-paginate";
+import ListingStatusBadges from "@/components/listing/ListingStatusBadges";
 
 const FeatureArea = () => {
    const dispatch = useDispatch();
@@ -72,8 +73,38 @@ const FeatureArea = () => {
                        key={item.id}
                        className="col-xxl-4 col-xl-6 col-lg-6 col-md-6 tg-grid-full"
                      >
-                       <div className="tg-listing-card-item tg-listing-4-card-item mb-25">
-                         <div className="tg-listing-card-thumb tg-listing-2-card-thumb mb-15 fix p-relative">
+                       <div
+                         className="tg-listing-card-item tg-listing-4-card-item mb-25"
+                         style={{
+                           borderRadius: "22px",
+                           overflow: "hidden",
+                           background:
+                             "linear-gradient(180deg, #ffffff 0%, #fafbff 100%)",
+                           border: "1px solid rgba(100, 91, 255, 0.08)",
+                           boxShadow: "0 14px 36px rgba(50, 38, 120, 0.08)",
+                           padding: "14px",
+                           transition:
+                             "transform 0.2s ease, box-shadow 0.2s ease",
+                         }}
+                         onMouseEnter={(e) => {
+                           e.currentTarget.style.transform = "translateY(-2px)";
+                           e.currentTarget.style.boxShadow =
+                             "0 18px 44px rgba(50, 38, 120, 0.12)";
+                         }}
+                         onMouseLeave={(e) => {
+                           e.currentTarget.style.transform = "translateY(0)";
+                           e.currentTarget.style.boxShadow =
+                             "0 14px 36px rgba(50, 38, 120, 0.08)";
+                         }}
+                       >
+                         <div
+                           className="tg-listing-card-thumb tg-listing-2-card-thumb fix p-relative"
+                           style={{
+                             borderRadius: "18px",
+                             overflow: "hidden",
+                             marginBottom: "14px",
+                           }}
+                         >
                            <Link href="/tour-details-2">
                              <Image
                                className="tg-card-border w-100"
@@ -121,6 +152,10 @@ const FeatureArea = () => {
                            </div>
                          </div>
                          <div className="tg-listing-card-content p-relative">
+                           <ListingStatusBadges
+                             item={item as unknown as Record<string, unknown>}
+                             uniformCardSlot
+                           />
                            <h4 className="tg-listing-card-title mb-5">
                              <Link href="/tour-details-2">{item.title}</Link>
                            </h4>

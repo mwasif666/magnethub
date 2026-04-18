@@ -14,6 +14,7 @@ import Wishlist from "@/svg/home-one/Wishlist";
 import Loading from "@/components/loading/Loading";
 import Location from "@/svg/home-one/Location";
 import Pagination from "@/components/pagination/Pagination";
+import ListingStatusBadges from "@/components/listing/ListingStatusBadges";
 type ListingItem = {
   id: number;
   url: string;
@@ -29,6 +30,9 @@ type ListingItem = {
   price?: string | number;
   premium?: string | number;
   franchise?: string | number;
+  under_offer?: string | number;
+  multiple_locations?: string | number;
+  urgent_sale?: string | number;
   images?: string[];
   title_image: string;
 };
@@ -81,18 +85,6 @@ const truncateText = (value: string, limit: number) => {
   return `${value.slice(0, Math.max(limit - 3, 0)).trimEnd()}...`;
 };
 
-const getCompanyInitials = (value?: string) => {
-  if (!value?.trim()) {
-    return "MH";
-  }
-
-  return value
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join("");
-};
 
 type ListingCardProps = {
   item: ListingItem;
@@ -393,9 +385,7 @@ const ListingCard = ({
   const companyLogoUrl = item?.user_company_logo?.trim()
     ? item.user_company_logo
     : "";
-  const companyInitials = getCompanyInitials(companyName);
   const hasCompanyName = Boolean(companyName);
-  const verificationSource = item?.user_company_name?.trim() || "partner";
   const listingCode = `MGH-${new Date().getFullYear()}-${item.id}`;
 
   return (
@@ -630,6 +620,8 @@ const ListingCard = ({
           padding: "20px 8px 6px",
         }}
       >
+        <ListingStatusBadges item={item} uniformCardSlot />
+
         <div
           style={{
             display: "flex",

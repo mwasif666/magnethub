@@ -22,6 +22,10 @@ export interface Product {
    desc:string;
    guest:string;
    quantity: number;
+   /** When `"0"`, listing shows “Under Offer” (same convention as live listings API). */
+   under_offer?: string | number;
+   urgent_sale?: string | number;
+   multiple_locations?: string | number;
 }
 
 interface ProductState {

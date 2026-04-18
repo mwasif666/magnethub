@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import styles from "./ListingDetail.module.css";
+import ListingStatusBadges from "@/components/listing/ListingStatusBadges";
 import Loading from "../loading/Loading";
 import { useRouter } from "next/navigation";
 import { FaTag } from "react-icons/fa";
@@ -196,6 +197,15 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                             {listing?.category_name}
                           </p>
                         )}
+                        <div style={{marginTop:"12px"}}>
+                         <ListingStatusBadges
+                          item={
+                            listing as unknown as Record<string, unknown>
+                          }
+                          className={styles.listingStatusBadges}
+                        />
+                        </div>
+
                         {isFranchiseBooker && (
                           <div
                             style={{
