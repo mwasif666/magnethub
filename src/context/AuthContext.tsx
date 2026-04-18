@@ -29,16 +29,6 @@ interface AuthResponse {
   message?: string;
 }
 
-interface sessionResponse {
-  raising_id: string;
-  name: string;
-  email: string;
-  profile: null;
-  type: string;
-  plan_type: string | null;
-  plan_expiry: null;
-}
-
 interface LoginData {
   email: string;
   password: string;
@@ -70,6 +60,7 @@ interface AuthContextType {
   ) => Promise<AuthResponse>;
   logout: () => Promise<void>;
   role: string | null;
+  user: User | any | null;
 }
 
 interface AuthProviderProps {
@@ -86,13 +77,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedUser = localStorage.getItem("user_id");
       const savedToken = localStorage.getItem("token");
       const saveRole = localStorage.getItem("role");
+      const savedUserInfo = localStorage.getItem("user");
 
+      if (savedUserInfo) setUser(JSON.parse(savedUserInfo));
       if (savedUser) setUserId(JSON.parse(savedUser));
       if (savedToken) setToken(savedToken);
       if (saveRole) setRole(saveRole);
@@ -128,6 +122,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setToken(nextToken);
       setRole(nextRole);
       setIsAuthenticated(true);
+      setUser(user);
     }
   };
 
@@ -207,6 +202,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         verifiyOtp,
         logout,
         role,
+        user
       }}
     >
       {children}

@@ -34,19 +34,6 @@ const formatListingPrice = (price?: string | number) => {
   }).format(Number(price || 0));
 };
 
-const sortListingsNewestFirst = <
-  T extends { id?: number | string; project_id?: number | string },
->(
-  items: T[],
-) => {
-  return [...items].sort((a, b) => {
-    const aValue = Number(a.project_id ?? a.id ?? 0);
-    const bValue = Number(b.project_id ?? b.id ?? 0);
-
-    return bValue - aValue;
-  });
-};
-
 const truncateText = (value: string, limit: number) => {
   if (value.length <= limit) {
     return value;
@@ -128,6 +115,9 @@ const HomeStyleListingCard = ({
           overflow: "hidden",
           background: "#f6f6f6",
           borderRadius: "24px",
+          boxShadow: isFranchiseBooker
+            ? "0 14px 30px rgba(86, 12, 227, 0.18)"
+            : "none",
         }}
       >
         {isFranchiseBooker && (
@@ -175,7 +165,8 @@ const HomeStyleListingCard = ({
                   maxWidth: "180px",
                   padding: "6px 12px",
                   borderRadius: "999px",
-                  background: "rgba(15,23,42,0.96)",
+                  background: "rgb(86, 12, 227)",
+                  border: "1px solid rgba(86, 12, 227, 0.95)",
                   color: "#f9fafb",
                   fontSize: "11px",
                   fontWeight: 700,
@@ -343,6 +334,29 @@ const HomeStyleListingCard = ({
           >
             {listingCode}
           </p>
+          {item?.franchise === 1 ? (
+            <i
+              className="fa-sharp fa-solid fa-star"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Franchise Listing"
+              style={{
+                color: "rgba(86, 12, 227, 0.95)",
+                fontSize: "20px",
+              }}
+            ></i>
+          ) : item?.premium === 1 ? (
+            <i
+              className="fa-sharp fa-solid fa-crown"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Premium Listing"
+              style={{
+                color: "rgba(86, 12, 227, 0.95)",
+                fontSize: "20px",
+              }}
+            ></i>
+          ) : null}
         </div>
 
         <h4
@@ -532,7 +546,6 @@ const ListViewListingCard = ({
             {item.category_name}
           </span>
         </div>
-
         <div
           className="mb-20 d-flex align-items-center"
           style={{ color: "#666" }}
@@ -553,25 +566,6 @@ const ListViewListingCard = ({
               <span className="mr-5">$</span>
               {formatListingPrice(item.price)}
             </span>
-          </div>
-          <div>
-            {item?.franchise === "1" ? (
-              <i
-                className="fa-sharp fa-solid fa-star"
-                style={{
-                  color: "#ffb703",
-                  fontSize: "20px",
-                }}
-              ></i>
-            ) : item?.premium === "1" ? (
-              <i
-                className="fa-sharp fa-solid fa-crown"
-                style={{
-                  color: "#d7263d",
-                  fontSize: "20px",
-                }}
-              ></i>
-            ) : null}
           </div>
         </div>
       </div>
@@ -619,7 +613,7 @@ const FeatureArea = ({
 
   useEffect(() => {
     if (listing && listing.length > 0) {
-      setData(sortListingsNewestFirst(listing));
+      setData(listing);
       setLoading(false);
     } else {
       setData([]);

@@ -158,7 +158,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
   const galleryPrevRef = useRef<HTMLButtonElement>(null);
   const galleryNextRef = useRef<HTMLButtonElement>(null);
 
-  const isFranchiseBooker = String(listing?.user_type) === "4";
+  const isFranchiseBooker = String(listing?.user_type) === "broker";
 
   const getCompanyLogoUrl = (logo: string) => {
     if (!logo) return "";

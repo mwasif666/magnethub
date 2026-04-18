@@ -14,7 +14,7 @@ import { TbShoppingBagHeart } from "react-icons/tb";
 
 const HeaderOne = () => {
   const { sticky } = UseSticky();
-  const { logout, isAuthenticated, role } = useAuth();
+  const { logout, isAuthenticated, role, user } = useAuth();
   const router = useRouter();
 
   const [offCanvas, setOffCanvas] = useState(false);
@@ -132,15 +132,7 @@ const HeaderOne = () => {
                               <span>
                                 <UserIcon />
                               </span>
-                              {role === "buyer"
-                                ? "Buyer"
-                                : role === "seller"
-                                ? "Seller"
-                                : role === "capital_raiser"
-                                ? "Capital Raiser"
-                                : role === "broker"
-                                ? "Broker/Franchisers"
-                                : "User"}
+                              {user?.name || "User"}
                             </div>
 
                             {showLogout && (
