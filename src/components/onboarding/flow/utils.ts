@@ -464,7 +464,7 @@ export const getListingStatusLabels = (item: any) =>
     {
       key: "multiple_locations",
       label: "Multiple Locations",
-      active: String(item?.multiple_locations) === "0",
+      active: String(item?.multiple_locations) === "1",
       background:
         "linear-gradient(135deg, rgba(239, 246, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 100%)",
       border: "1px solid rgba(59, 130, 246, 0.28)",
@@ -473,7 +473,7 @@ export const getListingStatusLabels = (item: any) =>
     {
       key: "urgent_sale",
       label: "Urgent Sale",
-      active: String(item?.urgent_sale) === "0",
+      active: String(item?.urgent_sale) === "1",
       background:
         "linear-gradient(135deg, rgba(255, 237, 213, 0.98) 0%, rgba(254, 215, 170, 0.88) 100%)",
       border: "1px solid rgba(249, 115, 22, 0.32)",
