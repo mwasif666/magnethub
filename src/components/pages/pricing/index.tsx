@@ -9,7 +9,7 @@ const Pricing = () => {
     <>
       <HeaderOne />
       <main>
-        <BreadCrumb title="Pricing Plans" sub_title="Pricing Plan" />
+        <BreadCrumb title="Packages" sub_title="Pricing Plan" />
         <PricingArea />
         <Pricing2 />
       </main>

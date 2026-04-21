@@ -10,7 +10,7 @@ const PricingArea = () => {
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >
-                Magnate Hub Pricing Plans
+                Magnate Hub Packages
               </h2>
 
               <p

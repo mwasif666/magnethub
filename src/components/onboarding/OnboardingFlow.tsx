@@ -945,7 +945,7 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         },
         {
           key: "plan",
-          label: "PLAN",
+          label: "Package",
         },
         {
           key: "checkout",
