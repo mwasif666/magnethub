@@ -9,8 +9,8 @@ const ICON_BY_KEY: Record<string, string> = {
 };
 
 /** Keeps title/meta aligned when some cards have 0–3 badges (same reserved band). */
-const SLOT_MIN_HEIGHT_PX = 52;
-const SLOT_MARGIN_BOTTOM_PX = 12;
+const SLOT_MIN_HEIGHT_PX = 34;
+const SLOT_MARGIN_BOTTOM_PX = 10;
 
 type ListingStatusBadgesProps = {
   item: Record<string, unknown>;
@@ -59,14 +59,9 @@ export default function ListingStatusBadges({
         flexWrap: "wrap",
         alignItems: "center",
         alignContent: "center",
-        gap: "6px",
-        rowGap: "6px",
-        padding: "8px 10px",
+        gap: "7px",
+        rowGap: "7px",
         marginBottom: `${SLOT_MARGIN_BOTTOM_PX}px`,
-        borderRadius: "16px",
-        background:
-          "linear-gradient(180deg, rgba(99, 102, 241, 0.06) 0%, rgba(248, 250, 252, 0.9) 100%)",
-        border: "1px solid rgba(100, 91, 255, 0.1)",
         boxSizing: "border-box",
       }}
     >
@@ -81,20 +76,18 @@ export default function ListingStatusBadges({
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: "6px",
-              padding: "6px 10px 6px 8px",
+              gap: "5px",
+              padding: "4px 9px 4px 6px",
               borderRadius: "999px",
               background: status.background,
               border: status.border,
               color: status.color,
-              fontSize: "11px",
+              fontSize: "10px",
               fontWeight: 750,
               lineHeight: 1.05,
               letterSpacing: "0.02em",
               boxShadow:
-                "0 10px 28px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255,255,255,0.65)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+                "0 8px 20px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255,255,255,0.6)",
               maxWidth: "100%",
             }}
           >
@@ -104,13 +97,13 @@ export default function ListingStatusBadges({
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "22px",
-                height: "22px",
+                width: "18px",
+                height: "18px",
                 borderRadius: "999px",
                 background: `${status.color}22`,
                 color: status.color,
                 flexShrink: 0,
-                fontSize: "10px",
+                fontSize: "8px",
               }}
             >
               <i className={icon} />

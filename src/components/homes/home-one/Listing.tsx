@@ -85,7 +85,6 @@ const truncateText = (value: string, limit: number) => {
   return `${value.slice(0, Math.max(limit - 3, 0)).trimEnd()}...`;
 };
 
-
 type ListingCardProps = {
   item: ListingItem;
   isInWishlist: boolean;
@@ -348,6 +347,32 @@ const Listing = ({
             transform 0.18s ease;
         }
 
+        .home-premium-listing-category-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          min-width: 0;
+          max-width: 100%;
+          padding: 8px 14px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #f6f2ff 0%, #eef4ff 100%);
+          border: 1px solid rgba(102, 88, 255, 0.14);
+          color: #5442b8;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.02em;
+          line-height: 1;
+          text-transform: uppercase;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        }
+
+        .home-premium-listing-category-pill span:last-child {
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
         @media (hover: hover) and (pointer: fine) {
           .home-premium-listing-wishlist {
             opacity: 0;
@@ -387,6 +412,16 @@ const ListingCard = ({
     : "";
   const hasCompanyName = Boolean(companyName);
   const listingCode = `MGH-${new Date().getFullYear()}-${item.id}`;
+  const cardBorder = isFranchiseBooker
+    ? "2px solid rgba(86, 12, 227, 0.72)"
+    : "1px solid rgba(100, 91, 255, 0.08)";
+  const cardShadow = isFranchiseBooker
+    ? "0 20px 56px rgba(74, 24, 180, 0.22)"
+    : "0 18px 50px rgba(50, 38, 120, 0.10)";
+  const cardHoverShadow = isFranchiseBooker
+    ? "0 28px 68px rgba(74, 24, 180, 0.30)"
+    : "0 24px 60px rgba(50, 38, 120, 0.14)";
+  const categoryLabel = truncateText(item.category_name || "Listing", 24);
 
   return (
     <div
@@ -400,19 +435,21 @@ const ListingCard = ({
         borderRadius: "28px",
         overflow: "hidden",
         position: "relative",
-        background: "linear-gradient(180deg, #ffffff 0%, #fcfbff 100%)",
-        border: "1px solid rgba(100, 91, 255, 0.08)",
-        boxShadow: "0 18px 50px rgba(50, 38, 120, 0.10)",
-        padding: "16px",
+        background: isFranchiseBooker
+          ? "linear-gradient(180deg, #ffffff 0%, #f7f2ff 100%)"
+          : "linear-gradient(180deg, #ffffff 0%, #fcfbff 100%)",
+        border: cardBorder,
+        boxShadow: cardShadow,
+        padding: "14px",
         transition: "transform .18s ease, box-shadow .18s ease",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-3px)";
-        e.currentTarget.style.boxShadow = "0 24px 60px rgba(50, 38, 120, 0.14)";
+        e.currentTarget.style.boxShadow = cardHoverShadow;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0px)";
-        e.currentTarget.style.boxShadow = "0 18px 50px rgba(50, 38, 120, 0.10)";
+        e.currentTarget.style.boxShadow = cardShadow;
       }}
       onClick={() => redirectUser(item)}
     >
@@ -527,7 +564,8 @@ const ListingCard = ({
             zIndex: 7,
           }}
         >
-          <a
+          <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               handleAddToWishlist(item);
@@ -556,34 +594,8 @@ const ListingCard = ({
                 flex: "0 0 auto",
               }}
             />
-          </a>
+          </button>
         </div>
-
-        <span
-          title={item.category_name}
-          style={{
-            position: "absolute",
-            left: "16px",
-            bottom: "16px",
-            zIndex: 6,
-            maxWidth: "72%",
-            padding: "6px 12px",
-            borderRadius: "999px",
-            background: "rgba(255,255,255,0.94)",
-            border: "1px solid rgba(90,69,181,0.08)",
-            color: "#5a45b5",
-            fontSize: "10.5px",
-            fontWeight: 700,
-            lineHeight: 1.15,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            backdropFilter: "blur(8px)",
-          }}
-        >
-          {item.category_name}
-        </span>
-
         {isFranchiseBooker && (
           <span
             style={{
@@ -617,10 +629,12 @@ const ListingCard = ({
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          padding: "20px 8px 6px",
+          padding: "16px 10px 8px",
         }}
       >
-        <ListingStatusBadges item={item} uniformCardSlot />
+        <div style={{ marginBottom: "10px" }}>
+          <ListingStatusBadges item={item} uniformCardSlot />
+        </div>
 
         <div
           style={{
@@ -630,7 +644,7 @@ const ListingCard = ({
             gap: "8px",
             marginBottom: "10px",
             flexWrap: "wrap",
-            minHeight: "30px",
+            minHeight: "24px",
           }}
         >
           <p
@@ -644,35 +658,30 @@ const ListingCard = ({
           >
             {listingCode}
           </p>
-          {item?.franchise === 1 ? (
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              color: item?.premium === 1 ? "#f59e0b" : "#7c3aed",
+              fontSize: "12px",
+              fontWeight: 700,
+              lineHeight: 1,
+            }}
+          >
             <i
-              className="fa-sharp fa-solid fa-star"
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="Franchise Listing"
-              style={{
-                color: "rgba(86, 12, 227, 0.95)",
-                fontSize: "20px",
-              }}
+              className={`fa-sharp fa-solid ${
+                item?.premium === 1 ? "fa-crown" : "fa-star"
+              }`}
             ></i>
-          ) : item?.premium === 1 ? (
-            <i
-              className="fa-sharp fa-solid fa-crown"
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="Premium Listing"
-              style={{
-                color: "rgba(86, 12, 227, 0.95)",
-                fontSize: "20px",
-              }}
-            ></i>
-          ) : null}
+            {item?.premium === 1 ? "Premium" : "Featured"}
+          </span>
         </div>
 
         <h4
           className="tg-listing-card-title"
           style={{
-            margin: "0 0 16px",
+            margin: "0 0 14px",
             minWidth: 0,
             minHeight: "42px",
           }}
@@ -697,11 +706,95 @@ const ListingCard = ({
           </Link>
         </h4>
 
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "10px",
+            marginBottom: item.location_name ? "14px" : "18px",
+            flexWrap: "wrap",
+          }}
+        >
+          <span
+            className="home-premium-listing-category-pill"
+            title={item.category_name}
+          >
+            <span
+              style={{
+                width: "8px",
+                height: "8px",
+                borderRadius: "999px",
+                background: "linear-gradient(135deg, #6d4cff 0%, #3d73ff 100%)",
+                flex: "0 0 auto",
+              }}
+            ></span>
+            <span>{categoryLabel}</span>
+          </span>
+
+          {isFranchiseBooker && hasCompanyName && (
+            <span
+              style={{
+                color: "#7b8397",
+                fontSize: "11px",
+                fontWeight: 700,
+                lineHeight: 1.2,
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+              }}
+              title={companyName}
+            >
+              by {truncateText(companyName, 18)}
+            </span>
+          )}
+        </div>
+
+        {item.location_name && (
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: "8px",
+              minWidth: 0,
+              flex: "0 1 58%",
+              marginBottom: "18px",
+            }}
+          >
+            <span
+              style={{
+                color: "#7d8497",
+                display: "inline-flex",
+                alignItems: "center",
+                flex: "0 0 auto",
+              }}
+            >
+              <Location />
+            </span>
+            <span
+              style={{
+                minWidth: 0,
+                color: "#7d8497",
+                fontSize: "12px",
+                fontWeight: 500,
+                lineHeight: 1.3,
+                textAlign: "left",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={item.location_name}
+            >
+              {truncateText(item.location_name, 28)}
+            </span>
+          </div>
+        )}
+
         <div>
           <div
             className="mt-10 pt-20 border-top"
             style={{
-              paddingTop: 18,
+              paddingTop: 16,
               borderTop: "1px solid rgba(201,204,220,0.7)",
             }}
           >
@@ -716,55 +809,37 @@ const ListingCard = ({
             >
               <span
                 style={{
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  color: "#334155",
-                  letterSpacing: "-0.05em",
-                  lineHeight: 0.95,
+                  display: "inline-flex",
+                  alignItems: "baseline",
+                  gap: "3px",
+                  padding: "12px 22px 11px 14px",
+                  background: "linear-gradient(135deg, #5f19ff 0%, #7c3aed 100%)",
+                  color: "#ffffff",
+                  fontSize: "23px",
+                  fontWeight: 800,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 0.9,
+                  borderRadius: "12px 24px 12px 12px",
+                  clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)",
+                  boxShadow: "0 14px 30px rgba(96, 25, 255, 0.32)",
                 }}
               >
                 ${formatListingPrice(item.price)}
               </span>
-
-              {item.location_name && (
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    gap: "8px",
-                    minWidth: 0,
-                    flex: "0 1 58%",
-                  }}
-                >
-                  <span
-                    style={{
-                      color: "#7d8497",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      flex: "0 0 auto",
-                    }}
-                  >
-                    <Location />
-                  </span>
-                  <span
-                    style={{
-                      minWidth: 0,
-                      color: "#7d8497",
-                      fontSize: "12px",
-                      fontWeight: 500,
-                      lineHeight: 1.3,
-                      textAlign: "right",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                    title={item.location_name}
-                  >
-                    {truncateText(item.location_name, 28)}
-                  </span>
-                </div>
-              )}
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  color: "#7d8497",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  lineHeight: 1,
+                }}
+              >
+                <i className="fa-regular fa-circle-check"></i>
+                View Details
+              </span>
             </div>
           </div>
         </div>
