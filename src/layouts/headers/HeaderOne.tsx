@@ -44,6 +44,15 @@ const HeaderOne = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+
+    const words = name.trim().split(" ");
+    const first = words[0]?.[0] || "";
+    const last = words[1]?.[0] || "";
+
+    return (first + last).toUpperCase();
+  };
   return (
     <>
       <style>
@@ -132,7 +141,7 @@ const HeaderOne = () => {
                               <span>
                                 <UserIcon />
                               </span>
-                              {user?.name || "User"}
+                              {getInitials(user?.name)}
                             </div>
 
                             {showLogout && (

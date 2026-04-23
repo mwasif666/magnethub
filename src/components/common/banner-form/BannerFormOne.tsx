@@ -35,7 +35,9 @@ const BannerFormOne = ({
   const shouldNotifyRef = useRef(false);
   const shouldScrollRef = useRef(false);
   type DropDown = { label: string; value: string }[];
-  const [activeTab, setActiveTab] = useState<"businesses" | "agencies">("businesses");
+  const [activeTab, setActiveTab] = useState<"businesses" | "agencies">(
+    "businesses",
+  );
   const [formData, setFormData] = useState({
     postcode: "",
     businessId: "",
@@ -63,7 +65,7 @@ const BannerFormOne = ({
   const [agencyRegionLoading, setAgencyRegionLoading] = useState(false);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
 
@@ -87,7 +89,6 @@ const BannerFormOne = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-
     if (onPageChange) onPageChange(1);
 
     // const isMissingRequired =
@@ -107,21 +108,34 @@ const BannerFormOne = ({
       const queryParams = new URLSearchParams();
 
       if (activeTab === "businesses") {
-        if (formData.postcode) queryParams.append("postcode", formData.postcode);
-        if (formData.businessId) queryParams.append("businessId", formData.businessId);
-        if (formData.category) queryParams.append("category", formData.category);
+        if (formData.postcode)
+          queryParams.append("postcode", formData.postcode);
+        if (formData.businessId)
+          queryParams.append("businessId", formData.businessId);
+        if (formData.category)
+          queryParams.append("category", formData.category);
         if (formData.state) queryParams.append("state", formData.state);
         if (formData.region) queryParams.append("region", formData.region);
-        if (formData.minPrice) queryParams.append("minPrice", formData.minPrice);
-        if (formData.maxPrice) queryParams.append("maxPrice", formData.maxPrice);
+        if (formData.minPrice)
+          queryParams.append("minPrice", formData.minPrice);
+        if (formData.maxPrice)
+          queryParams.append("maxPrice", formData.maxPrice);
         if (formData.franchise) queryParams.append("franchise", "1");
         if (formData.premium) queryParams.append("premium", "1");
         if (formData.all) queryParams.append("all", "true");
       } else if (activeTab === "agencies") {
-        if (formData.sPostcode) queryParams.append("postcode", formData.sPostcode);
+        if (formData.sPostcode)
+          queryParams.append("postcode", formData.sPostcode);
         if (formData.agency) queryParams.append("agency", formData.agency);
+        if (formData.category)
+          queryParams.append("category", formData.category);
         if (formData.state2) queryParams.append("state", formData.state2);
         if (formData.region2) queryParams.append("region", formData.region2);
+        if (formData.minPrice)
+          queryParams.append("minPrice", formData.minPrice);
+        if (formData.maxPrice)
+          queryParams.append("maxPrice", formData.maxPrice);
+        if (formData.all) queryParams.append("all", "true");
       }
 
       queryParams.append("tab", activeTab);
@@ -154,7 +168,7 @@ const BannerFormOne = ({
         response?.data?.map((r: any) => ({
           label: r.name,
           value: r.id,
-        })) || []
+        })) || [],
       );
     } finally {
       setBusinessRegionLoading(false);
@@ -173,7 +187,7 @@ const BannerFormOne = ({
         response?.data?.map((r: any) => ({
           label: r.name,
           value: r.id,
-        })) || []
+        })) || [],
       );
     } finally {
       setAgencyRegionLoading(false);
@@ -188,14 +202,14 @@ const BannerFormOne = ({
           catRes?.data?.map((c: any) => ({
             label: c.name,
             value: c.id,
-          })) || []
+          })) || [],
         );
 
         setLocations(
           locRes?.data?.map((l: any) => ({
             label: l.name,
             value: l.id,
-          })) || []
+          })) || [],
         );
       })
       .finally(() => setLoading(false));
@@ -205,7 +219,7 @@ const BannerFormOne = ({
     filters: any,
     page: number = 1,
     perPage: number = 12,
-    tabOverride?: "businesses" | "agencies"
+    tabOverride?: "businesses" | "agencies",
   ) => {
     const tabToUse = tabOverride ?? activeTab;
     let params: any = {};
@@ -232,9 +246,13 @@ const BannerFormOne = ({
     if (tabToUse === "agencies") {
       if (filters.sPostcode) params.postcode = filters.sPostcode;
       if (filters.agency) params.agency = filters.agency;
+      if (filters.category) params.category = filters.category;
       if (filters.state2) params.state = filters.state2;
       if (filters.region2) params.region = filters.region2;
-      params.type = 3
+      if (filters.minPrice) params.minPrice = filters.minPrice;
+      if (filters.maxPrice) params.maxPrice = filters.maxPrice;
+      if (filters.all) params.all = true;
+      params.type = 3;
       params.per_page = perPage;
       params.page = page;
       return `projects?${Object.keys(params)
@@ -317,7 +335,7 @@ const BannerFormOne = ({
   const getListingData = (
     page: number = 1,
     filters?: typeof formData,
-    tabOverride?: "businesses" | "agencies"
+    tabOverride?: "businesses" | "agencies",
   ) => {
     const initialUrl = constructUrl(filters || formData, page, 12, tabOverride);
     if (initialUrl) {
@@ -349,7 +367,9 @@ const BannerFormOne = ({
         if (results.length > 0) {
           // toast.success("Results loaded successfully.", { position: "top-center" });
         } else {
-          toast.error("No results found for your search.", { position: "top-center" });
+          toast.error("No results found for your search.", {
+            position: "top-center",
+          });
         }
         shouldNotifyRef.current = false;
       }
@@ -363,7 +383,9 @@ const BannerFormOne = ({
     } catch (error) {
       console.error(error);
       if (shouldNotifyRef.current) {
-        toast.error("Search failed. Please try again.", { position: "top-center" });
+        toast.error("Search failed. Please try again.", {
+          position: "top-center",
+        });
         shouldNotifyRef.current = false;
       }
     }
@@ -381,9 +403,12 @@ const BannerFormOne = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-
   useEffect(() => {
-    if (pathname === "/listings" && searchParams && Array.from(searchParams.keys()).length > 0) {
+    if (
+      pathname === "/listings" &&
+      searchParams &&
+      Array.from(searchParams.keys()).length > 0
+    ) {
       return;
     }
     getListingData(1);
@@ -447,9 +472,12 @@ const BannerFormOne = ({
     if (tab === "agencies") {
       newFormData.sPostcode = searchParams.get("postcode") || "";
       newFormData.agency = searchParams.get("agency") || "";
+      newFormData.category = searchParams.get("category") || "";
       newFormData.state2 = searchParams.get("state") || "";
       newFormData.region2 = searchParams.get("region") || "";
-
+      newFormData.minPrice = searchParams.get("minPrice") || "";
+      newFormData.maxPrice = searchParams.get("maxPrice") || "";
+      newFormData.all = searchParams.get("all") === "true";
       if (newFormData.state2) {
         getAgencyRegionsById(newFormData.state2);
       }
@@ -480,8 +508,12 @@ const BannerFormOne = ({
       } else if (tab === "agencies") {
         if (newFormData.sPostcode) params.postcode = newFormData.sPostcode;
         if (newFormData.agency) params.agency = newFormData.agency;
+        if (newFormData.category) params.category = newFormData.category;
         if (newFormData.state2) params.state = newFormData.state2;
         if (newFormData.region2) params.region = newFormData.region2;
+        if (newFormData.minPrice) params.minPrice = newFormData.minPrice;
+        if (newFormData.maxPrice) params.maxPrice = newFormData.maxPrice;
+        if (newFormData.all) params.all = true;
         params.per_page = 12;
         params.page = 1;
         params.type = 3;
@@ -492,7 +524,6 @@ const BannerFormOne = ({
       }
     }, 50);
   }, [pathname, searchParams]);
-
 
   const isListing = pathname.includes("listing");
 
@@ -515,8 +546,9 @@ const BannerFormOne = ({
                 <ul className="nav nav-tabs nav-justified mb-4" role="tablist">
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${activeTab === "businesses" ? "active" : ""
-                        } ${isListing ? "tab-listing-color" : ""}`}
+                      className={`nav-link ${
+                        activeTab === "businesses" ? "active" : ""
+                      } ${isListing ? "tab-listing-color" : ""}`}
                       onClick={() => {
                         setActiveTab("businesses");
                         getListingData(1, undefined, "businesses");
@@ -529,8 +561,9 @@ const BannerFormOne = ({
                   </li>
                   <li className="nav-item" role="presentation">
                     <button
-                      className={`nav-link ${activeTab === "agencies" ? "active" : ""
-                        } ${isListing ? "tab-listing-color" : ""}`}
+                      className={`nav-link ${
+                        activeTab === "agencies" ? "active" : ""
+                      } ${isListing ? "tab-listing-color" : ""}`}
                       onClick={() => {
                         setActiveTab("agencies");
                         getListingData(1, undefined, "agencies");
@@ -640,7 +673,6 @@ const BannerFormOne = ({
                               </>
                             )}
                           </select>
-
                         </div>
                         <div className="col-md-3">
                           <select
@@ -687,8 +719,9 @@ const BannerFormOne = ({
                               id="franchiseCheck"
                             />
                             <label
-                              className={`form-check-label ${isListing ? "tab-listing-color" : ""
-                                }`}
+                              className={`form-check-label ${
+                                isListing ? "tab-listing-color" : ""
+                              }`}
                               htmlFor="franchiseCheck"
                             >
                               Franchise
@@ -704,8 +737,9 @@ const BannerFormOne = ({
                               id="premiumCheck"
                             />
                             <label
-                              className={`form-check-label ${isListing ? "tab-listing-color" : ""
-                                }`}
+                              className={`form-check-label ${
+                                isListing ? "tab-listing-color" : ""
+                              }`}
                               htmlFor="premiumCheck"
                             >
                               Premium Listing
@@ -721,8 +755,9 @@ const BannerFormOne = ({
                               id="allCheck"
                             />
                             <label
-                              className={`form-check-label ${isListing ? "tab-listing-color" : ""
-                                }`}
+                              className={`form-check-label ${
+                                isListing ? "tab-listing-color" : ""
+                              }`}
                               htmlFor="allCheck"
                             >
                               All
@@ -781,18 +816,34 @@ const BannerFormOne = ({
                           </div>
                         </div>
                       </div>
-                      <div className="row g-3">
-                        {/* <div className="col-md-4">
+                      <div className="row g-3 mb-4">
+                        <div className="col-md-6">
                           <input
                             type="text"
-                            className="form-control"
+                            className="form-control banner-search-control"
                             name="agency"
                             value={formData.agency}
                             onChange={handleInputChange}
-                            placeholder="Find Investment"
+                            placeholder="Keywords or Investment ID"
                           />
-                        </div> */}
-                        <div className="col-md-4">
+                        </div>
+                        <div className="col-md-6">
+                          <select
+                            className="form-select banner-search-control"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleInputChange}
+                            required={false}
+                          >
+                            <option value="">Select category</option>
+                            {categories.map((category, index) => (
+                              <option key={index} value={category.value}>
+                                {category.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="col-md-3">
                           <select
                             className="form-select banner-search-control"
                             name="state2"
@@ -808,7 +859,7 @@ const BannerFormOne = ({
                             ))}
                           </select>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                           <select
                             className="form-select banner-search-control"
                             name="region2"
@@ -831,7 +882,56 @@ const BannerFormOne = ({
                               </>
                             )}
                           </select>
-
+                        </div>
+                        <div className="col-md-3">
+                          <select
+                            className="form-select banner-search-control"
+                            name="minPrice"
+                            value={formData.minPrice}
+                            onChange={handleInputChange}
+                          >
+                            <option value="">Min price</option>
+                            {minPriceRanges.map((price, index) => (
+                              <option key={index} value={price.value}>
+                                {price.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="col-md-3">
+                          <select
+                            className="form-select banner-search-control"
+                            name="maxPrice"
+                            value={formData.maxPrice}
+                            onChange={handleInputChange}
+                          >
+                            <option value="">Max price</option>
+                            {maxPriceRanges.map((price, index) => (
+                              <option key={index} value={price.value}>
+                                {price.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="row mb-4">
+                        <div className="col-12">
+                          <div className="form-check form-check-inline">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              name="all"
+                              checked={formData.all}
+                              onChange={handleInputChange}
+                              id="allCheckAgency"
+                            />
+                            <label
+                              className={`form-check-label ${isListing ? "tab-listing-color" : ""}`}
+                              htmlFor="allCheckAgency"
+                            >
+                              All
+                            </label>
+                          </div>
                         </div>
                       </div>
                       <div className="row justify-content-end mt-4">
@@ -875,7 +975,7 @@ const BannerFormOne = ({
         .form-check label {
           color: white;
         }
-          
+
         .form-check-input:checked {
           background-color: #560ce3;
         }

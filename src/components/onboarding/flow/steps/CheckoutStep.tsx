@@ -92,14 +92,60 @@ const CheckoutStep = ({
           <h3 className={styles.checkoutSectionTitle}>Billing information</h3>
           <div className={styles.formGrid}>
             <div className={styles.field}>
-              <label className={styles.label}>Full name</label>
+              <label className={styles.label}>First name</label>
               <input
                 className={`${styles.input} ${styles.checkoutInput}`}
-                value={paymentState.name}
-                onChange={(event) => onUpdateField("name", event.target.value)}
-                placeholder="John Doe"
+                value={paymentState.firstName}
+                onChange={(event) =>
+                  onUpdateField("firstName", event.target.value)
+                }
+                placeholder="John"
               />
-              <p className={styles.error}>{fieldErrors.name}</p>
+              <p className={styles.error}>{fieldErrors.firstName}</p>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Last name</label>
+              <input
+                className={`${styles.input} ${styles.checkoutInput}`}
+                value={paymentState.lastName}
+                onChange={(event) =>
+                  onUpdateField("lastName", event.target.value)
+                }
+                placeholder="Doe"
+              />
+              <p className={styles.error}>{fieldErrors.lastName}</p>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Business name</label>
+              <input
+                className={`${styles.input} ${styles.checkoutInput}`}
+                value={paymentState.businessName}
+                onChange={(event) =>
+                  onUpdateField("businessName", event.target.value)
+                }
+                placeholder="Your business name"
+              />
+              <p className={styles.error}>{fieldErrors.businessName}</p>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Australian Business Number</label>
+              <input
+                className={`${styles.input} ${styles.checkoutInput}`}
+                value={paymentState.australianBusinessNumber}
+                onChange={(event) =>
+                  onUpdateField(
+                    "australianBusinessNumber",
+                    event.target.value,
+                  )
+                }
+                placeholder="11 digit ABN"
+              />
+              <p className={styles.error}>
+                {fieldErrors.australianBusinessNumber}
+              </p>
             </div>
 
             <div className={styles.field}>
@@ -114,10 +160,11 @@ const CheckoutStep = ({
               <p className={styles.error}>{fieldErrors.email}</p>
             </div>
 
-            <div className={`${styles.field} ${styles.fieldFull}`}>
+            <div className={styles.field}>
               <label className={styles.label}>Phone number</label>
               <input
                 className={`${styles.input} ${styles.checkoutInput}`}
+                type="tel"
                 value={paymentState.phone}
                 onChange={(event) => onUpdateField("phone", event.target.value)}
                 placeholder="+61 400 000 000"
@@ -126,15 +173,16 @@ const CheckoutStep = ({
             </div>
 
             <div className={`${styles.field} ${styles.fieldFull}`}>
-              <label className={styles.label}>Message</label>
+              <label className={styles.label}>Billing address</label>
               <textarea
                 className={`${styles.textarea} ${styles.checkoutTextarea}`}
-                value={paymentState.message}
+                value={paymentState.billingAddress}
                 onChange={(event) =>
-                  onUpdateField("message", event.target.value)
+                  onUpdateField("billingAddress", event.target.value)
                 }
-                placeholder="Any additional details you want the team to know..."
+                placeholder="Street address, suburb, state, postcode"
               />
+              <p className={styles.error}>{fieldErrors.billingAddress}</p>
             </div>
           </div>
         </div>

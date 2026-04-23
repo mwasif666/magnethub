@@ -38,9 +38,14 @@ export interface SignupState {
 }
 
 export interface PaymentState {
+  firstName: string;
+  lastName: string;
+  businessName: string;
+  australianBusinessNumber: string;
   name: string;
   email: string;
   phone: string;
+  billingAddress: string;
   message: string;
   cardName: string;
   cardNumber: string;

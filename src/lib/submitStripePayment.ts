@@ -1,12 +1,18 @@
 "use client";
 
+import { apiRequest } from "@/api/axiosInstance";
+
 interface StripePaymentPayload {
-  stripeToken: string;
-  planId: number | string;
-  email?: string;
-  name?: string;
-  phone?: string;
-  message?: string;
+  user_id: number;
+  plan_id: number | string;
+  stripe_token: string;
+  billing_first_name: string;
+  billing_last_name: string;
+  billing_business_name?: string;
+  billing_abn?: string;
+  billing_email: string;
+  billing_phone?: string;
+  billing_address: string;
 }
 
 interface StripePaymentResponse {
@@ -19,38 +25,35 @@ interface StripePaymentResponse {
 }
 
 export const submitStripePayment = async ({
-  stripeToken,
-  planId,
-  email,
-  name,
-  phone,
-  message,
+  user_id,
+  plan_id,
+  stripe_token,
+  billing_first_name,
+  billing_last_name,
+  billing_business_name,
+  billing_abn,
+  billing_email,
+  billing_phone,
+  billing_address,
 }: StripePaymentPayload): Promise<StripePaymentResponse> => {
-  const formData = new FormData();
-  formData.append("stripeToken", stripeToken);
-  formData.append("plan_id", String(planId));
-
-  if (email) {
-    formData.append("email", email);
-  }
-  if (name) {
-    formData.append("name", name);
-  }
-  if (phone) {
-    formData.append("phone", phone);
-  }
-  if (message) {
-    formData.append("message", message);
-  }
-
-  const response = await fetch("/api/stripe", {
+  const payload = await apiRequest({
+    url: "plans/subscribe",
     method: "POST",
-    body: formData,
+    data: {
+      user_id,
+      plan_id,
+      stripe_token,
+      billing_first_name,
+      billing_last_name,
+      billing_business_name: billing_business_name || "",
+      billing_abn: billing_abn || "",
+      billing_email,
+      billing_phone: billing_phone || "",
+      billing_address,
+    },
   });
 
-  const payload = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
+  if ((payload as any)?.error) {
     throw new Error(payload?.message || "Stripe payment failed.");
   }
 

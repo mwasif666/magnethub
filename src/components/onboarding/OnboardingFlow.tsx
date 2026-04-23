@@ -236,13 +236,17 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
   }, [selectedRoleId]);
 
   useEffect(() => {
-    const fullName = `${signupState.firstName} ${signupState.lastName}`.trim();
-
     setPaymentState((current) => ({
       ...current,
-      name: current.name || fullName,
+      firstName: current.firstName || signupState.firstName,
+      lastName: current.lastName || signupState.lastName,
+      name:
+        current.name ||
+        `${signupState.firstName} ${signupState.lastName}`.trim(),
       email: current.email || signupState.email,
-      cardName: current.cardName || fullName,
+      cardName:
+        current.cardName ||
+        `${signupState.firstName} ${signupState.lastName}`.trim(),
     }));
   }, [signupState.email, signupState.firstName, signupState.lastName]);
 
@@ -647,10 +651,22 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
         return;
       }
 
-      const payload: Record<string, string | number> = {
+      const verificationToken = sessionStorage.getItem(
+        "mh-signup-verification-token",
+      );
+      const payload: Record<string, string | number | null> = {
         lead_id: Number(leadId),
         lead_code: leadCode,
         plan_id: selectedPlan.id,
+        stripe_token: null,
+        token: verificationToken || null,
+        billing_first_name: paymentState.firstName.trim(),
+        billing_last_name: paymentState.lastName.trim(),
+        billing_business_name: paymentState.businessName.trim(),
+        billing_abn: paymentState.australianBusinessNumber.trim(),
+        billing_email: paymentState.email.trim(),
+        billing_phone: paymentState.phone.trim(),
+        billing_address: paymentState.billingAddress.trim(),
       };
 
       if (selectedPlan.price > 0) {
@@ -666,7 +682,9 @@ const OnboardingFlow = ({ defaultPlanSlug }: OnboardingFlowProps) => {
               cvc: paymentState.cvc,
               exp_month: paymentState.expMonth,
               exp_year: getStripeExpiryYear(paymentState.expYear),
-              name: paymentState.cardName.trim(),
+              name:
+                paymentState.cardName.trim() ||
+                `${paymentState.firstName} ${paymentState.lastName}`.trim(),
             },
             (_status: number, response: any) => {
               if (response?.error) {

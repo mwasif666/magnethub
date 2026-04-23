@@ -9,6 +9,7 @@ import pricing_data from "@/data/PricingData";
 import Loading from "../loading/Loading";
 import { submitStripePayment } from "@/lib/submitStripePayment";
 import { STRIPE_TEST_PUBLISHABLE_KEY } from "../onboarding/flow/utils";
+import { useAuth } from "@/context/AuthContext";
 
 interface BuyNowProps {
   slug: string;
@@ -24,9 +25,13 @@ interface PricingItem {
 }
 
 interface FormData {
-  name: string;
+  firstName: string;
+  lastName: string;
+  businessName: string;
+  australianBusinessNumber: string;
   email: string;
   phone: string;
+  billingAddress: string;
   message: string;
   cardName: string;
   cardNumber: string;
@@ -37,10 +42,14 @@ interface FormData {
 }
 
 const schema = yup.object({
-  name: yup.string().required("Name is required"),
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  businessName: yup.string().default(""),
+  australianBusinessNumber: yup.string().default(""),
   email: yup.string().email("Invalid email").required("Email is required"),
-  phone: yup.string().required("Phone is required"),
-  message: yup.string().required("Message is required"),
+  phone: yup.string().default(""),
+  billingAddress: yup.string().required("Billing address is required"),
+  message: yup.string().default(""),
   cardName: yup.string().required("Name on card is required"),
   cardNumber: yup
     .string()
@@ -68,6 +77,7 @@ declare global {
 }
 
 const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
+  const {user} = useAuth();
   const [selectedSlug, setSelectedSlug] = useState(slug);
   const [item, setItem] = useState<PricingItem | null>(null);
   const [showFullText, setShowFullText] = useState(false);
@@ -102,12 +112,10 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
     }, 500);
   }, []);
 
-
-
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
-       const stripeResponse = await new Promise((resolve, reject) => {
+      const stripeResponse = await new Promise((resolve, reject) => {
         window.Stripe.createToken(
           {
             number: data.cardNumber,
@@ -126,20 +134,24 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
       const token = (stripeResponse as any).id;
 
       const response = await submitStripePayment({
-        stripeToken: token,
-        planId: item && item.id,
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        message: data.message,
+        user_id: user?.id,
+        plan_id: item?.id,
+        stripe_token: token,
+        billing_first_name: data.firstName,
+        billing_last_name: data.lastName,
+        billing_business_name: data.businessName,
+        billing_abn: data.australianBusinessNumber,
+        billing_email: data.email,
+        billing_phone: data.phone,
+        billing_address: data.billingAddress,
       });
 
-       window.open(
-          `https://dash.magnatehub.au${response.redirect || "/dashboard/professionals"}`,
-          "_blank"
-        );
+      window.open(
+        `https://dash.magnatehub.au${response.redirect || "/dashboard/professionals"}`,
+        "_blank",
+      );
       toast.success("Plan Purchase Successfully!");
-      reset({plan: selectedSlug});
+      reset({ plan: selectedSlug });
     } catch (error: any) {
       toast.error(error?.message || "Error submitting form");
     } finally {
@@ -207,17 +219,17 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                   )}
                 </div>
 
-                {/* CONTACT DETAILS */}
+                {/* BILLING DETAILS */}
                 <div className={styles.formSection}>
                   <div className={styles.sectionHeader}>
-                    <h4 className={styles.sectionTitle}>Contact Details</h4>
+                    <h4 className={styles.sectionTitle}>Billing Details</h4>
                     <div className={styles.sectionDivider}></div>
                   </div>
 
                   <div className="row g-3">
                     <div className="col-md-6">
                       <div className={styles.inputGroup}>
-                        <label className={styles.inputLabel}>Full Name</label>
+                        <label className={styles.inputLabel}>First Name *</label>
                         <div className={styles.inputWrapper}>
                           <svg
                             className={styles.inputIcon}
@@ -233,20 +245,95 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           </svg>
                           <input
                             className={styles.input}
-                            {...register("name")}
-                            placeholder="John Doe"
+                            {...register("firstName")}
+                            placeholder="John"
                           />
                         </div>
-                        {errors.name && (
-                          <p className={styles.error}>{errors.name.message}</p>
+                        {errors.firstName && (
+                          <p className={styles.error}>{errors.firstName.message}</p>
                         )}
                       </div>
                     </div>
 
                     <div className="col-md-6">
                       <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Last Name *</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                          </svg>
+                          <input
+                            className={styles.input}
+                            {...register("lastName")}
+                            placeholder="Doe"
+                          />
+                        </div>
+                        {errors.lastName && (
+                          <p className={styles.error}>{errors.lastName.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Business Name</label>
+                        <div className={styles.inputWrapper}>
+                          <svg
+                            className={styles.inputIcon}
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M3 21h18"></path>
+                            <path d="M5 21V7l8-4v18"></path>
+                            <path d="M19 21V11l-6-4"></path>
+                            <path d="M9 9v.01"></path>
+                            <path d="M9 12v.01"></path>
+                            <path d="M9 15v.01"></path>
+                            <path d="M9 18v.01"></path>
+                          </svg>
+                          <input
+                            className={styles.input}
+                            style={{ paddingLeft: "42px" }}
+                            {...register("businessName")}
+                            placeholder="Your business name"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className={styles.inputGroup}>
                         <label className={styles.inputLabel}>
-                          Email Address
+                          Australian Business Number
+                        </label>
+                        <div className={styles.inputWrapper}>
+                          <input
+                            className={styles.input}
+                            style={{ paddingLeft: "16px" }}
+                            {...register("australianBusinessNumber")}
+                            placeholder="11 digit ABN"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>
+                          Email Address *
                         </label>
                         <div className={styles.inputWrapper}>
                           <svg
@@ -264,7 +351,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           <input
                             type="email"
                             className={styles.input}
-                            style={{paddingLeft:'42px'}}
+                            style={{ paddingLeft: "42px" }}
                             {...register("email")}
                             placeholder="john@example.com"
                           />
@@ -275,11 +362,9 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                       </div>
                     </div>
 
-                    <div className="col-12">
+                    <div className="col-md-6">
                       <div className={styles.inputGroup}>
-                        <label className={styles.inputLabel}>
-                          Phone Number
-                        </label>
+                        <label className={styles.inputLabel}>Phone Number</label>
                         <div className={styles.inputWrapper}>
                           <svg
                             className={styles.inputIcon}
@@ -295,13 +380,29 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                           <input
                             type="tel"
                             className={styles.input}
-                            style={{paddingLeft:'42px'}}
+                            style={{ paddingLeft: "42px" }}
                             {...register("phone")}
                             placeholder="+61 400 000 000"
                           />
                         </div>
-                        {errors.phone && (
-                          <p className={styles.error}>{errors.phone.message}</p>
+                      </div>
+                    </div>
+
+                    <div className="col-12">
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>
+                          Billing Address *
+                        </label>
+                        <textarea
+                          className={styles.textarea}
+                          {...register("billingAddress")}
+                          placeholder="Street address, suburb, state, postcode"
+                          rows={4}
+                        ></textarea>
+                        {errors.billingAddress && (
+                          <p className={styles.error}>
+                            {errors.billingAddress.message}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -309,19 +410,14 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                     <div className="col-12">
                       <div className={styles.inputGroup}>
                         <label className={styles.inputLabel}>
-                          Message
+                          Additional Information
                         </label>
                         <textarea
                           className={styles.textarea}
                           {...register("message")}
                           placeholder="Any additional information or questions..."
-                          rows={4}
+                          rows={3}
                         ></textarea>
-                        {errors.message && (
-                          <p className={styles.error}>
-                            {errors.message.message}
-                          </p>
-                        )}
                       </div>
                     </div>
                   </div>

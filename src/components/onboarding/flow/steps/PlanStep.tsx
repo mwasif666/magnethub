@@ -1,6 +1,5 @@
 "use client";
 
-import SimpleBar from "simplebar-react"
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { PlanStepProps, PricingItem } from "../types";
 import styles from "../../OnboardingFlow.module.css";
@@ -113,13 +112,11 @@ const PlanStep = ({
                   )}
                 </div>
 
-                <SimpleBar autoHide={false} className={styles.planListScroll}>
-                  <ul className={styles.planList}>
-                    {plan.list.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </SimpleBar>
+                <ul className={`${styles.planList} ${styles.planListScroll}`}>
+                  {plan.list.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
               </div>
             </SwiperSlide>
           );

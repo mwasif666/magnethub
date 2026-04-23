@@ -2,18 +2,18 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-import type { Swiper as SwiperType } from "swiper";
 import { apiRequest, BACKEND_ORIGIN } from "@/api/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "@/redux/features/wishlistSlice";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
-import Image from "next/image";
-import styles from "./ListingDetail.module.css";
-import ListingStatusBadges from "@/components/listing/ListingStatusBadges";
-import Loading from "../loading/Loading";
 import { useRouter } from "next/navigation";
 import { FaTag } from "react-icons/fa";
+import type { Swiper as SwiperType } from "swiper";
+import Loading from "../loading/Loading";
+import ListingStatusBadges from "@/components/listing/ListingStatusBadges";
+import styles from "./ListingDetail.module.css";
+import Image from "next/image";
 
 interface ListingDetailProps {
   url: string;
@@ -189,7 +189,7 @@ const ListingDetail: React.FC<ListingDetailProps> = ({ url, id }) => {
                         <h5 className={styles.host}>
                           <i className="fa-solid fa-user me-2"></i>
                           <span>Hosted By:</span>{" "}
-                          {listing?.user_first_name + " " + listing?.user_last_name || "N/A"}
+                          {listing?.user_first_name + " " + listing?.user_last_name && listing?.user_last_name || "N/A"}
                         </h5>
                         {listing?.category_name && (
                           <p className={styles.categoryDesign}>

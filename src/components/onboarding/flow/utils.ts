@@ -69,9 +69,14 @@ export const initialSignupState: SignupState = {
 };
 
 export const initialPaymentState: PaymentState = {
+  firstName: "",
+  lastName: "",
+  businessName: "",
+  australianBusinessNumber: "",
   name: "",
   email: "",
   phone: "",
+  billingAddress: "",
   message: "",
   cardName: "",
   cardNumber: "",
@@ -410,8 +415,11 @@ export const validatePaymentState = (
 ) => {
   const errors: Record<string, string> = {};
 
-  if (!paymentState.name.trim()) {
-    errors.name = "Full name is required.";
+  if (!paymentState.firstName.trim()) {
+    errors.firstName = "First name is required.";
+  }
+  if (!paymentState.lastName.trim()) {
+    errors.lastName = "Last name is required.";
   }
   if (!paymentState.email.trim()) {
     errors.email = "Email is required.";
@@ -420,6 +428,9 @@ export const validatePaymentState = (
   }
   if (!paymentState.phone.trim()) {
     errors.phone = "Phone number is required.";
+  }
+  if (!paymentState.billingAddress.trim()) {
+    errors.billingAddress = "Billing address is required.";
   }
 
   if (selectedPlan.price === 0) {
