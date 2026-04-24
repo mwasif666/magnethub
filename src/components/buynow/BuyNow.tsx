@@ -599,7 +599,7 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                       >
                         <path d="M20 6L9 17l-5-5"></path>
                       </svg>
-                      Complete Payment - ${item.price}/month
+                      Complete Payment - ${item.price}
                     </>
                   )}
                 </button>
@@ -634,10 +634,13 @@ const BuyNow: React.FC<BuyNowProps> = ({ slug }) => {
                   </button>
                 )}
               </div>
-              <div className="d-flex align-items-center gap-2">
-                <p><strong>Includes:</strong></p>
-                <p>10% GST</p>
-              </div>
+              {item.price > 0 && (
+                <div className={styles.pricingDescription}>
+                  <p className={styles.descriptionText}>
+                    <strong>Includes:</strong> Price includes GST
+                  </p>
+                </div>
+              )}
               <div className={styles.featuresList}>
                 <h5 className={styles.featuresTitle}>What's Included:</h5>
                 <ul className={styles.features}>

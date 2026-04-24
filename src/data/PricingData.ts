@@ -6,6 +6,11 @@ interface DataType {
   price: number;
   list: string[];
   suitable?: string;
+  priceLabel: string;
+  timeframe: string;
+  images?: string;
+  offer?: string;
+  note?: string;
 }
 
 const pricing_data: DataType[] = [
@@ -32,6 +37,9 @@ With 0% commission, 3 post-publish listing edits, and secure chat with registere
     ],
     suitable:
       "Business owners wanting an affordable way to test the market and manage their own sale.",
+    priceLabel: "Free",
+    timeframe: "3 months",
+    images: "1",
   },
   {
     id: 1,
@@ -58,6 +66,8 @@ With 0% commission, unlimited edits, premium positioning, and a 30-day listing r
     ],
     suitable:
       "Business owners who want an affordable way to manage their own sale while gaining stronger exposure, better positioning, and additional tools to support the selling process.",
+    priceLabel: "$149 incl. GST",
+    timeframe: "6 months",
   },
   {
     id: 4,
@@ -80,6 +90,8 @@ With 0% commission, unlimited edits, and a 12-month listing period, this package
     ],
     suitable:
       "Startups, established businesses, and pre-revenue ideas seeking capital or investment.",
+    priceLabel: "$249 incl. GST",
+    timeframe: "12 months",
   },
   {
     id: 3,
@@ -116,6 +128,10 @@ With 0% commission, unlimited listings, 30-day listing refreshes, premium brandi
     ],
     suitable:
       "Brokers, agents, and franchisors who want to market multiple listings professionally while benefiting from stronger branding, flexible control, and ongoing exposure.",
+    priceLabel: "$1,499 per year incl. GST",
+    offer:
+      "Introductory rate for early broker, agent, and franchise partners",
+    timeframe: "Listed until sold",
   },
   {
     id: 2,
@@ -148,6 +164,9 @@ With 0% commission, unlimited edits, fortnightly listing refreshes, business eva
     ],
     suitable:
       "Business owners who want expert support with valuing, presenting, and marketing their business while improving visibility and buyer confidence throughout the sale process.",
+    priceLabel: "$1,999 incl. GST",
+    timeframe: "Listed until sold",
+    note: "The Magnate Premium Directory is a directory of Private investors, private equity firms, venture capitalists, and high-level business buyers who are looking for business opportunities. Your advert will be sent to them directly.",
   },
 ];
 

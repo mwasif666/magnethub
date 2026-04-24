@@ -19,7 +19,6 @@ type PricingItem = {
   price: number | string;
   desc: string;
   list: string[];
-  suitable?: string;
 };
 
 const swiperOptions = {
@@ -59,10 +58,11 @@ const Pricing = () => {
           <div className="col-lg-8 text-center">
             <div className="tg-pricing-section-title-wrap">
               <h2 className="tg-section-su-title mb-0">
-                Magnate Hub
-                <br />
-                Pricing
+                Magnate Hub Pricing Packages
               </h2>
+              <p className="mb-0 mt-3">
+                At Magnate Hub, we believe selling your business should be more accessible, flexible, and cost-effective. That is why our packages are designed to give you the tools, exposure, and control you need to market your business professionally and choose the option that best suits your needs.
+              </p>
             </div>
           </div>
         </div>
@@ -175,7 +175,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ item }) => {
             <p className="mb-0">
               <strong style={{ color: "#560ce3" }}>Includes:</strong>
             </p>
-            <p className="mb-0">10% GST</p>
+            <p className="mb-0">Price includes GST</p>
           </div>
         )}
 

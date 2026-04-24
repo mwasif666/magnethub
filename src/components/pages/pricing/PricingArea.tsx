@@ -10,7 +10,7 @@ const PricingArea = () => {
                 data-wow-delay=".5s"
                 data-wow-duration=".9s"
               >
-                Magnate Hub Packages
+                Magnate Hub Pricing Packages
               </h2>
 
               <p
@@ -18,13 +18,18 @@ const PricingArea = () => {
                 data-wow-delay=".4s"
                 data-wow-duration=".9s"
               >
-                At Magnate Hub, we believe in your success. That's why we offer
-                unbeatable benefits such as no commissions, long listing times{" "}
-                <br />
-                and unlimited edits, allowing you to showcase your business and
-                make any necessary changes with ease. Say goodbye <br /> to high
-                costs and hello to a brighter future. Join us today and select
-                the best option for your situation.
+                At Magnate Hub, we believe selling your business should be more
+                accessible, flexible, and cost-effective. That is why our
+                packages are designed to give you the tools, exposure, and
+                control you need to market your business professionally and
+                choose the option that best suits your needs.
+              </p>
+              <p
+                className="mb-0 wow fadeInUp"
+                data-wow-delay=".4s"
+                data-wow-duration=".9s"
+              >
+                Selling your Business
               </p>
             </div>
           </div>

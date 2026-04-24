@@ -219,8 +219,10 @@
 }
 
 .submitBtn:hover:not(:disabled) {
+  color: #ffffff;
+  background: linear-gradient(135deg, #560ce3 0%, #7c3aed 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(86, 12, 227, 0.4);
+  box-shadow: 0 6px 20px rgba(86, 12, 227, 0.35);
 }
 
 .submitBtn:active:not(:disabled) {
