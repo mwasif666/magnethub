@@ -61,7 +61,7 @@ const HomeStyleListingCard = ({
   const isFranchiseBooker = String(item?.user_type) === "broker";
   const companyName = item?.user_company_name?.trim() || "";
   const companyLogoUrl = item?.user_company_logo?.trim()
-    ? item.user_company_logo
+    ? `https://dash.magnatehub.au${item.user_company_logo}`
     : "";
   const hasCompanyName = Boolean(companyName);
   const listingCode = `MGH-${new Date().getFullYear()}-${item.id}`;
@@ -144,7 +144,7 @@ const HomeStyleListingCard = ({
                 alignItems: "center",
                 justifyContent: "center",
                 flex: "0 0 auto",
-                background: "linear-gradient(135deg, #6d4cff 0%, #3d73ff 100%)",
+                background: "#f0f0f0",
                 boxShadow: "0 10px 22px rgba(70, 62, 180, 0.22)",
               }}
             >
