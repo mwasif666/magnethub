@@ -54,7 +54,7 @@ const menu_data: MenuItem[] = [
   },
   {
     id: 5,
-    title: "Premium Packages",
+    title: "Premium Package",
     link: "/premium-packages",
     has_dropdown: false,
   },
